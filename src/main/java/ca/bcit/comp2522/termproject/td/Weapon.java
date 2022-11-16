@@ -34,7 +34,7 @@ public class Weapon {
     }
 
     /**
-     * Returns the name of the weapon.
+     * Returns the name of the Weapon.
      *
      * @return the name as a String
      */
@@ -43,7 +43,7 @@ public class Weapon {
     }
 
     /**
-     * Returns the accuracy of the weapon.
+     * Returns the accuracy of the Weapon.
      *
      * @return the accuracy as an int
      */
@@ -52,7 +52,7 @@ public class Weapon {
     }
 
     /**
-     * Sets the accuracy of the weapon.
+     * Sets the accuracy of the Weapon.
      *
      * @param accuracy the accuracy as an int
      */
@@ -61,7 +61,7 @@ public class Weapon {
     }
 
     /**
-     * Returns the attack strength of the weapon.
+     * Returns the attack strength of the Weapon.
      *
      * @return the attack strength as an int
      */
@@ -70,7 +70,7 @@ public class Weapon {
     }
 
     /**
-     * Sets the attack strength of the weapon.
+     * Sets the attack strength of the Weapon.
      *
      * @param damage the attack strength as an int
      */
@@ -79,7 +79,7 @@ public class Weapon {
     }
 
     /**
-     * Returns the range of the weapon. One range unit is equivalent to one grid square.
+     * Returns the range of the Weapon. One range unit is equivalent to one grid square.
      *
      * @return the range as an int
      */
@@ -88,7 +88,7 @@ public class Weapon {
     }
 
     /**
-     * Sets the range of the weapon.
+     * Sets the range of the Weapon.
      *
      * @param range the range as an int
      */
@@ -97,12 +97,27 @@ public class Weapon {
     }
 
     /**
-     * Returns the damage type of the weapon.
+     * Returns the damage type of the Weapon.
      *
      * @return the damage type as a DamageType enum
      */
     public DamageType getDamageType() {
         return damageType;
+    }
+
+    /**
+     * Attacks another Combatant, potentially dealing damage to them.
+     *
+     * @param target the Combatant to attack
+     * @param distance the distance from the target in grid squares
+     * @throws IllegalArgumentException if the target is null
+     */
+    public void attack(final Combatant target, final int distance) {
+        if (target == null) {
+            throw new IllegalArgumentException("Attack target cannot be null.");
+        }
+
+        target.receiveAttack(distance, this);
     }
 
     /**
