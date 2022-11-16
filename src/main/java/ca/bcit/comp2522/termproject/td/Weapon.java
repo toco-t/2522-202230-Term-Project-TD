@@ -7,8 +7,8 @@ package ca.bcit.comp2522.termproject.td;
  * @version 0.1
  */
 public class Weapon {
-    private static final int DEFAULT_DAMAGE = 300;
-    private static final int DEFAULT_ACCURACY = 50;
+    private static final int DEFAULT_DAMAGE = 250;
+    private static final int DEFAULT_ACCURACY = 150;
     private static final int DEFAULT_RANGE = 5;
     private static final DamageType DEFAULT_DAMAGE_TYPE = DamageType.STANDARD;
 
