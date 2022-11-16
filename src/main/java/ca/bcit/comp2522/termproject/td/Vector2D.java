@@ -7,5 +7,5 @@ package ca.bcit.comp2522.termproject.td;
  * @version 0.1
  */
 public class Vector2D {
-
+    // replace this class with your implementation for a Vector2D.
 }
