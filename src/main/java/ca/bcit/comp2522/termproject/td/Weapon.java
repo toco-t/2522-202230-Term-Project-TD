@@ -1,40 +1,42 @@
 package ca.bcit.comp2522.termproject.td;
 
+import java.util.Objects;
+
 /**
  * A weapon that is used for attacking other Combatants. Weapon stats are used for offensive damage calculation.
  *
  * @author Nathan
  * @version 0.1
  */
-public class Weapon {
+public abstract class Weapon {
+    private static final String DEFAULT_DESCRIPTION = "I like to keep this for close encounters.";
     private static final int DEFAULT_DAMAGE = 250;
-    private static final int DEFAULT_ACCURACY = 150;
     private static final int DEFAULT_RANGE = 5;
     private static final DamageType DEFAULT_DAMAGE_TYPE = DamageType.STANDARD;
 
     private final String name;
+    private final String description;
     private int damage;
-    private int accuracy;
     private int range; // might use a custom range table for more advanced damage calculation later
     private final DamageType damageType;
 
     /**
      * Constructs an object of type Weapon using the name to determine stats.
      *
-     * @param name the name of the Weapon as a String
+     * @param name the name of this Weapon as a String
      */
     public Weapon(final String name) {
         // replace this code with I/O to a weapon bank of some sort. This is just a placeholder.
         this.name = name;
+        this.description = DEFAULT_DESCRIPTION;
 
         damage = DEFAULT_DAMAGE;
-        accuracy = DEFAULT_ACCURACY;
         range = DEFAULT_RANGE;
         damageType = DEFAULT_DAMAGE_TYPE;
     }
 
     /**
-     * Returns the name of the Weapon.
+     * Returns the name of this Weapon.
      *
      * @return the name as a String
      */
@@ -43,25 +45,16 @@ public class Weapon {
     }
 
     /**
-     * Returns the accuracy of the Weapon.
+     * Returns the description of this Weapon.
      *
-     * @return the accuracy as an int
+     * @return the description as a String
      */
-    public int getAccuracy() {
-        return accuracy;
+    public String getDescription() {
+        return description;
     }
 
     /**
-     * Sets the accuracy of the Weapon.
-     *
-     * @param accuracy the accuracy as an int
-     */
-    public void setAccuracy(final int accuracy) {
-        this.accuracy = accuracy;
-    }
-
-    /**
-     * Returns the attack strength of the Weapon.
+     * Returns the attack strength of this Weapon.
      *
      * @return the attack strength as an int
      */
@@ -70,7 +63,7 @@ public class Weapon {
     }
 
     /**
-     * Sets the attack strength of the Weapon.
+     * Sets the attack strength of this Weapon.
      *
      * @param damage the attack strength as an int
      */
@@ -79,7 +72,7 @@ public class Weapon {
     }
 
     /**
-     * Returns the range of the Weapon. One range unit is equivalent to one grid square.
+     * Returns the range of this Weapon. One range unit is equivalent to one grid square.
      *
      * @return the range as an int
      */
@@ -88,7 +81,7 @@ public class Weapon {
     }
 
     /**
-     * Sets the range of the Weapon.
+     * Sets the range of this Weapon.
      *
      * @param range the range as an int
      */
@@ -97,7 +90,7 @@ public class Weapon {
     }
 
     /**
-     * Returns the damage type of the Weapon.
+     * Returns the damage type of this Weapon.
      *
      * @return the damage type as a DamageType enum
      */
@@ -140,13 +133,13 @@ public class Weapon {
         if (damage != weapon.damage) {
             return false;
         }
-        if (accuracy != weapon.accuracy) {
-            return false;
-        }
         if (range != weapon.range) {
             return false;
         }
-        if (!name.equals(weapon.name)) {
+        if (!Objects.equals(name, weapon.name)) {
+            return false;
+        }
+        if (!Objects.equals(description, weapon.description)) {
             return false;
         }
         return damageType == weapon.damageType;
@@ -160,9 +153,9 @@ public class Weapon {
     @Override
     public int hashCode() {
         final int primeMultiplier = 31;
-        int result = name.hashCode();
+        int result = name != null ? name.hashCode() : 0;
+        result = primeMultiplier * result + (description != null ? description.hashCode() : 0);
         result = primeMultiplier * result + damage;
-        result = primeMultiplier * result + accuracy;
         result = primeMultiplier * result + range;
         result = primeMultiplier * result + (damageType != null ? damageType.hashCode() : 0);
         return result;
@@ -177,8 +170,8 @@ public class Weapon {
     public String toString() {
         return "Weapon{"
                 + "name='" + name + '\''
+                + ", description='" + description + '\''
                 + ", damage=" + damage
-                + ", accuracy=" + accuracy
                 + ", range=" + range
                 + ", damageType=" + damageType
                 + '}';
