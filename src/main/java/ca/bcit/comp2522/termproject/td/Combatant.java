@@ -29,6 +29,34 @@ public interface Combatant {
     Vector2D getLocation();
 
     /**
+     * Returns the defense of this Combatant.
+     *
+     * @return the defense as an int
+     */
+    int getDefense();
+
+    /**
+     * Returns the evasion of this Unit.
+     *
+     * @return the defense as an int
+     */
+    int getEvasion();
+
+    /**
+     * Returns whether this Unit is aerial.
+     *
+     * @return whether this Unit is aerial as a boolean
+     */
+    boolean isAerial();
+
+    /**
+     * Returns the armour type of this Unit.
+     *
+     * @return the armour type as an ArmourType
+     */
+    ArmourType getArmourType();
+
+    /**
      * Adds or subtracts health from the Combatant.
      *
      * @param delta the amount of add or subtract as an int
@@ -36,33 +64,9 @@ public interface Combatant {
     void changeHealth(int delta);
 
     /**
-     * Attacks another Combatant.
+     * Initiates an attack against a target.
      *
      * @param target the Combatant to attack
      */
     void attack(Combatant target);
-
-    /**
-     * Calculates damage resulting from a combat initiation. This is subject to probability such as with accuracy.
-     *
-     * @param weapon the Weapon used for the attack
-     * @return the damage that may result from the attack
-     */
-    int calculateDamage(Weapon weapon);
-
-    /**
-     * Calculates maximum damage resulting from a combat initiation. This assumes all bullets hit the target.
-     *
-     * @param weapon the Weapon used for the attack
-     * @return the total damage that may result from the attack
-     */
-    int calculateMaxDamage(Weapon weapon);
-
-    /**
-     * Reduces the Combatant's health based on the attacker's weapon's stats and distance from the attacker.
-     *
-     * @param distance the distance of the attack, in grid squares
-     * @param weapon the Weapon used for the attack
-     */
-    void receiveAttack(int distance, Weapon weapon);
 }

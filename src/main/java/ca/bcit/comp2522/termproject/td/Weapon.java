@@ -8,17 +8,19 @@ import java.util.Objects;
  * @author Nathan
  * @version 0.1
  */
-public abstract class Weapon {
+public abstract class Weapon implements Attacker {
     private static final String DEFAULT_DESCRIPTION = "I like to keep this for close encounters.";
     private static final int DEFAULT_DAMAGE = 250;
     private static final int DEFAULT_RANGE = 5;
     private static final DamageType DEFAULT_DAMAGE_TYPE = DamageType.STANDARD;
+    private static final ProjectileSize DEFAULT_PROJECTILE_SIZE = ProjectileSize.BULLET;
 
     private final String name;
     private final String description;
     private int damage;
     private int range; // might use a custom range table for more advanced damage calculation later
     private final DamageType damageType;
+    private final ProjectileSize projectileSize;
 
     /**
      * Constructs an object of type Weapon using the name to determine stats.
@@ -33,6 +35,7 @@ public abstract class Weapon {
         damage = DEFAULT_DAMAGE;
         range = DEFAULT_RANGE;
         damageType = DEFAULT_DAMAGE_TYPE;
+        projectileSize = DEFAULT_PROJECTILE_SIZE;
     }
 
     /**
@@ -110,7 +113,130 @@ public abstract class Weapon {
             throw new IllegalArgumentException("Attack target cannot be null.");
         }
 
-        target.receiveAttack(distance, this);
+        int damageDealt = calculateDamage(target, distance);
+
+        target.changeHealth(damageDealt);
+    }
+
+    /**
+     * Calculates damage resulting from a combat initiation. This is subject to probability such as with accuracy.
+     *
+     * @param target the Combatant to attack
+     * @param distance the distance from the target in grid squares
+     * @return the damage that may result from the attack
+     */
+    public int calculateDamage(final Combatant target, final int distance) {
+        int baseDamageDealt = damage - target.getDefense();
+        double damageModifier = getDamageModifier(target);
+
+        return 0;
+    }
+
+    private double getDamageModifier(final Combatant target) {
+        double modifier = 1;
+
+        if (target.isAerial()) {
+            final double aerialPenalty = 0.5;
+            modifier *= aerialPenalty;
+        }
+
+        if (damageType == DamageType.STANDARD && target.getArmourType() == ArmourType.DEFAULT) {
+            final double highCaliberAgainstInfantryPenalty = 0.2;
+            modifier *= highCaliberAgainstInfantryPenalty;
+        }
+
+        modifier *= getDamageFromArmourModifier(target);
+
+        return modifier;
+    }
+
+    private double getDamageFromArmourModifier(final Combatant target) {
+        // TODO: make this method clean
+        switch (target.getArmourType()) {
+            case DEFAULT -> {
+                final double bulletDamageModifier = 1;
+                final double explosiveDamageModifier = 1.25;
+                final double dartDamageModifier = 2;
+                final double heatDamageModifier = 2;
+                return applyBulletArmourModifiers(bulletDamageModifier, explosiveDamageModifier, dartDamageModifier,
+                        heatDamageModifier);
+            }
+            case LIGHT -> {
+                final double bulletDamageModifier = 0.75;
+                final double explosiveDamageModifier = 1;
+                final double dartDamageModifier = 0.75;
+                final double heatDamageModifier = 2;
+                return applyBulletArmourModifiers(bulletDamageModifier, explosiveDamageModifier, dartDamageModifier,
+                        heatDamageModifier);
+            }
+            case MEDIUM -> {
+                final double bulletDamageModifier = 0;
+                final double explosiveDamageModifier = 0;
+                final double dartDamageModifier = 1.75;
+                final double heatDamageModifier = 2;
+                return applyBulletArmourModifiers(bulletDamageModifier, explosiveDamageModifier, dartDamageModifier,
+                        heatDamageModifier);
+            }
+            case ERA -> {
+                final double bulletDamageModifier = 0;
+                final double explosiveDamageModifier = 0;
+                final double dartDamageModifier = 0.9;
+                final double heatDamageModifier = 0;
+                return applyBulletArmourModifiers(bulletDamageModifier, explosiveDamageModifier, dartDamageModifier,
+                        heatDamageModifier);
+            }
+            case COMPOSITE -> {
+                final double bulletDamageModifier = 0;
+                final double explosiveDamageModifier = 0;
+                final double dartDamageModifier = 0.75;
+                final double heatDamageModifier = 0.5;
+                return applyBulletArmourModifiers(bulletDamageModifier, explosiveDamageModifier, dartDamageModifier,
+                        heatDamageModifier);
+            }
+            default -> {
+                final double bulletDamageModifier = 1;
+                final double explosiveDamageModifier = 1;
+                final double dartDamageModifier = 1;
+                final double heatDamageModifier = 1;
+                return applyBulletArmourModifiers(bulletDamageModifier, explosiveDamageModifier, dartDamageModifier,
+                        heatDamageModifier);
+            }
+        }
+    }
+
+    private double applyBulletArmourModifiers(final double bulletDamageModifier, final double explosiveDamageModifier,
+                                              final double dartDamageModifier, final double heatDamageModifier) {
+        if (projectileSize == ProjectileSize.BULLET) {
+            if (damageType == DamageType.STANDARD) {
+                return bulletDamageModifier;
+            }
+            if (damageType == DamageType.EXPLOSIVE) {
+                return explosiveDamageModifier;
+            }
+        }
+
+        if (projectileSize == ProjectileSize.SHELL) {
+            if (damageType == DamageType.STANDARD) {
+                return dartDamageModifier;
+            }
+            if (damageType == DamageType.EXPLOSIVE) {
+                return heatDamageModifier;
+            }
+        }
+
+        return 1;
+    }
+
+    /**
+     * Calculates maximum damage resulting from a combat initiation. This assumes all bullets hit the target.
+     *
+     * @param target the Combatant to attack
+     * @param distance the distance from the target in grid squares
+     * @return the total damage that may result from the attack
+     */
+    @Override
+    public int calculateMaxDamage(final Combatant target, final int distance) {
+        return 0;
     }
 
     /**

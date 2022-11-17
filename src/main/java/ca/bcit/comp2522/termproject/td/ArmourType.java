@@ -9,6 +9,7 @@ package ca.bcit.comp2522.termproject.td;
 public enum ArmourType {
     DEFAULT,
     LIGHT,
+    MEDIUM,
     ERA,
     COMPOSITE
 }

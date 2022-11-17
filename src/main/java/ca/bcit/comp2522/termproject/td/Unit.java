@@ -10,17 +10,20 @@ import java.util.ArrayList;
  * @author Nathan
  * @version 0.1
  */
-public class Unit {
+public class Unit implements Combatant {
     private String name;
     private Image sprite;
     private Affiliation affiliation;
     private Vector2D location;
+    private ArrayList<Attacker> weapons;
     private ArrayList<Item> inventory;
     private int level;
     private int expToNext;
     private int movementRange;
     private boolean aerial;
     private ArmourType armourType;
+    private int health;
+    private int maxHealth;
     private int defense;
     private int evasion;
 
@@ -104,6 +107,24 @@ public class Unit {
      */
     public void setLocation(final Vector2D location) {
         this.location = location;
+    }
+
+    /**
+     * Returns this unit's list of weapons.
+     *
+     * @return the weapons as an ArrayList of Attacker
+     */
+    public ArrayList<Attacker> getWeapons() {
+        return weapons;
+    }
+
+    /**
+     * Sets this unit's list of weapons.
+     *
+     * @param weapons the weapons as an ArrayList of Attacker
+     */
+    public void setWeapons(final ArrayList<Attacker> weapons) {
+        this.weapons = weapons;
     }
 
     /**
@@ -215,6 +236,42 @@ public class Unit {
     }
 
     /**
+     * Returns the health of this Unit.
+     *
+     * @return the health as an int
+     */
+    public int getHealth() {
+        return health;
+    }
+
+    /**
+     * Sets the health of this Unit.
+     *
+     * @param health the health as an int
+     */
+    public void setHealth(final int health) {
+        this.health = health;
+    }
+
+    /**
+     * Returns the max health of this Unit.
+     *
+     * @return the max health as an int
+     */
+    public int getMaxHealth() {
+        return maxHealth;
+    }
+
+    /**
+     * Sets the max health of this Unit.
+     *
+     * @param maxHealth the max health as an int
+     */
+    public void setMaxHealth(final int maxHealth) {
+        this.maxHealth = maxHealth;
+    }
+
+    /**
      * Returns the defense of this Unit.
      *
      * @return the defense as an int
@@ -248,5 +305,44 @@ public class Unit {
      */
     public void setEvasion(final int evasion) {
         this.evasion = evasion;
+    }
+
+    /**
+     * Adds or subtracts health from the Unit.
+     *
+     * @param delta the amount of add or subtract as an int
+     */
+    public void changeHealth(final int delta) {
+        health += delta;
+
+        if (health < 0) {
+            health = 0;
+        }
+        if (health > maxHealth) {
+            health = maxHealth;
+        }
+    }
+
+    /**
+     * Moves the Combatant to a specific location.
+     *
+     * @param destination the location to move to
+     */
+    public void moveTo(final Vector2D destination) {
+        // TODO: check if destination is valid
+        location = destination;
+    }
+
+    /**
+     * Initiates an attack against a target.
+     *
+     * @param target the Combatant to attack
+     * @throws IllegalStateException if there is no weapon at index 0 in the unit's weapon list
+     */
+    public void attack(final Combatant target) {
+        if (weapons.get(0) == null) {
+            throw new IllegalStateException("Cannot attack without a weapon.");
+        }
+        weapons.get(0).attack(target, 0);
     }
 }
