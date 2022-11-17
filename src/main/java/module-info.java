@@ -5,4 +5,6 @@ module ca.bcit.comp2522.termproject.td {
 
     opens ca.bcit.comp2522.termproject.td to javafx.fxml;
     exports ca.bcit.comp2522.termproject.td;
+    exports ca.bcit.comp2522.termproject.td.hello;
+    opens ca.bcit.comp2522.termproject.td.hello to javafx.fxml;
 }

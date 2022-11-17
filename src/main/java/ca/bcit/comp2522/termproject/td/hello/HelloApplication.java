@@ -1,4 +1,4 @@
-package ca.bcit.comp2522.termproject.td;
+package ca.bcit.comp2522.termproject.td.hello;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
