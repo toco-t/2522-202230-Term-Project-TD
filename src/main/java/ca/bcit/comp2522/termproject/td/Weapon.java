@@ -1,6 +1,7 @@
 package ca.bcit.comp2522.termproject.td;
 
 import java.util.Objects;
+import java.util.Random;
 
 /**
  * A weapon that is used for attacking other Combatants. Weapon stats are used for offensive damage calculation.
@@ -14,10 +15,12 @@ public abstract class Weapon implements Attacker {
     private static final int DEFAULT_RANGE = 5;
     private static final DamageType DEFAULT_DAMAGE_TYPE = DamageType.STANDARD;
     private static final ProjectileSize DEFAULT_PROJECTILE_SIZE = ProjectileSize.BULLET;
+    private static final Random RANDOM_NUMBER_GENERATOR = new Random();
 
     private final String name;
     private final String description;
     private int damage;
+    private int hits;
     private int range; // might use a custom range table for more advanced damage calculation later
     private final DamageType damageType;
     private final ProjectileSize projectileSize;
@@ -115,7 +118,7 @@ public abstract class Weapon implements Attacker {
 
         int damageDealt = calculateDamage(target, distance);
 
-        target.changeHealth(damageDealt);
+        target.changeHealth(-damageDealt);
     }
 
     /**
@@ -127,18 +130,36 @@ public abstract class Weapon implements Attacker {
      */
     public int calculateDamage(final Combatant target, final int distance) {
         int baseDamageDealt = damage - target.getDefense();
-        double accuracyModifier = getAccuracyModifier(target);
         double damageModifier = getDamageModifier(target);
+        Double unroundedDamagePerHit = baseDamageDealt * damageModifier;
+        int damagePerHit = unroundedDamagePerHit.intValue();
+
+        // TODO: ask chris if using wrapping or casting is better
+        double baseAccuracy = 1;
+        double accuracyModifier = getAccuracyModifier(target);
+        double accuracyPerHit = baseAccuracy * accuracyModifier;
 
         if (canBreakTargetERA(target)) {
             target.breakERA();
         }
 
-        // TODO: apply randomness to hits
-
-        return 0;
+        return simulateHits(damagePerHit, accuracyPerHit);
     }
 
+    /* Simulates a number of attacks and returns the result. */
+    private int simulateHits(final int damagePerHit, final double accuracyPerHit) {
+        int totalDamageDealt = 0;
+
+        for (int i = 0; i < hits; i++) {
+            if (RANDOM_NUMBER_GENERATOR.nextDouble() < accuracyPerHit) {
+                totalDamageDealt += damagePerHit;
+            }
+        }
+
+        return totalDamageDealt;
+    }
+
+    /* Returns a multiplier for a particular attack's chance of hitting. */
     private double getAccuracyModifier(final Combatant target) {
         double modifier = 1;
 
@@ -155,10 +176,12 @@ public abstract class Weapon implements Attacker {
         return modifier;
     }
 
+    /* Determines whether this attack can break ERA armour. */
     private boolean canBreakTargetERA(final Combatant target) {
         return projectileSize == ProjectileSize.SHELL || damageType == DamageType.EXPLOSIVE;
     }
 
+    /* Returns a multiplier for attack damage. */
     private double getDamageModifier(final Combatant target) {
         // TODO: make this method clean
         switch (target.getArmourType()) {
