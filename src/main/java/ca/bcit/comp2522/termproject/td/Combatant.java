@@ -57,6 +57,11 @@ public interface Combatant {
     ArmourType getArmourType();
 
     /**
+     * Removes ERA armour and replaces it with MEDIUM armour.
+     */
+    void breakERA();
+
+    /**
      * Adds or subtracts health from the Combatant.
      *
      * @param delta the amount of add or subtract as an int

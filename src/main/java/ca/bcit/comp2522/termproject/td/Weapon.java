@@ -127,12 +127,19 @@ public abstract class Weapon implements Attacker {
      */
     public int calculateDamage(final Combatant target, final int distance) {
         int baseDamageDealt = damage - target.getDefense();
+        double accuracyModifier = getAccuracyModifier(target);
         double damageModifier = getDamageModifier(target);
+
+        if (canBreakTargetERA(target)) {
+            target.breakERA();
+        }
+
+        // TODO: apply randomness to hits
 
         return 0;
     }
 
-    private double getDamageModifier(final Combatant target) {
+    private double getAccuracyModifier(final Combatant target) {
         double modifier = 1;
 
         if (target.isAerial()) {
@@ -145,12 +152,14 @@ public abstract class Weapon implements Attacker {
             modifier *= highCaliberAgainstInfantryPenalty;
         }
 
-        modifier *= getDamageFromArmourModifier(target);
-
         return modifier;
     }
 
-    private double getDamageFromArmourModifier(final Combatant target) {
+    private boolean canBreakTargetERA(final Combatant target) {
+        return projectileSize == ProjectileSize.SHELL || damageType == DamageType.EXPLOSIVE;
+    }
+
+    private double getDamageModifier(final Combatant target) {
         // TODO: make this method clean
         switch (target.getArmourType()) {
             case DEFAULT -> {

@@ -227,6 +227,15 @@ public class Unit implements Combatant {
     }
 
     /**
+     * Removes ERA armour and replaces it with MEDIUM armour.
+     */
+    public void breakERA() {
+        if (armourType == ArmourType.ERA) {
+            armourType = ArmourType.MEDIUM;
+        }
+    }
+
+    /**
      * Sets the armour type of this Unit.
      *
      * @param armourType the armour type as an ArmourType
