@@ -1,4 +1,10 @@
-package ca.bcit.comp2522.termproject.td;
+package ca.bcit.comp2522.termproject.td.weapon;
+
+import ca.bcit.comp2522.termproject.td.ArmourType;
+import ca.bcit.comp2522.termproject.td.Attacker;
+import ca.bcit.comp2522.termproject.td.Combatant;
+import ca.bcit.comp2522.termproject.td.DamageType;
+import ca.bcit.comp2522.termproject.td.ProjectileSize;
 
 import java.util.Objects;
 
@@ -15,7 +21,10 @@ public abstract class Weapon implements Attacker {
     private static final DamageType DEFAULT_DAMAGE_TYPE = DamageType.STANDARD;
     private static final ProjectileSize DEFAULT_PROJECTILE_SIZE = ProjectileSize.BULLET;
 
-    private final String name;
+    /**
+     * Name of this Weapon.
+     */
+    protected final String name;
     private final String description;
     private int damage;
     private int range; // might use a custom range table for more advanced damage calculation later
@@ -26,10 +35,15 @@ public abstract class Weapon implements Attacker {
      * Constructs an object of type Weapon using the name to determine stats.
      *
      * @param name the name of this Weapon as a String
+     * @throws IllegalArgumentException when the specified name is empty
      */
-    public Weapon(final String name) {
+    public Weapon(final String name) throws IllegalArgumentException {
         // replace this code with I/O to a weapon bank of some sort. This is just a placeholder.
-        this.name = name;
+        if (name == null || name.length() == 0) {
+            throw new IllegalArgumentException("Name cannot be empty...");
+        } else {
+            this.name = name;
+        }
         this.description = DEFAULT_DESCRIPTION;
 
         damage = DEFAULT_DAMAGE;
@@ -251,19 +265,19 @@ public abstract class Weapon implements Attacker {
     /**
      * Compares this Weapon with another object.
      *
-     * @param o the other Object to compare
+     * @param object the other Object to compare
      * @return true if they are the equal, otherwise false
      */
     @Override
-    public boolean equals(final Object o) {
-        if (this == o) {
+    public boolean equals(final Object object) {
+        if (this == object) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (object == null || getClass() != object.getClass()) {
             return false;
         }
 
-        final Weapon weapon = (Weapon) o;
+        final Weapon weapon = (Weapon) object;
 
         if (damage != weapon.damage) {
             return false;

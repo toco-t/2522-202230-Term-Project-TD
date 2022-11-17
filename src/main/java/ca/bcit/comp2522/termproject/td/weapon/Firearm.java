@@ -1,4 +1,4 @@
-package ca.bcit.comp2522.termproject.td;
+package ca.bcit.comp2522.termproject.td.weapon;
 
 /**
  * A firearm that deals ranged weapon. Includes infantry guns, tank cannons, and rocket tubes.

@@ -1,4 +1,6 @@
-package ca.bcit.comp2522.termproject.td;
+package ca.bcit.comp2522.termproject.td.weapon;
+
+import ca.bcit.comp2522.termproject.td.Usable;
 
 import java.util.Objects;
 
@@ -8,9 +10,8 @@ import java.util.Objects;
  * @author Toco Tachibana
  * @version 0.1
  */
-public class Trap implements Usable {
+public class Trap extends Weapon implements Usable {
 
-    private final String name;
     private final String description;
     private final int effect;
 
@@ -24,11 +25,7 @@ public class Trap implements Usable {
      * @throws IllegalArgumentException when the specified effect is negative
      */
     public Trap(final String name, final String description, final int effect) {
-        if (name.length() == 0) {
-            throw new IllegalArgumentException("Name cannot be empty...");
-        } else {
-            this.name = name;
-        }
+        super(name);
 
         this.description = description;
 
@@ -47,16 +44,6 @@ public class Trap implements Usable {
     @Override
     public int use() {
         return this.effect;
-    }
-
-    /**
-     * Returns the name of this Trap.
-     *
-     * @return name as a String
-     */
-    @Override
-    public String getName() {
-        return this.name;
     }
 
     /**
