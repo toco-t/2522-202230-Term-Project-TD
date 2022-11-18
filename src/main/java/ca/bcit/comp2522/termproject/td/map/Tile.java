@@ -1,5 +1,6 @@
 package ca.bcit.comp2522.termproject.td.map;
 
+import ca.bcit.comp2522.termproject.td.Terrain;
 import ca.bcit.comp2522.termproject.td.Vector2D;
 import javafx.scene.image.Image;
 
@@ -12,14 +13,12 @@ import java.util.Objects;
  * @version 0.1
  */
 public class Tile {
-
-    private enum Terrain { ROAD, GRASS, OBSTACLE, AIRSPACE }
     private Image sprite;
 
     private final Vector2D coordinates;
     private final Terrain terrain;
 
-    protected Tile(final Terrain terrain, final Image sprite, final Vector2D coordinates) {
+    public Tile(final Terrain terrain, final Image sprite, final Vector2D coordinates) {
         this.terrain = terrain;
         this.sprite = sprite;
         this.coordinates = coordinates;

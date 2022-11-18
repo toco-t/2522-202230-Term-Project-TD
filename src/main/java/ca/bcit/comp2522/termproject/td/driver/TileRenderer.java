@@ -62,10 +62,10 @@ public class TileRenderer {
         final double tileHeightInPixels = 64;
 
         final double tileXCoordinateToScreenXCoordinate = 0.5 * tileWidthInPixels;
-        final double tileXCoordinateToScreenYCoordinate = -0.5 * tileHeightInPixels;
+        final double tileXCoordinateToScreenYCoordinate = 0.5 * tileHeightInPixels;
 
         final double tileYCoordinateToScreenXCoordinate = 0.5 * tileWidthInPixels;
-        final double tileYCoordinateToScreenYCoordinate = 0.5 * tileHeightInPixels;
+        final double tileYCoordinateToScreenYCoordinate = -0.5 * tileHeightInPixels;
 
         double screenSpaceX = tileCoordinate.getXCoordinate() * tileXCoordinateToScreenXCoordinate
                 + tileCoordinate.getYCoordinate() * tileYCoordinateToScreenXCoordinate;

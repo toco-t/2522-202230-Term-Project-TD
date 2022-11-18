@@ -1,5 +1,7 @@
 package ca.bcit.comp2522.termproject.td.driver;
 
+import ca.bcit.comp2522.termproject.td.Terrain;
+import ca.bcit.comp2522.termproject.td.Vector2D;
 import ca.bcit.comp2522.termproject.td.map.Tile;
 import javafx.application.Application;
 import javafx.geometry.Rectangle2D;
@@ -12,6 +14,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Driver for the game.
@@ -25,21 +28,25 @@ public class BlossomStorm extends Application {
         Text hello = new Text(50, 50, "Blossom Storm");
         Text question = new Text(120, 80, "Ah, what a miserable life...");
 
-        Image tile = new Image("tile_demo.png");
-        ImageView imageView1 = new ImageView(tile);
-        ImageView imageView2 = new ImageView(tile);
-        ImageView imageView3 = new ImageView(tile);
+        Image tileImage = new Image("tile_demo.png");
 
-        imageView1.setViewport(new Rectangle2D(0, 0, 128, 128));
-        imageView2.setViewport(new Rectangle2D(0, 0, 128, 128));
-        imageView3.setViewport(new Rectangle2D(0, 0, 128, 128));
+        /* These Vector2D arguments are in Tile coordinates. */
+        Tile tile1 = new Tile(Terrain.ROAD, tileImage, new Vector2D(0, 0));
+        Tile tile2 = new Tile(Terrain.ROAD, tileImage, new Vector2D(1, 0));
+        Tile tile3 = new Tile(Terrain.ROAD, tileImage, new Vector2D(2, 0));
+        Tile tile4 = new Tile(Terrain.ROAD, tileImage, new Vector2D(1, -1));
+        Tile tile5 = new Tile(Terrain.ROAD, tileImage, new Vector2D(2, -1));
 
-        imageView2.setX(128);
+        ArrayList<Tile> tiles = new ArrayList<>();
+        tiles.add(tile1);
+        tiles.add(tile2);
+        tiles.add(tile3);
+        tiles.add(tile4);
+        tiles.add(tile5);
 
-        imageView3.setX(64);
-        imageView3.setY(32);
+        TileRenderer tileRenderer = new TileRenderer();
 
-        Group root = new Group(imageView1, imageView2, imageView3);
+        Group root = tileRenderer.getTileGroup(tiles);
         Scene scene = new Scene(root, 1280, 720, Color.BLACK);
 
         stage.setTitle("Blossom Storm");

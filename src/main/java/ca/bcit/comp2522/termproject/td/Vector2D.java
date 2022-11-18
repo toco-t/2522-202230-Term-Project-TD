@@ -15,20 +15,10 @@ public class Vector2D {
      *
      * @param xCoordinate a double
      * @param yCoordinate a double
-     * @throws IllegalArgumentException when either of the specified coordinates is negative
      */
-    public Vector2D(final double xCoordinate, final double yCoordinate) throws IllegalArgumentException {
-        if (xCoordinate < 0) {
-            throw new IllegalArgumentException("Coordinate cannot be negative...");
-        } else {
-            this.xCoordinate = xCoordinate;
-        }
-
-        if (yCoordinate < 0) {
-            throw new IllegalArgumentException("Coordinate cannot be negative...");
-        } else {
-            this.yCoordinate = yCoordinate;
-        }
+    public Vector2D(final double xCoordinate, final double yCoordinate) {
+        this.xCoordinate = xCoordinate;
+        this.yCoordinate = yCoordinate;
     }
 
     /**
