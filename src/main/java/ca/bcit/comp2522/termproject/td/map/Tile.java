@@ -18,6 +18,13 @@ public class Tile {
     private final Vector2D coordinates;
     private final Terrain terrain;
 
+    /**
+     * Constructs an object of type Tile.
+     *
+     * @param terrain the terrain type of this Tile
+     * @param sprite the sprite this Tile uses
+     * @param coordinates the tile-coordinates of the Tile
+     */
     public Tile(final Terrain terrain, final Image sprite, final Vector2D coordinates) {
         this.terrain = terrain;
         this.sprite = sprite;
