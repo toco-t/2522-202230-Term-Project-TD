@@ -1,7 +1,7 @@
-package ca.bcit.comp2522.termproject.td.hello;
+package ca.bcit.comp2522.termproject.td.driver;
 
+import ca.bcit.comp2522.termproject.td.map.Tile;
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -13,7 +13,13 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class HelloApplication extends Application {
+/**
+ * Driver for the game.
+ *
+ * @author Nathan
+ * @version 0.1
+ */
+public class BlossomStorm extends Application {
     @Override
     public void start(final Stage stage) throws IOException {
         Text hello = new Text(50, 50, "Blossom Storm");

@@ -1,4 +1,4 @@
-package ca.bcit.comp2522.termproject.td.hello;
+package ca.bcit.comp2522.termproject.td.driver;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;

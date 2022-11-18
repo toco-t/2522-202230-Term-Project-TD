@@ -61,7 +61,7 @@
                         <id>default-cli</id>
                         <configuration>
                             <mainClass>
-                                ca.bcit.comp2522.termproject.td/ca.bcit.comp2522.termproject.td.hello.HelloApplication
+                                ca.bcit.comp2522.termproject.td/ca.bcit.comp2522.termproject.td.driver.BlossomStorm
                             </mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>
