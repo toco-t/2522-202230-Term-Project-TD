@@ -29,7 +29,7 @@ public class TileRenderer {
      * @param tiles an ArrayList of Tiles to convert
      * @return the Group of converted ImageView nodes
      */
-    public Group getTileGroup(final ArrayList<Tile> tiles) {
+    public Group groupTiles(final ArrayList<Tile> tiles) {
         ArrayList<ImageView> tileViews = new ArrayList<>();
 
         for (Tile tile : tiles) {
