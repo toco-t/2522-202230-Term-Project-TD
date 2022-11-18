@@ -23,7 +23,7 @@ import java.util.ArrayList;
 public class BlossomStorm extends Application {
     @Override
     public void start(final Stage stage) throws IOException {
-        Text hello = new Text(50, 50, "Blossom Storm");
+        Text title = new Text(50, 50, "Blossom Storm");
         Text reminiscence = new Text(120, 80, "Ah, it was a miserable life...");
         Text question = new Text(120, 110, "What could I expect but a miserable death?");
 
