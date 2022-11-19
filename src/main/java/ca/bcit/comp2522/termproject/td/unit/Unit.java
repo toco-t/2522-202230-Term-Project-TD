@@ -1,10 +1,6 @@
 package ca.bcit.comp2522.termproject.td.unit;
 
-import ca.bcit.comp2522.termproject.td.Affiliation;
-import ca.bcit.comp2522.termproject.td.ArmourType;
-import ca.bcit.comp2522.termproject.td.Attacker;
-import ca.bcit.comp2522.termproject.td.Combatant;
-import ca.bcit.comp2522.termproject.td.Vector2D;
+import ca.bcit.comp2522.termproject.td.*;
 import ca.bcit.comp2522.termproject.td.items.Item;
 import javafx.scene.image.Image;
 
@@ -16,7 +12,7 @@ import java.util.ArrayList;
  * @author Nathan
  * @version 0.1
  */
-public class Unit implements Combatant {
+public class Unit implements Combatant, Drawable {
     private String name;
     private Image sprite;
     private Affiliation affiliation;
@@ -41,6 +37,8 @@ public class Unit implements Combatant {
     public Unit(final String name) {
         // replace this code with I/O to a unit bank of some sort. This is just a placeholder.
         this.name = name;
+        this.sprite = new Image("ayumi.png");
+        this.location = new Vector2D(2, -1);
     }
 
     /**

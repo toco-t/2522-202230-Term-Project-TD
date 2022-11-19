@@ -1,5 +1,6 @@
 package ca.bcit.comp2522.termproject.td.map;
 
+import ca.bcit.comp2522.termproject.td.Drawable;
 import ca.bcit.comp2522.termproject.td.Terrain;
 import ca.bcit.comp2522.termproject.td.Vector2D;
 import javafx.scene.image.Image;
@@ -12,10 +13,10 @@ import java.util.Objects;
  * @author Toco Tachibana
  * @version 0.1
  */
-public class Tile {
+public class Tile implements Drawable {
     private Image sprite;
 
-    private final Vector2D coordinates;
+    private final Vector2D location;
     private final Terrain terrain;
 
     /**
@@ -23,12 +24,12 @@ public class Tile {
      *
      * @param terrain the terrain type of this Tile
      * @param sprite the sprite this Tile uses
-     * @param coordinates the tile-coordinates of the Tile
+     * @param location the tile-coordinates of the Tile
      */
-    public Tile(final Terrain terrain, final Image sprite, final Vector2D coordinates) {
+    public Tile(final Terrain terrain, final Image sprite, final Vector2D location) {
         this.terrain = terrain;
         this.sprite = sprite;
-        this.coordinates = coordinates;
+        this.location = location;
     }
 
     /**
@@ -54,8 +55,8 @@ public class Tile {
      *
      * @return the coordinates as a Vector2D
      */
-    public Vector2D getCoordinates() {
-        return coordinates;
+    public Vector2D getLocation() {
+        return location;
     }
 
     /**
@@ -74,7 +75,7 @@ public class Tile {
      */
     @Override
     public String toString() {
-        return String.format("Tile{ coordinates = %s, terrain = %s}", coordinates.toString(), terrain.toString());
+        return String.format("Tile{ coordinates = %s, terrain = %s}", location.toString(), terrain.toString());
     }
 
     /**
@@ -92,7 +93,7 @@ public class Tile {
             return false;
         }
         Tile tile = (Tile) object;
-        return Objects.equals(coordinates, tile.coordinates) && terrain == tile.terrain;
+        return Objects.equals(location, tile.location) && terrain == tile.terrain;
     }
 
     /**
@@ -102,6 +103,6 @@ public class Tile {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(coordinates, terrain);
+        return Objects.hash(location, terrain);
     }
 }

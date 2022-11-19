@@ -90,4 +90,29 @@ public class Vector2D {
         this.xCoordinate -= vector.getXCoordinate();
         this.yCoordinate -= vector.getYCoordinate();
     }
+
+    /**
+     * Converts a coordinate pair from tile-space to screen-space.
+     *
+     * @param tileWidthInPixels the width, in pixels, of each tile
+     * @param tileHeightInPixels the height, in pixels, of each tile
+     * @param tileCoordinate the tile coordinates to convert as a Vector2D
+     * @return the converted screen coordinates as a Vector2D
+     */
+    public static Vector2D tileCoordinateToScreenSpace(final double tileWidthInPixels, final double tileHeightInPixels,
+                                                       final Vector2D tileCoordinate) {
+
+        final double tileXCoordinateToScreenXCoordinate = 0.5 * tileWidthInPixels;
+        final double tileXCoordinateToScreenYCoordinate = 0.5 * tileHeightInPixels;
+
+        final double tileYCoordinateToScreenXCoordinate = 0.5 * tileWidthInPixels;
+        final double tileYCoordinateToScreenYCoordinate = -0.5 * tileHeightInPixels;
+
+        double screenSpaceX = tileCoordinate.getXCoordinate() * tileXCoordinateToScreenXCoordinate
+                + tileCoordinate.getYCoordinate() * tileYCoordinateToScreenXCoordinate;
+        double screenSpaceY = tileCoordinate.getXCoordinate() * tileXCoordinateToScreenYCoordinate
+                + tileCoordinate.getYCoordinate() * tileYCoordinateToScreenYCoordinate;
+
+        return new Vector2D(screenSpaceX, screenSpaceY);
+    }
 }
