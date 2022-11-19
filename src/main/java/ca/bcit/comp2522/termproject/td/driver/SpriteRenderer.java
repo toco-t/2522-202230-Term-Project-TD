@@ -71,7 +71,6 @@ public final class SpriteRenderer {
             imageView.setY(screenSpaceCoordinates.getYCoordinate());
         }
 
-
         imageView.setFitWidth(scaledViewSizeX);
         imageView.setFitHeight(scaledViewSizeY);
 

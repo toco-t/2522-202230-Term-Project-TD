@@ -56,7 +56,7 @@ public class BlossomStorm extends Application {
         Group tileGroup = SpriteRenderer.groupDrawables(tiles, 128, 128, 1, false);
         Group unitGroup = SpriteRenderer.groupDrawables(units, 20, 35, 2, true);
         Group root = new Group(tileGroup, unitGroup);
-        Scene scene = new Scene(root, 1280, 720, Color.BLACK);
+        Scene scene = new Scene(root, 1024, 576, Color.BLACK);
 
         stage.setTitle("Blossom Storm");
         stage.setScene(scene);
