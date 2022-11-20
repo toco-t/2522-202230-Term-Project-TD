@@ -33,12 +33,13 @@ public class Unit implements Combatant, Drawable {
      * Constructs an object of type Unit using the name to determine stats.
      *
      * @param name the name of the Unit as a String
+     * @param location the starting location of the Unit as a Vector2D
      */
-    public Unit(final String name) {
+    public Unit(final String name, final Vector2D location) {
         // replace this code with I/O to a unit bank of some sort. This is just a placeholder.
         this.name = name;
         this.sprite = new Image("ayumi.png");
-        this.location = new Vector2D(2, -1);
+        this.location = location;
     }
 
     /**

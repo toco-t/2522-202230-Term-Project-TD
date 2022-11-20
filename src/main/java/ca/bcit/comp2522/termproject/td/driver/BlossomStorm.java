@@ -3,6 +3,8 @@ package ca.bcit.comp2522.termproject.td.driver;
 import ca.bcit.comp2522.termproject.td.Drawable;
 import ca.bcit.comp2522.termproject.td.Terrain;
 import ca.bcit.comp2522.termproject.td.Vector2D;
+import ca.bcit.comp2522.termproject.td.Weather;
+import ca.bcit.comp2522.termproject.td.map.Map;
 import ca.bcit.comp2522.termproject.td.map.Tile;
 import ca.bcit.comp2522.termproject.td.unit.Unit;
 import javafx.application.Application;
@@ -25,28 +27,15 @@ import java.util.ArrayList;
 public class BlossomStorm extends Application {
     @Override
     public void start(final Stage stage) throws IOException {
-        Text title = new Text(50, 50, "Blossom Storm");
-        Text reminiscence = new Text(120, 80, "Ah, it was a miserable life...");
-        Text question = new Text(120, 110, "What could I expect but a miserable death?");
+        // Create a new Unit.
+        Unit ayumi = new Unit("Ayumi", new Vector2D(7, 0));
 
-        Image tileImage = new Image("tile_demo.png");
-
-        Unit ayumi = new Unit("Ayumi");
-
-        // These Vector2D arguments are in Tile coordinates.
-        Tile tile1 = new Tile(Terrain.ROAD, tileImage, new Vector2D(0, 0));
-        Tile tile2 = new Tile(Terrain.ROAD, tileImage, new Vector2D(1, 0));
-        Tile tile3 = new Tile(Terrain.ROAD, tileImage, new Vector2D(2, 0));
-        Tile tile4 = new Tile(Terrain.ROAD, tileImage, new Vector2D(1, -1));
-        Tile tile5 = new Tile(Terrain.ROAD, tileImage, new Vector2D(2, -1));
+        // Create a test Map, using the preset mission -1.
+        Map testMap = new Map(Weather.OVERCAST, false);
+        testMap.generateMap(-1);
 
         // Put all the Tiles in one ArrayList.
-        ArrayList<Drawable> tiles = new ArrayList<>();
-        tiles.add(tile1);
-        tiles.add(tile2);
-        tiles.add(tile3);
-        tiles.add(tile4);
-        tiles.add(tile5);
+        ArrayList<Drawable> tiles = testMap.getTilesForRendering();
 
         // Put all the Units in one ArrayList.
         ArrayList<Drawable> units = new ArrayList<>();
@@ -58,6 +47,7 @@ public class BlossomStorm extends Application {
         Group root = new Group(tileGroup, unitGroup);
         Scene scene = new Scene(root, 1024, 576, Color.BLACK);
 
+        // Let the game begin.
         stage.setTitle("Blossom Storm");
         stage.getIcons().add(new Image("icon.png"));
         stage.setScene(scene);
