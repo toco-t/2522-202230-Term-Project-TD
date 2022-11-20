@@ -1,4 +1,7 @@
-package ca.bcit.comp2522.termproject.td;
+package ca.bcit.comp2522.termproject.td.interfaces;
+
+import ca.bcit.comp2522.termproject.td.Vector2D;
+import ca.bcit.comp2522.termproject.td.enums.ArmourType;
 
 /**
  * An object that is capable of attacking and receiving damage from Combatants.

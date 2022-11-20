@@ -1,6 +1,10 @@
 package ca.bcit.comp2522.termproject.td.unit;
 
-import ca.bcit.comp2522.termproject.td.*;
+import ca.bcit.comp2522.termproject.td.enums.Affiliation;
+import ca.bcit.comp2522.termproject.td.enums.ArmourType;
+import ca.bcit.comp2522.termproject.td.interfaces.Attacker;
+import ca.bcit.comp2522.termproject.td.interfaces.Combatant;
+import ca.bcit.comp2522.termproject.td.Vector2D;
 import ca.bcit.comp2522.termproject.td.items.Item;
 import javafx.scene.image.Image;
 
