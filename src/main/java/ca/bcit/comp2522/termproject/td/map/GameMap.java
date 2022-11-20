@@ -1,9 +1,6 @@
 package ca.bcit.comp2522.termproject.td.map;
 
-import ca.bcit.comp2522.termproject.td.Drawable;
-import ca.bcit.comp2522.termproject.td.Terrain;
-import ca.bcit.comp2522.termproject.td.Vector2D;
-import ca.bcit.comp2522.termproject.td.Weather;
+import ca.bcit.comp2522.termproject.td.*;
 import javafx.scene.image.Image;
 
 import java.util.ArrayList;
@@ -15,6 +12,7 @@ import java.util.ArrayList;
  * @version 0.1
  */
 public class GameMap {
+    private GameManager gameManager;
 
     private static final Weather DEFAULT_WEATHER = Weather.SUNNY;
     private static final boolean DEFAULT_CONDITION = false;
@@ -26,21 +24,29 @@ public class GameMap {
     /**
      * Constructs an object of type Map.
      *
+     * @param gameManager the GameManager, used for handling events
      * @param weather     weather condition of this Map, an enum Weather
      * @param isNighttime a boolean
+     * @param mission     the mission number as an int
      */
-    public GameMap(final Weather weather, final boolean isNighttime) {
+    public GameMap(final GameManager gameManager, final Weather weather, final boolean isNighttime, final int mission) {
+        this.gameManager = gameManager;
         this.tiles = new ArrayList<>();
 
         this.weather = weather;
         this.isNighttime = isNighttime;
+
+        generateMap(mission);
     }
 
     /**
      * Constructs an object of type Map, no params.
+     *
+     * @param gameManager the GameManager, used for handling events
+     * @param mission     the mission number as an int
      */
-    public GameMap() {
-        this(DEFAULT_WEATHER, DEFAULT_CONDITION);
+    public GameMap(final GameManager gameManager, final int mission) {
+        this(gameManager, DEFAULT_WEATHER, DEFAULT_CONDITION, mission);
     }
 
     /**
@@ -87,7 +93,7 @@ public class GameMap {
 
         for (int x = leftmostColumn; x <= rightmostColumn; x++) {
             for (int y = bottommostRow; y <= topmostRow; y++) {
-                Tile tile = new Tile(Terrain.ROAD, testTile, new Vector2D(x, y));
+                Tile tile = new Tile(gameManager, Terrain.ROAD, testTile, new Vector2D(x, y));
                 tiles.add(tile);
             }
         }

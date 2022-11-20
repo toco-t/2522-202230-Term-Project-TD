@@ -1,6 +1,7 @@
 package ca.bcit.comp2522.termproject.td.driver;
 
 import ca.bcit.comp2522.termproject.td.Drawable;
+import ca.bcit.comp2522.termproject.td.GameManager;
 import ca.bcit.comp2522.termproject.td.Vector2D;
 import ca.bcit.comp2522.termproject.td.Weather;
 import ca.bcit.comp2522.termproject.td.map.GameMap;
@@ -24,12 +25,15 @@ import java.util.ArrayList;
 public class BlossomStorm extends Application {
     @Override
     public void start(final Stage stage) throws IOException {
+        // Note: this is an early demo for rendering and does not use GameManager to create the map as intended
+        // Create a GameManager.
+        GameManager gameManager = new GameManager();
+
         // Create a new Unit.
         Unit ayumi = new Unit("Ayumi", new Vector2D(7, 0));
 
         // Create a test Map, using the preset mission -1.
-        GameMap testMap = new GameMap(Weather.OVERCAST, false);
-        testMap.generateMap(-1);
+        GameMap testMap = new GameMap(gameManager, Weather.OVERCAST, false, -1);
 
         // Put all the Tiles in one ArrayList.
         ArrayList<Drawable> tiles = testMap.getTilesForRendering();

@@ -1,6 +1,7 @@
 package ca.bcit.comp2522.termproject.td.map;
 
 import ca.bcit.comp2522.termproject.td.Drawable;
+import ca.bcit.comp2522.termproject.td.GameManager;
 import ca.bcit.comp2522.termproject.td.Terrain;
 import ca.bcit.comp2522.termproject.td.Vector2D;
 import javafx.geometry.Rectangle2D;
@@ -19,6 +20,7 @@ import static ca.bcit.comp2522.termproject.td.Vector2D.tileCoordinateToScreenSpa
  * @version 0.1
  */
 public class Tile implements Drawable {
+    private GameManager gameManager;
     private Image sprite;
 
     private final Vector2D location;
@@ -27,11 +29,13 @@ public class Tile implements Drawable {
     /**
      * Constructs an object of type Tile.
      *
+     * @param gameManager the GameManager, used for handling events
      * @param terrain the terrain type of this Tile
      * @param sprite the sprite this Tile uses
      * @param location the tile-coordinates of the Tile
      */
-    public Tile(final Terrain terrain, final Image sprite, final Vector2D location) {
+    public Tile(final GameManager gameManager, final Terrain terrain, final Image sprite, final Vector2D location) {
+        this.gameManager = gameManager;
         this.terrain = terrain;
         this.sprite = sprite;
         this.location = location;
@@ -94,8 +98,7 @@ public class Tile implements Drawable {
         imageView.setFitHeight(scaledViewSizeY);
 
         imageView.setOnMouseClicked((MouseEvent event) -> {
-            System.out.printf("Tile at coordinates (%f, %f) has been clicked.\n", location.getXCoordinate(),
-                    location.getYCoordinate());
+            gameManager.select(this);
         });
 
         return imageView;

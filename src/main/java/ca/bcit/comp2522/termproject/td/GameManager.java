@@ -2,8 +2,11 @@ package ca.bcit.comp2522.termproject.td;
 
 import ca.bcit.comp2522.termproject.td.interfaces.Combatant;
 import ca.bcit.comp2522.termproject.td.map.GameMap;
+import ca.bcit.comp2522.termproject.td.map.Tile;
+
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.concurrent.TimeoutException;
 
 
 /**
@@ -26,7 +29,7 @@ public class GameManager {
         this.playerUnits = new ArrayList<>();
         this.enemyUnits = new ArrayList<>();
 
-        createGameMap();
+        createGameMap(-1);
     }
 
     /**
@@ -46,9 +49,24 @@ public class GameManager {
 
     /**
      * Creates a GameMap.
+     *
+     * @param mission the mission number as an int
      */
-    public void createGameMap() {
-        this.map = new GameMap();
+    public void createGameMap(final int mission) {
+        this.map = new GameMap(this, mission);
+    }
+
+    /**
+     * Responds to a Tile being clicked, and takes action according to the context (whether a unit is selected).
+     *
+     * @param tile the Tile that was clicked
+     */
+    public void select(final Tile tile) {
+        // TODO: replace this test implementation with contextual actions
+        double xCoordinate = tile.getLocation().getXCoordinate();
+        double yCoordinate = tile.getLocation().getYCoordinate();
+
+        System.out.printf("Tile at (%f, %f) has been clicked.\n", xCoordinate, yCoordinate);
     }
 
     /**
