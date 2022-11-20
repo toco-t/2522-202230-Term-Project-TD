@@ -59,6 +59,7 @@ public class BlossomStorm extends Application {
         Scene scene = new Scene(root, 1024, 576, Color.BLACK);
 
         stage.setTitle("Blossom Storm");
+        stage.getIcons().add(new Image("icon.png"));
         stage.setScene(scene);
         stage.show();
     }
