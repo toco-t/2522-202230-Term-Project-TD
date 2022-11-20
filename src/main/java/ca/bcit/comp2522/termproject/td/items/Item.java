@@ -1,5 +1,5 @@
 package ca.bcit.comp2522.termproject.td.items;
-import ca.bcit.comp2522.termproject.td.Usable;
+import ca.bcit.comp2522.termproject.td.interfaces.Usable;
 
 /**
  * Abstract item that implements Usable interface.

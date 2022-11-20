@@ -1,5 +1,6 @@
 package ca.bcit.comp2522.termproject.td;
 
+import ca.bcit.comp2522.termproject.td.interfaces.Combatant;
 import ca.bcit.comp2522.termproject.td.map.GameMap;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -56,7 +57,7 @@ public class GameManager {
      * @param unit the specified Unit to play, a Combatant
      */
     public void selectUnit(final Combatant unit) {
-        if (playerUnits.contains(unit)) {
+        if (playerUnits.contains(unit) || enemyUnits.contains(unit)) {
             this.selectedUnit = unit;
         }
     }

@@ -1,10 +1,10 @@
 package ca.bcit.comp2522.termproject.td.weapon;
 
-import ca.bcit.comp2522.termproject.td.ArmourType;
-import ca.bcit.comp2522.termproject.td.Attacker;
-import ca.bcit.comp2522.termproject.td.Combatant;
-import ca.bcit.comp2522.termproject.td.DamageType;
-import ca.bcit.comp2522.termproject.td.ProjectileSize;
+import ca.bcit.comp2522.termproject.td.enums.ArmourType;
+import ca.bcit.comp2522.termproject.td.interfaces.Attacker;
+import ca.bcit.comp2522.termproject.td.interfaces.Combatant;
+import ca.bcit.comp2522.termproject.td.enums.DamageType;
+import ca.bcit.comp2522.termproject.td.enums.ProjectileSize;
 
 import java.util.Objects;
 import java.util.Random;

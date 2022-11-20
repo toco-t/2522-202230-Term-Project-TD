@@ -1,4 +1,4 @@
-package ca.bcit.comp2522.termproject.td;
+package ca.bcit.comp2522.termproject.td.interfaces;
 
 /**
  * Represents objects that can inflict damage on Combatants.
