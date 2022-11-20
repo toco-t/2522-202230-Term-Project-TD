@@ -7,9 +7,13 @@ import ca.bcit.comp2522.termproject.td.interfaces.Attacker;
 import ca.bcit.comp2522.termproject.td.interfaces.Combatant;
 import ca.bcit.comp2522.termproject.td.Vector2D;
 import ca.bcit.comp2522.termproject.td.items.Item;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 import java.util.ArrayList;
+
+import static ca.bcit.comp2522.termproject.td.Vector2D.tileCoordinateToScreenSpace;
 
 /**
  * Represents a character or vehicle on the battlefield.
@@ -108,6 +112,38 @@ public class Unit implements Combatant, Drawable {
      */
     public Vector2D getLocation() {
         return location;
+    }
+
+    /**
+     * Returns an ImageView of this Unit, using its coordinates.
+     *
+     * @return the ImageView representing this Unit
+     */
+    @Override
+    public ImageView getImageView() {
+        final double viewSizeX = 20;
+        final double viewSizeY = 35;
+
+        final double tileWidthInPixels = 128;
+        final double tileHeightInPixels = 64;
+
+        final double scale = 2;
+        double scaledViewSizeX = viewSizeX * scale;
+        double scaledViewSizeY = viewSizeY * scale;
+
+        ImageView imageView = new ImageView(sprite);
+        imageView.setViewport(new Rectangle2D(0, 0, viewSizeX, viewSizeY));
+
+        Vector2D screenSpaceCoordinates = tileCoordinateToScreenSpace(tileWidthInPixels, tileHeightInPixels,
+                location);
+
+        imageView.setX(screenSpaceCoordinates.getXCoordinate() + tileWidthInPixels / 2 - scaledViewSizeX / 2);
+        imageView.setY(screenSpaceCoordinates.getYCoordinate() + tileHeightInPixels / 2 - scaledViewSizeY);
+
+        imageView.setFitWidth(scaledViewSizeX);
+        imageView.setFitHeight(scaledViewSizeY);
+
+        return imageView;
     }
 
     /**

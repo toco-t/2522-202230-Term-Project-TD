@@ -3,9 +3,14 @@ package ca.bcit.comp2522.termproject.td.map;
 import ca.bcit.comp2522.termproject.td.Drawable;
 import ca.bcit.comp2522.termproject.td.Terrain;
 import ca.bcit.comp2522.termproject.td.Vector2D;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 
 import java.util.Objects;
+
+import static ca.bcit.comp2522.termproject.td.Vector2D.tileCoordinateToScreenSpace;
 
 /**
  * Tile in a Map.
@@ -57,6 +62,43 @@ public class Tile implements Drawable {
      */
     public Vector2D getLocation() {
         return location;
+    }
+
+    /**
+     * Returns an ImageView of this Tile, using its coordinates.
+     *
+     * @return the ImageView representing this Tile
+     */
+    @Override
+    public ImageView getImageView() {
+        final double viewSizeX = 128;
+        final double viewSizeY = 128;
+
+        final double tileWidthInPixels = 128;
+        final double tileHeightInPixels = 64;
+
+        final double scale = 1;
+        double scaledViewSizeX = viewSizeX * scale;
+        double scaledViewSizeY = viewSizeY * scale;
+
+        ImageView imageView = new ImageView(sprite);
+        imageView.setViewport(new Rectangle2D(0, 0, viewSizeX, viewSizeY));
+
+        Vector2D screenSpaceCoordinates = tileCoordinateToScreenSpace(tileWidthInPixels, tileHeightInPixels,
+                location);
+
+        imageView.setX(screenSpaceCoordinates.getXCoordinate());
+        imageView.setY(screenSpaceCoordinates.getYCoordinate());
+
+        imageView.setFitWidth(scaledViewSizeX);
+        imageView.setFitHeight(scaledViewSizeY);
+
+        imageView.setOnMouseClicked((MouseEvent event) -> {
+            System.out.printf("Tile at coordinates (%f, %f) has been clicked.\n", location.getXCoordinate(),
+                    location.getYCoordinate());
+        });
+
+        return imageView;
     }
 
     /**
