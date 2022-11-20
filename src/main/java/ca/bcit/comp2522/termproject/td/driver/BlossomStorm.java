@@ -39,8 +39,8 @@ public class BlossomStorm extends Application {
         units.add(ayumi);
 
         // Convert the Tiles into ImageViews, then put them into a Group.
-        Group tileGroup = SpriteRenderer.groupDrawables(tiles, 128, 128, 1, false);
-        Group unitGroup = SpriteRenderer.groupDrawables(units, 20, 35, 2, true);
+        Group tileGroup = SpriteRenderer.groupDrawables(tiles);
+        Group unitGroup = SpriteRenderer.groupDrawables(units);
         Group root = new Group(tileGroup, unitGroup);
         Scene scene = new Scene(root, 1024, 576, Color.BLACK);
 
