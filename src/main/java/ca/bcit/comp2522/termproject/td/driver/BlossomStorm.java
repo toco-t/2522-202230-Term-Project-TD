@@ -1,18 +1,15 @@
 package ca.bcit.comp2522.termproject.td.driver;
 
 import ca.bcit.comp2522.termproject.td.Drawable;
-import ca.bcit.comp2522.termproject.td.Terrain;
 import ca.bcit.comp2522.termproject.td.Vector2D;
 import ca.bcit.comp2522.termproject.td.Weather;
-import ca.bcit.comp2522.termproject.td.map.Map;
-import ca.bcit.comp2522.termproject.td.map.Tile;
+import ca.bcit.comp2522.termproject.td.map.GameMap;
 import ca.bcit.comp2522.termproject.td.unit.Unit;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -31,7 +28,7 @@ public class BlossomStorm extends Application {
         Unit ayumi = new Unit("Ayumi", new Vector2D(7, 0));
 
         // Create a test Map, using the preset mission -1.
-        Map testMap = new Map(Weather.OVERCAST, false);
+        GameMap testMap = new GameMap(Weather.OVERCAST, false);
         testMap.generateMap(-1);
 
         // Put all the Tiles in one ArrayList.
