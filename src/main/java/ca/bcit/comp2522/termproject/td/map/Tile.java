@@ -1,8 +1,8 @@
 package ca.bcit.comp2522.termproject.td.map;
 
-import ca.bcit.comp2522.termproject.td.Drawable;
+import ca.bcit.comp2522.termproject.td.interfaces.Drawable;
 import ca.bcit.comp2522.termproject.td.GameManager;
-import ca.bcit.comp2522.termproject.td.Terrain;
+import ca.bcit.comp2522.termproject.td.enums.Terrain;
 import ca.bcit.comp2522.termproject.td.Vector2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;

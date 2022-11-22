@@ -1,6 +1,9 @@
 package ca.bcit.comp2522.termproject.td.map;
 
 import ca.bcit.comp2522.termproject.td.*;
+import ca.bcit.comp2522.termproject.td.enums.Terrain;
+import ca.bcit.comp2522.termproject.td.enums.Weather;
+import ca.bcit.comp2522.termproject.td.interfaces.Drawable;
 import javafx.scene.image.Image;
 
 import java.util.ArrayList;

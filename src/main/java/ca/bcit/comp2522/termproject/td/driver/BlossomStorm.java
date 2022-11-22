@@ -1,9 +1,9 @@
 package ca.bcit.comp2522.termproject.td.driver;
 
-import ca.bcit.comp2522.termproject.td.Drawable;
+import ca.bcit.comp2522.termproject.td.interfaces.Drawable;
 import ca.bcit.comp2522.termproject.td.GameManager;
 import ca.bcit.comp2522.termproject.td.Vector2D;
-import ca.bcit.comp2522.termproject.td.Weather;
+import ca.bcit.comp2522.termproject.td.enums.Weather;
 import ca.bcit.comp2522.termproject.td.map.GameMap;
 import ca.bcit.comp2522.termproject.td.unit.Unit;
 import javafx.application.Application;

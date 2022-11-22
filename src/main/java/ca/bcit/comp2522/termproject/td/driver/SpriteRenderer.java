@@ -1,15 +1,10 @@
 package ca.bcit.comp2522.termproject.td.driver;
 
-import ca.bcit.comp2522.termproject.td.Drawable;
-import ca.bcit.comp2522.termproject.td.Vector2D;
-import javafx.geometry.Rectangle2D;
+import ca.bcit.comp2522.termproject.td.interfaces.Drawable;
 import javafx.scene.Group;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import java.util.ArrayList;
-
-import static ca.bcit.comp2522.termproject.td.Vector2D.tileCoordinateToScreenSpace;
 
 /**
  * Renders Drawable objects and groups them.

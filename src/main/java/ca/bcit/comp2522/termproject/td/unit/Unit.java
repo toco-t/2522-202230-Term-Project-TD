@@ -1,6 +1,6 @@
 package ca.bcit.comp2522.termproject.td.unit;
 
-import ca.bcit.comp2522.termproject.td.Drawable;
+import ca.bcit.comp2522.termproject.td.interfaces.Drawable;
 import ca.bcit.comp2522.termproject.td.enums.Affiliation;
 import ca.bcit.comp2522.termproject.td.enums.ArmourType;
 import ca.bcit.comp2522.termproject.td.interfaces.Attacker;

@@ -1,4 +1,4 @@
-package ca.bcit.comp2522.termproject.td;
+package ca.bcit.comp2522.termproject.td.enums;
 
 /**
  * Represents weather conditions on the battlefield.

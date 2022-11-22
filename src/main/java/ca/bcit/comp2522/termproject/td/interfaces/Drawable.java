@@ -1,5 +1,6 @@
-package ca.bcit.comp2522.termproject.td;
+package ca.bcit.comp2522.termproject.td.interfaces;
 
+import ca.bcit.comp2522.termproject.td.Vector2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
