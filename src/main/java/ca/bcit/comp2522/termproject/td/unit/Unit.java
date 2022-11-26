@@ -19,9 +19,10 @@ import static ca.bcit.comp2522.termproject.td.Vector2D.tileCoordinateToScreenSpa
  * Represents a character or vehicle on the battlefield.
  *
  * @author Nathan
- * @version 0.1
+ * @version 0.2
  */
 public class Unit implements Combatant, Drawable {
+    private ImageView imageView;
     private String name;
     private Image sprite;
     private Affiliation affiliation;
@@ -49,6 +50,18 @@ public class Unit implements Combatant, Drawable {
         this.name = name;
         this.sprite = new Image("ayumi.png");
         this.location = location;
+
+        generateImageView();
+    }
+
+    /**
+     * Returns the image view of this Unit.
+     *
+     * @return the image view as an ImageView
+     */
+    @Override
+    public ImageView getImageView() {
+        return imageView;
     }
 
     /**
@@ -114,13 +127,8 @@ public class Unit implements Combatant, Drawable {
         return location;
     }
 
-    /**
-     * Returns an ImageView of this Unit, using its coordinates.
-     *
-     * @return the ImageView representing this Unit
-     */
-    @Override
-    public ImageView getImageView() {
+    /* Generates an ImageView of this Unit, using its coordinates. */
+    private void generateImageView() {
         final double viewSizeX = 20;
         final double viewSizeY = 35;
 
@@ -131,7 +139,7 @@ public class Unit implements Combatant, Drawable {
         double scaledViewSizeX = viewSizeX * scale;
         double scaledViewSizeY = viewSizeY * scale;
 
-        ImageView imageView = new ImageView(sprite);
+        imageView = new ImageView(sprite);
         imageView.setViewport(new Rectangle2D(0, 0, viewSizeX, viewSizeY));
 
         Vector2D screenSpaceCoordinates = tileCoordinateToScreenSpace(tileWidthInPixels, tileHeightInPixels,
@@ -142,8 +150,6 @@ public class Unit implements Combatant, Drawable {
 
         imageView.setFitWidth(scaledViewSizeX);
         imageView.setFitHeight(scaledViewSizeY);
-
-        return imageView;
     }
 
     /**

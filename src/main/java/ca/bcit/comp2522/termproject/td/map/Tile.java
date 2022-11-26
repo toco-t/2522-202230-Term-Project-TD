@@ -17,10 +17,11 @@ import static ca.bcit.comp2522.termproject.td.Vector2D.tileCoordinateToScreenSpa
  * Tile in a Map.
  *
  * @author Toco Tachibana
- * @version 0.1
+ * @version 0.2
  */
 public class Tile implements Drawable {
-    private GameManager gameManager;
+    private ImageView imageView;
+    private final GameManager gameManager;
     private Image sprite;
 
     private final Vector2D location;
@@ -39,6 +40,18 @@ public class Tile implements Drawable {
         this.terrain = terrain;
         this.sprite = sprite;
         this.location = location;
+
+        generateImageView();
+    }
+
+    /**
+     * Returns the image view of this Tile.
+     *
+     * @return the image view as an ImageView
+     */
+    @Override
+    public ImageView getImageView() {
+        return imageView;
     }
 
     /**
@@ -69,12 +82,16 @@ public class Tile implements Drawable {
     }
 
     /**
-     * Returns an ImageView of this Tile, using its coordinates.
+     * Returns the terrain type of this Tile.
      *
-     * @return the ImageView representing this Tile
+     * @return the terrain type as a Terrain
      */
-    @Override
-    public ImageView getImageView() {
+    public Terrain getTerrain() {
+        return terrain;
+    }
+
+    /* Generates an ImageView of this Tile, using its coordinates. */
+    private void generateImageView() {
         final double viewSizeX = 128;
         final double viewSizeY = 128;
 
@@ -85,7 +102,7 @@ public class Tile implements Drawable {
         double scaledViewSizeX = viewSizeX * scale;
         double scaledViewSizeY = viewSizeY * scale;
 
-        ImageView imageView = new ImageView(sprite);
+        imageView = new ImageView(sprite);
         imageView.setViewport(new Rectangle2D(0, 0, viewSizeX, viewSizeY));
 
         Vector2D screenSpaceCoordinates = tileCoordinateToScreenSpace(tileWidthInPixels, tileHeightInPixels,
@@ -100,17 +117,6 @@ public class Tile implements Drawable {
         imageView.setOnMouseClicked((MouseEvent event) -> {
             gameManager.select(this);
         });
-
-        return imageView;
-    }
-
-    /**
-     * Returns the terrain type of this Tile.
-     *
-     * @return the terrain type as a Terrain
-     */
-    public Terrain getTerrain() {
-        return terrain;
     }
 
     /**
