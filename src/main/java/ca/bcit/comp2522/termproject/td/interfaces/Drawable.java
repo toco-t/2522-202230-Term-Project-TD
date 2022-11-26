@@ -31,4 +31,11 @@ public interface Drawable {
      * @return the ImageView representing this object
      */
     ImageView getImageView();
+
+    /**
+     * Moves the ImageView of this Drawable object without changing its coordinates.
+     *
+     * @param delta the amount to move the ImageView by, as a Vector2D
+     */
+    void moveImageView(Vector2D delta);
 }

@@ -29,24 +29,12 @@ public class BlossomStorm extends Application {
         // Create a GameManager.
         GameManager gameManager = new GameManager();
 
-        // Create a new Unit.
-        Unit ayumi = new Unit("Ayumi", new Vector2D(7, 0));
-
-        // Create a test Map, using the preset mission -1.
-        GameMap testMap = new GameMap(gameManager, Weather.OVERCAST, false, -1);
-
-        // Put all the Tiles in one ArrayList.
-        ArrayList<Drawable> tiles = testMap.getTilesForRendering();
-
-        // Put all the Units in one ArrayList.
-        ArrayList<Drawable> units = new ArrayList<>();
-        units.add(ayumi);
-
         // Convert the Tiles into ImageViews, then put them into a Group.
-        Group tileGroup = SpriteRenderer.groupDrawables(tiles);
-        Group unitGroup = SpriteRenderer.groupDrawables(units);
-        Group root = new Group(tileGroup, unitGroup);
+        Group root = gameManager.groupAllObjectsForRendering();
         Scene scene = new Scene(root, 1024, 576, Color.BLACK);
+
+        // Add a listener to the Scene for keyboard presses.
+        scene.setOnKeyPressed(gameManager::panCameraTo);
 
         // Let the game begin.
         stage.setTitle("Blossom Storm");

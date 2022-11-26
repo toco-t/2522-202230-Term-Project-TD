@@ -12,7 +12,7 @@ import java.util.ArrayList;
  * GameMap that consists of number of Tiles.
  *
  * @author Toco Tachibana
- * @version 0.1
+ * @version 0.2
  */
 public class GameMap {
     private GameManager gameManager;
@@ -68,6 +68,17 @@ public class GameMap {
      */
     public ArrayList<Drawable> getTilesForRendering() {
         return new ArrayList<>(tiles);
+    }
+
+    /**
+     * Moves the tiles' ImageViews to simulate camera movements.
+     *
+     * @param delta the amount to move, in pixels
+     */
+    public void moveTiles(final Vector2D delta) {
+        for (Drawable tile : tiles) {
+            tile.moveImageView(delta);
+        }
     }
 
     /**

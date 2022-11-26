@@ -20,11 +20,19 @@ import static ca.bcit.comp2522.termproject.td.Vector2D.tileCoordinateToScreenSpa
  * @version 0.2
  */
 public class Tile implements Drawable {
+    private static final double VIEW_SIZE_X = 128;
+    private static final double VIEW_SIZE_Y = 128;
+
+    private static final double TILE_WIDTH_IN_PIXELS = 128;
+    private static final double TILE_HEIGHT_IN_PIXELS = 64;
+
+    private static final double SPRITE_SCALE = 1;
     private ImageView imageView;
     private final GameManager gameManager;
     private Image sprite;
 
     private final Vector2D location;
+    private Vector2D viewOffset;
     private final Terrain terrain;
 
     /**
@@ -40,6 +48,7 @@ public class Tile implements Drawable {
         this.terrain = terrain;
         this.sprite = sprite;
         this.location = location;
+        this.viewOffset = new Vector2D(0, 0);
 
         generateImageView();
     }
@@ -52,6 +61,17 @@ public class Tile implements Drawable {
     @Override
     public ImageView getImageView() {
         return imageView;
+    }
+
+    /**
+     * Moves the ImageView of this Tile without changing its actual coordinates.
+     *
+     * @param offsetDelta the amount to move the Tile by, as a Vector2D
+     */
+    @Override
+    public void moveImageView(final Vector2D offsetDelta) {
+        viewOffset.add(offsetDelta);
+        updateImageViewPosition();
     }
 
     /**
@@ -92,24 +112,13 @@ public class Tile implements Drawable {
 
     /* Generates an ImageView of this Tile, using its coordinates. */
     private void generateImageView() {
-        final double viewSizeX = 128;
-        final double viewSizeY = 128;
-
-        final double tileWidthInPixels = 128;
-        final double tileHeightInPixels = 64;
-
-        final double scale = 1;
-        double scaledViewSizeX = viewSizeX * scale;
-        double scaledViewSizeY = viewSizeY * scale;
+        double scaledViewSizeX = VIEW_SIZE_X * SPRITE_SCALE;
+        double scaledViewSizeY = VIEW_SIZE_Y * SPRITE_SCALE;
 
         imageView = new ImageView(sprite);
-        imageView.setViewport(new Rectangle2D(0, 0, viewSizeX, viewSizeY));
+        imageView.setViewport(new Rectangle2D(0, 0, VIEW_SIZE_X, VIEW_SIZE_Y));
 
-        Vector2D screenSpaceCoordinates = tileCoordinateToScreenSpace(tileWidthInPixels, tileHeightInPixels,
-                location);
-
-        imageView.setX(screenSpaceCoordinates.getXCoordinate());
-        imageView.setY(screenSpaceCoordinates.getYCoordinate());
+        updateImageViewPosition();
 
         imageView.setFitWidth(scaledViewSizeX);
         imageView.setFitHeight(scaledViewSizeY);
@@ -117,6 +126,22 @@ public class Tile implements Drawable {
         imageView.setOnMouseClicked((MouseEvent event) -> {
             gameManager.select(this);
         });
+    }
+
+    /* Updates the ImageView's position based on the offset. */
+    private void updateImageViewPosition() {
+        Vector2D screenSpaceCoordinates = getScreenSpaceCoordinates(viewOffset);
+        imageView.setX(screenSpaceCoordinates.getXCoordinate());
+        imageView.setY(screenSpaceCoordinates.getYCoordinate());
+    }
+
+    /* Gets the coordinates of this Unit in screen space (pixels). */
+    private Vector2D getScreenSpaceCoordinates(final Vector2D offset) {
+        Vector2D screenSpaceCoordinates = tileCoordinateToScreenSpace(TILE_WIDTH_IN_PIXELS, TILE_HEIGHT_IN_PIXELS,
+                location);
+
+        return new Vector2D(screenSpaceCoordinates.getXCoordinate() + offset.getXCoordinate(),
+                screenSpaceCoordinates.getYCoordinate() + offset.getYCoordinate());
     }
 
     /**

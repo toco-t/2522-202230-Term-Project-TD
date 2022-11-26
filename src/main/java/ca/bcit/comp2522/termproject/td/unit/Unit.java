@@ -22,11 +22,20 @@ import static ca.bcit.comp2522.termproject.td.Vector2D.tileCoordinateToScreenSpa
  * @version 0.2
  */
 public class Unit implements Combatant, Drawable {
+    private static final double VIEW_SIZE_X = 20;
+    private static final double VIEW_SIZE_Y = 35;
+
+    private static final double TILE_WIDTH_IN_PIXELS = 128;
+    private static final double TILE_HEIGHT_IN_PIXELS = 64;
+
+    private static final double SPRITE_SCALE = 2;
+
     private ImageView imageView;
     private String name;
     private Image sprite;
     private Affiliation affiliation;
     private Vector2D location;
+    private Vector2D viewOffset;
     private ArrayList<Attacker> weapons;
     private ArrayList<Item> inventory;
     private int level;
@@ -50,6 +59,7 @@ public class Unit implements Combatant, Drawable {
         this.name = name;
         this.sprite = new Image("ayumi.png");
         this.location = location;
+        this.viewOffset = new Vector2D(0, 0);
 
         generateImageView();
     }
@@ -127,29 +137,50 @@ public class Unit implements Combatant, Drawable {
         return location;
     }
 
-    /* Generates an ImageView of this Unit, using its coordinates. */
-    private void generateImageView() {
-        final double viewSizeX = 20;
-        final double viewSizeY = 35;
+    /**
+     * Moves the ImageView of this Unit without changing its actual coordinates.
+     *
+     * @param offsetDelta the amount to move the Unit by, as a Vector2D
+     */
+    @Override
+    public void moveImageView(final Vector2D offsetDelta) {
+        viewOffset.add(offsetDelta);
+        updateImageViewPosition();
+    }
 
-        final double tileWidthInPixels = 128;
-        final double tileHeightInPixels = 64;
+    /* Gets the coordinates of this Unit in screen space (pixels). */
+    private Vector2D getScreenSpaceCoordinates(final Vector2D offset) {
+        double scaledViewSizeX = VIEW_SIZE_X * SPRITE_SCALE;
+        double scaledViewSizeY = VIEW_SIZE_Y * SPRITE_SCALE;
 
-        final double scale = 2;
-        double scaledViewSizeX = viewSizeX * scale;
-        double scaledViewSizeY = viewSizeY * scale;
-
-        imageView = new ImageView(sprite);
-        imageView.setViewport(new Rectangle2D(0, 0, viewSizeX, viewSizeY));
-
-        Vector2D screenSpaceCoordinates = tileCoordinateToScreenSpace(tileWidthInPixels, tileHeightInPixels,
+        Vector2D screenSpaceCoordinates = tileCoordinateToScreenSpace(TILE_WIDTH_IN_PIXELS, TILE_HEIGHT_IN_PIXELS,
                 location);
 
-        imageView.setX(screenSpaceCoordinates.getXCoordinate() + tileWidthInPixels / 2 - scaledViewSizeX / 2);
-        imageView.setY(screenSpaceCoordinates.getYCoordinate() + tileHeightInPixels / 2 - scaledViewSizeY);
+        return new Vector2D(screenSpaceCoordinates.getXCoordinate() + TILE_WIDTH_IN_PIXELS / 2 - scaledViewSizeX / 2
+                + offset.getXCoordinate(),
+                screenSpaceCoordinates.getYCoordinate() + TILE_HEIGHT_IN_PIXELS / 2 - scaledViewSizeY
+                + offset.getYCoordinate());
+    }
+
+    /* Generates an ImageView of this Unit, using its coordinates. */
+    private void generateImageView() {
+        double scaledViewSizeX = VIEW_SIZE_X * SPRITE_SCALE;
+        double scaledViewSizeY = VIEW_SIZE_Y * SPRITE_SCALE;
+
+        imageView = new ImageView(sprite);
+        imageView.setViewport(new Rectangle2D(0, 0, VIEW_SIZE_X, VIEW_SIZE_Y));
+
+        updateImageViewPosition();
 
         imageView.setFitWidth(scaledViewSizeX);
         imageView.setFitHeight(scaledViewSizeY);
+    }
+
+    /* Updates the ImageView's position based on the offset. */
+    private void updateImageViewPosition() {
+        Vector2D screenSpaceCoordinates = getScreenSpaceCoordinates(viewOffset);
+        imageView.setX(screenSpaceCoordinates.getXCoordinate());
+        imageView.setY(screenSpaceCoordinates.getYCoordinate());
     }
 
     /**
