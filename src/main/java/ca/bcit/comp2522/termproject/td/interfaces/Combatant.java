@@ -1,6 +1,7 @@
 package ca.bcit.comp2522.termproject.td.interfaces;
 
 import ca.bcit.comp2522.termproject.td.Vector2D;
+import ca.bcit.comp2522.termproject.td.enums.Affiliation;
 import ca.bcit.comp2522.termproject.td.enums.ArmourType;
 
 /**
@@ -16,6 +17,13 @@ public interface Combatant {
      * @return the name as a String
      */
     String getName();
+
+    /**
+     * Returns the affiliation of this Combatant.
+     *
+     * @return the affiliation as an Affiliation
+     */
+    Affiliation getAffiliation();
 
     /**
      * Moves the Combatant to a specific location.
@@ -63,6 +71,13 @@ public interface Combatant {
      * Removes ERA armour and replaces it with MEDIUM armour.
      */
     void breakERA();
+
+    /**
+     * Returns the health of this Combatant.
+     *
+     * @return the health as an int
+     */
+    int getHealth();
 
     /**
      * Adds or subtracts health from the Combatant.

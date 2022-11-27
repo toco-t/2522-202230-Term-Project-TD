@@ -2,12 +2,13 @@ package ca.bcit.comp2522.termproject.td.driver;
 
 import ca.bcit.comp2522.termproject.td.interfaces.Drawable;
 import javafx.scene.Group;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import java.util.ArrayList;
 
 /**
- * Renders Drawable objects and groups them.
+ * Contains useful methods related to rendering sprites.
  *
  * @author Nathan
  * @version 0.1

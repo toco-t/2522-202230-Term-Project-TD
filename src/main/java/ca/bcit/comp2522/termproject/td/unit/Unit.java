@@ -35,7 +35,7 @@ public class Unit implements Combatant, Drawable {
     private Image sprite;
     private Affiliation affiliation;
     private Vector2D location;
-    private Vector2D viewOffset;
+    private final Vector2D viewOffset;
     private ArrayList<Attacker> weapons;
     private ArrayList<Item> inventory;
     private int level;
@@ -60,6 +60,7 @@ public class Unit implements Combatant, Drawable {
         this.sprite = new Image("ayumi.png", VIEW_SIZE_X * SPRITE_SCALE, VIEW_SIZE_Y * SPRITE_SCALE, true, false);
         this.location = location;
         this.viewOffset = new Vector2D(0, 0);
+        this.affiliation = Affiliation.PLAYER;
 
         generateImageView();
     }
@@ -425,6 +426,7 @@ public class Unit implements Combatant, Drawable {
     public void moveTo(final Vector2D destination) {
         // TODO: check if destination is valid
         location = destination;
+        updateImageViewPosition();
     }
 
     /**

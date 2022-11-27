@@ -115,4 +115,58 @@ public class Vector2D {
 
         return new Vector2D(screenSpaceX, screenSpaceY);
     }
+
+    /**
+     * Compares this Vector2D with another object.
+     *
+     * @param o the other Object to compare
+     * @return true if they are the equal, otherwise false
+     */
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        final Vector2D vector2D = (Vector2D) o;
+
+        if (Double.compare(vector2D.xCoordinate, xCoordinate) != 0) {
+            return false;
+        }
+        return Double.compare(vector2D.yCoordinate, yCoordinate) == 0;
+    }
+
+    /**
+     * Returns this instance of Vector2D's hashcode.
+     *
+     * @return the hashcode as an int
+     */
+    @Override
+    public int hashCode() {
+        final int primeMultiplier = 31;
+        final int bitShiftAmount = 32;
+        int result;
+        long temp;
+        temp = Double.doubleToLongBits(xCoordinate);
+        result = (int) (temp ^ (temp >>> bitShiftAmount));
+        temp = Double.doubleToLongBits(yCoordinate);
+        result = primeMultiplier * result + (int) (temp ^ (temp >>> bitShiftAmount));
+        return result;
+    }
+
+    /**
+     * Returns a String representation of this Vector2D's state.
+     *
+     * @return String representation of object
+     */
+    @Override
+    public String toString() {
+        return "Vector2D{"
+                + "xCoordinate=" + xCoordinate
+                + ", yCoordinate=" + yCoordinate
+                + '}';
+    }
 }

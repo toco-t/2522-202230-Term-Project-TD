@@ -1,6 +1,7 @@
 package ca.bcit.comp2522.termproject.td;
 
 import ca.bcit.comp2522.termproject.td.driver.SpriteRenderer;
+import ca.bcit.comp2522.termproject.td.enums.Affiliation;
 import ca.bcit.comp2522.termproject.td.enums.Weather;
 import ca.bcit.comp2522.termproject.td.interfaces.Combatant;
 import ca.bcit.comp2522.termproject.td.interfaces.Drawable;
@@ -145,11 +146,77 @@ public class GameManager {
      * @param tile the Tile that was clicked
      */
     public void select(final Tile tile) {
-        // TODO: replace this test implementation with contextual actions
-        double xCoordinate = tile.getLocation().getXCoordinate();
-        double yCoordinate = tile.getLocation().getYCoordinate();
+        Vector2D selectionLocation = tile.getLocation();
+        Combatant clickedUnit = getCombatantAtLocation(selectionLocation);
 
-        System.out.printf("Tile at (%f, %f) has been clicked.\n", xCoordinate, yCoordinate);
+        System.out.printf("Selected at (%f, %f).\n", selectionLocation.getXCoordinate(),
+                selectionLocation.getYCoordinate());
+
+        // a friendly unit is already selected, take action with them...
+        if (selectedUnit != null) {
+            takeActionWithSelectedUnit(selectionLocation, clickedUnit);
+        } else {
+            takeActionWithoutSelectedUnit(clickedUnit);
+        }
+    }
+
+    /* Take action without a selected unit depending on the context. */
+    private void takeActionWithoutSelectedUnit(final Combatant clickedUnit) {
+        // select unit if a unit is clicked but no unit is already selected
+        if (clickedUnit != null && clickedUnit.getAffiliation() == Affiliation.PLAYER) {
+            selectedUnit = clickedUnit;
+            System.out.printf("%s is selected.\n", selectedUnit.getName());
+        }
+
+        // open enemy info card if enemy is selected
+        if (clickedUnit != null && clickedUnit.getAffiliation() == Affiliation.ENEMY) {
+            System.out.printf("%s: %d", clickedUnit.getName(), clickedUnit.getHealth());
+            // open enemy info card
+        }
+    }
+
+    /* Take action with a selected unit depending on the context. */
+    private void takeActionWithSelectedUnit(final Vector2D selectionLocation, final Combatant clickedUnit) {
+        // move unit if an empty tile is clicked and a unit is selected
+        if (clickedUnit == null) {
+            selectedUnit.moveTo(selectionLocation);
+            System.out.printf("Moved %s to (%f, %f).\n", selectedUnit.getName(),
+                    selectedUnit.getLocation().getXCoordinate(), selectedUnit.getLocation().getYCoordinate());
+        }
+
+        // attack enemy if occupied tile is clicked and a friendly unit is selected
+        if (clickedUnit != null && clickedUnit.getAffiliation() == Affiliation.ENEMY) {
+            selectedUnit.attack(clickedUnit);
+            System.out.printf("%s initiating attack against %s.\n", selectedUnit.getName(), clickedUnit.getName());
+        }
+
+        // select the other unit if it is a friendly
+        if (clickedUnit != null && clickedUnit.getAffiliation() == Affiliation.PLAYER) {
+            selectedUnit = clickedUnit;
+        }
+
+        // deselect unit if clicked again
+        if (clickedUnit == selectedUnit) {
+            selectedUnit = null;
+        }
+    }
+
+    /* Gets a combatant at a specific world-space location, or returns null if tile is empty. */
+    private Combatant getCombatantAtLocation(final Vector2D location) {
+        // possibly replace combatant list with hashset based on coordinates?
+        for (Combatant combatant : playerUnits) {
+            if (combatant.getLocation().equals(location)) {
+                return combatant;
+            }
+        }
+
+        for (Combatant combatant : enemyUnits) {
+            if (combatant.getLocation().equals(location)) {
+                return combatant;
+            }
+        }
+
+        return null;
     }
 
     /**
