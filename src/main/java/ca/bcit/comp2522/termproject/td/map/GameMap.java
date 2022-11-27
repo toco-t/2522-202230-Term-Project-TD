@@ -108,21 +108,24 @@ public class GameMap {
 
         for (int x = leftmostColumn; x <= rightmostColumn; x++) {
             for (int y = bottommostRow; y <= topmostRow; y++) {
-                Tile tile = new Tile(gameManager, Terrain.ROAD, testTile, new Vector2D(x, y), 0);
+                Tile tile = new Tile(gameManager, Terrain.ROAD, testTile, new Vector2D(0, 0), new Vector2D(x, y));
+                tile.setHeight(0);
                 tiles.add(tile);
             }
         }
 
         for (int wallHeight = 1; wallHeight <= 3; wallHeight++) {
             for (int y = topmostRow + 1; y >= bottommostRow; y--) {
-                Tile tile = new Tile(gameManager, Terrain.OBSTACLE, testCube, new Vector2D(leftmostColumn - 1, y),
-                        wallHeight);
+                Tile tile = new Tile(gameManager, Terrain.OBSTACLE, testCube, new Vector2D(0, 0),
+                        new Vector2D(leftmostColumn - 1, y));
+                tile.setHeight(wallHeight);
                 tiles.add(tile);
             }
 
             for (int x = leftmostColumn; x <= rightmostColumn; x++) {
-                Tile tile = new Tile(gameManager, Terrain.OBSTACLE, testCube, new Vector2D(x, topmostRow + 1),
-                        wallHeight);
+                Tile tile = new Tile(gameManager, Terrain.OBSTACLE, testCube, new Vector2D(0, 0),
+                        new Vector2D(x, topmostRow + 1));
+                tile.setHeight(wallHeight);
                 tiles.add(tile);
             }
         }

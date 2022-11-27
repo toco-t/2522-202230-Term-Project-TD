@@ -39,22 +39,21 @@ public class Tile implements Drawable {
     /**
      * Constructs an object of type Tile.
      *
-     * @param gameManager the GameManager, used for handling events
+     * @param gameManager the GameManager, used for handling clicking events
      * @param terrain the terrain type of this Tile
-     * @param sprite the sprite this Tile uses
+     * @param spriteSheet the sprite this Tile uses
      * @param location the tile-coordinates of this Tile
-     * @param height the simulated height of this Tile
+     * @param spriteLocation the location of the sprite within the sprite sheet
      */
-    public Tile(final GameManager gameManager, final Terrain terrain, final Image sprite, final Vector2D location,
-                final int height) {
+    public Tile(final GameManager gameManager, final Terrain terrain, final Image spriteSheet,
+                final Vector2D spriteLocation, final Vector2D location) {
         this.gameManager = gameManager;
         this.terrain = terrain;
-        this.sprite = sprite;
+        this.sprite = spriteSheet;
         this.location = location;
-        this.height = height;
         this.viewOffset = new Vector2D(0, 0);
 
-        generateImageView(0, 0);
+        generateImageView(spriteLocation);
     }
 
     /**
@@ -115,6 +114,16 @@ public class Tile implements Drawable {
     }
 
     /**
+     * Sets the height of this Tile.
+     *
+     * @param height the height as an int
+     */
+    public void setHeight(final int height) {
+        this.height = height;
+        updateImageViewPosition();
+    }
+
+    /**
      * Returns the terrain type of this Tile.
      *
      * @return the terrain type as a Terrain
@@ -124,9 +133,12 @@ public class Tile implements Drawable {
     }
 
     /* Generates an ImageView of this Tile, using its coordinates. */
-    private void generateImageView(final int xOffsetPixels, final int yOffsetPixels) {
+    private void generateImageView(final Vector2D spritePosition) {
         double scaledViewSizeX = VIEW_SIZE_X * SPRITE_SCALE;
         double scaledViewSizeY = VIEW_SIZE_Y * SPRITE_SCALE;
+
+        double xOffsetPixels = VIEW_SIZE_X * spritePosition.getXCoordinate();
+        double yOffsetPixels = VIEW_SIZE_Y * spritePosition.getYCoordinate();
 
         imageView = new ImageView(sprite);
         imageView.setViewport(new Rectangle2D(xOffsetPixels, yOffsetPixels, VIEW_SIZE_X + xOffsetPixels,
