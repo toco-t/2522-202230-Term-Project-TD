@@ -37,7 +37,7 @@ public class UIManager {
         turnDisplay = new Text(455, 15, "PLAYER PHASE 01");
         turnDisplay.setFill(Color.WHITE);
 
-        levelDisplay = new Text(10, 15, "Mission -1 Test Mission");
+        levelDisplay = new Text(10, 15, "Test Mission");
         levelDisplay.setFill(Color.WHITE);
     }
 
