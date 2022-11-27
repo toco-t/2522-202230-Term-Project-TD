@@ -57,7 +57,7 @@ public class Unit implements Combatant, Drawable {
     public Unit(final String name, final Vector2D location) {
         // replace this code with I/O to a unit bank of some sort. This is just a placeholder.
         this.name = name;
-        this.sprite = new Image("ayumi.png");
+        this.sprite = new Image("ayumi.png", VIEW_SIZE_X * SPRITE_SCALE, VIEW_SIZE_Y * SPRITE_SCALE, true, false);
         this.location = location;
         this.viewOffset = new Vector2D(0, 0);
 
@@ -156,10 +156,14 @@ public class Unit implements Combatant, Drawable {
         Vector2D screenSpaceCoordinates = tileCoordinateToScreenSpace(TILE_WIDTH_IN_PIXELS, TILE_HEIGHT_IN_PIXELS,
                 location);
 
-        return new Vector2D(screenSpaceCoordinates.getXCoordinate() + TILE_WIDTH_IN_PIXELS / 2 - scaledViewSizeX / 2
-                + offset.getXCoordinate(),
-                screenSpaceCoordinates.getYCoordinate() + TILE_HEIGHT_IN_PIXELS / 2 - scaledViewSizeY
-                + offset.getYCoordinate());
+        final double verticalPositionInTile = 0.75;
+
+        double adjustedXCoordinate = screenSpaceCoordinates.getXCoordinate() + TILE_WIDTH_IN_PIXELS / 2
+                - scaledViewSizeX / 2 + offset.getXCoordinate();
+        double adjustedYCoordinate = screenSpaceCoordinates.getYCoordinate() + TILE_HEIGHT_IN_PIXELS
+                * (verticalPositionInTile) - scaledViewSizeY + offset.getYCoordinate();
+
+        return new Vector2D(adjustedXCoordinate, adjustedYCoordinate);
     }
 
     /* Generates an ImageView of this Unit, using its coordinates. */
@@ -168,13 +172,10 @@ public class Unit implements Combatant, Drawable {
         double scaledViewSizeY = VIEW_SIZE_Y * SPRITE_SCALE;
 
         imageView = new ImageView(sprite);
-        imageView.setViewport(new Rectangle2D(0, 0, VIEW_SIZE_X, VIEW_SIZE_Y));
+        imageView.setViewport(new Rectangle2D(0, 0, scaledViewSizeX, scaledViewSizeY));
         imageView.setMouseTransparent(true);
 
         updateImageViewPosition();
-
-        imageView.setFitWidth(scaledViewSizeX);
-        imageView.setFitHeight(scaledViewSizeY);
     }
 
     /* Updates the ImageView's position based on the offset. */

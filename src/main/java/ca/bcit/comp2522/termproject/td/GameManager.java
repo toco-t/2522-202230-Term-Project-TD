@@ -59,7 +59,7 @@ public class GameManager {
      */
     public void panCameraTo(final KeyEvent keyEvent) {
         Vector2D movementAmount;
-        final double speedInPixelsPerFrame = 5;
+        final double speedInPixelsPerFrame = 10;
 
         switch (keyEvent.getCode()) {
             case W -> {
