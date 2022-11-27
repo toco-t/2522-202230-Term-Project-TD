@@ -69,7 +69,7 @@ public class Unit implements Combatant, Drawable {
             default -> throw new IllegalArgumentException("The requested Unit does not exist.");
         }
 
-        generateImageView();
+        generateImageView(new Vector2D(0, 0));
     }
 
     private void getAyumiStats() {
@@ -221,13 +221,17 @@ public class Unit implements Combatant, Drawable {
     }
 
     /* Generates an ImageView of this Unit, using its coordinates. */
-    private void generateImageView() {
+    private void generateImageView(final Vector2D spritePosition) {
         double scaledViewSizeX = VIEW_SIZE_X * SPRITE_SCALE;
         double scaledViewSizeY = VIEW_SIZE_Y * SPRITE_SCALE;
 
+        double xOffsetPixels = VIEW_SIZE_X * spritePosition.getXCoordinate();
+        double yOffsetPixels = VIEW_SIZE_Y * spritePosition.getYCoordinate();
+
         imageView = new ImageView(sprite);
-        imageView.setViewport(new Rectangle2D(0, 0, scaledViewSizeX, scaledViewSizeY));
         imageView.setMouseTransparent(true);
+        imageView.setViewport(new Rectangle2D(xOffsetPixels, yOffsetPixels, scaledViewSizeX + xOffsetPixels,
+                scaledViewSizeY + yOffsetPixels));
 
         updateImageViewPosition();
     }
