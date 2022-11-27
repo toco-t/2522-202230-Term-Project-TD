@@ -1,5 +1,6 @@
 package ca.bcit.comp2522.termproject.td.unit;
 
+import ca.bcit.comp2522.termproject.td.enums.TurnState;
 import ca.bcit.comp2522.termproject.td.interfaces.Drawable;
 import ca.bcit.comp2522.termproject.td.enums.Affiliation;
 import ca.bcit.comp2522.termproject.td.enums.ArmourType;
@@ -34,6 +35,7 @@ public class Unit implements Combatant, Drawable {
     private String name;
     private Image sprite;
     private Affiliation affiliation;
+    private TurnState turnState;
     private Vector2D location;
     private final Vector2D viewOffset;
     private ArrayList<Attacker> weapons;
@@ -61,6 +63,7 @@ public class Unit implements Combatant, Drawable {
         this.location = location;
         this.viewOffset = new Vector2D(0, 0);
         this.affiliation = Affiliation.PLAYER;
+        this.turnState = TurnState.CAN_MOVE;
 
         generateImageView();
     }
@@ -127,6 +130,24 @@ public class Unit implements Combatant, Drawable {
      */
     public void setAffiliation(final Affiliation affiliation) {
         this.affiliation = affiliation;
+    }
+
+    /**
+     * Returns the turn state of this Unit.
+     *
+     * @return the turnState as a TurnState
+     */
+    public TurnState getTurnState() {
+        return turnState;
+    }
+
+    /**
+     * Sets the turn state of this Unit.
+     *
+     * @param turnState the turn state as a TurnState
+     */
+    public void setTurnState(final TurnState turnState) {
+        this.turnState = turnState;
     }
 
     /**

@@ -2,6 +2,7 @@ package ca.bcit.comp2522.termproject.td;
 
 import ca.bcit.comp2522.termproject.td.driver.SpriteRenderer;
 import ca.bcit.comp2522.termproject.td.enums.Affiliation;
+import ca.bcit.comp2522.termproject.td.enums.TurnState;
 import ca.bcit.comp2522.termproject.td.enums.Weather;
 import ca.bcit.comp2522.termproject.td.interfaces.Combatant;
 import ca.bcit.comp2522.termproject.td.interfaces.Drawable;
@@ -179,20 +180,17 @@ public class GameManager {
     private void takeActionWithSelectedUnit(final Vector2D selectionLocation, final Combatant clickedUnit) {
         // move unit if an empty tile is clicked and a unit is selected
         if (clickedUnit == null) {
-            selectedUnit.moveTo(selectionLocation);
-            System.out.printf("Moved %s to (%f, %f).\n", selectedUnit.getName(),
-                    selectedUnit.getLocation().getXCoordinate(), selectedUnit.getLocation().getYCoordinate());
+            moveUnit(selectionLocation);
         }
 
         // attack enemy if occupied tile is clicked and a friendly unit is selected
         if (clickedUnit != null && clickedUnit.getAffiliation() == Affiliation.ENEMY) {
-            selectedUnit.attack(clickedUnit);
-            System.out.printf("%s initiating attack against %s.\n", selectedUnit.getName(), clickedUnit.getName());
+            attackEnemy(clickedUnit);
         }
 
         // select the other unit if it is a friendly
         if (clickedUnit != null && clickedUnit.getAffiliation() == Affiliation.PLAYER) {
-            selectedUnit = clickedUnit;
+            selectUnit(clickedUnit);
         }
 
         // deselect unit if clicked again
@@ -225,9 +223,7 @@ public class GameManager {
      * @param unit the specified Unit to play, a Combatant
      */
     public void selectUnit(final Combatant unit) {
-        if (playerUnits.contains(unit) || enemyUnits.contains(unit)) {
-            this.selectedUnit = unit;
-        }
+        this.selectedUnit = unit;
     }
 
     /**
@@ -239,8 +235,30 @@ public class GameManager {
     public void moveUnit(final Vector2D coordinates) throws IllegalArgumentException {
         if (coordinates == null) {
             throw new IllegalArgumentException("Coordinates cannot be null...");
-        } else {
+        } else if (selectedUnit.getTurnState() == TurnState.CAN_MOVE) {
             selectedUnit.moveTo(coordinates);
+            selectedUnit.setTurnState(TurnState.CAN_ATTACK);
+            System.out.printf("Moved %s to (%f, %f).\n", selectedUnit.getName(),
+                    selectedUnit.getLocation().getXCoordinate(), selectedUnit.getLocation().getYCoordinate());
+        } else {
+            selectedUnit = null;
+        }
+    }
+
+    /**
+     * Attacks the target using the selected Unit.
+     *
+     * @param target the Combatant to attack
+     * @throws IllegalArgumentException if target is null
+     */
+    public void attackEnemy(final Combatant target) throws IllegalArgumentException {
+        if (target == null) {
+            throw new IllegalArgumentException("The target to attack cannot be null.");
+        } else if (selectedUnit.getTurnState() == TurnState.CAN_ATTACK) {
+            selectedUnit.attack(target);
+            selectedUnit.setTurnState(TurnState.DONE);
+            System.out.printf("%s initiating attack against %s.\n", selectedUnit.getName(), target.getName());
+            selectedUnit = null;
         }
     }
 }

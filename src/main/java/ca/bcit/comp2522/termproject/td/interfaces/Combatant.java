@@ -3,6 +3,7 @@ package ca.bcit.comp2522.termproject.td.interfaces;
 import ca.bcit.comp2522.termproject.td.Vector2D;
 import ca.bcit.comp2522.termproject.td.enums.Affiliation;
 import ca.bcit.comp2522.termproject.td.enums.ArmourType;
+import ca.bcit.comp2522.termproject.td.enums.TurnState;
 
 /**
  * An object that is capable of attacking and receiving damage from Combatants.
@@ -71,6 +72,21 @@ public interface Combatant {
      * Removes ERA armour and replaces it with MEDIUM armour.
      */
     void breakERA();
+
+
+    /**
+     * Returns the turn state of this Combatant.
+     *
+     * @return the turnState as a TurnState
+     */
+    TurnState getTurnState();
+
+    /**
+     * Sets the turn state of this Combatant.
+     *
+     * @param turnState the turn state as a TurnState
+     */
+    void setTurnState(TurnState turnState);
 
     /**
      * Returns the health of this Combatant.
