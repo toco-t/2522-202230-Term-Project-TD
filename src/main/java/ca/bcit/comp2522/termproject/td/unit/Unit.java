@@ -28,7 +28,7 @@ public class Unit implements Combatant, Drawable {
     private static final double TILE_WIDTH_IN_PIXELS = 128;
     private static final double TILE_HEIGHT_IN_PIXELS = 64;
 
-    private static final double SPRITE_SCALE = 2;
+    private static final double SPRITE_SCALE = 2.5;
 
     private ImageView imageView;
     private String name;
@@ -169,6 +169,7 @@ public class Unit implements Combatant, Drawable {
 
         imageView = new ImageView(sprite);
         imageView.setViewport(new Rectangle2D(0, 0, VIEW_SIZE_X, VIEW_SIZE_Y));
+        imageView.setMouseTransparent(true);
 
         updateImageViewPosition();
 

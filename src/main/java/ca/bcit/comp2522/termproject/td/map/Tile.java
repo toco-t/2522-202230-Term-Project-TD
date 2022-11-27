@@ -145,7 +145,7 @@ public class Tile implements Drawable {
     private void updateImageViewPosition() {
         Vector2D screenSpaceCoordinates = getScreenSpaceCoordinates(viewOffset);
         imageView.setX(screenSpaceCoordinates.getXCoordinate());
-        imageView.setY(screenSpaceCoordinates.getYCoordinate() + height * (TILE_HEIGHT_IN_PIXELS / 2));
+        imageView.setY(screenSpaceCoordinates.getYCoordinate() - height * TILE_HEIGHT_IN_PIXELS);
     }
 
     /* Gets the coordinates of this Unit in screen space (pixels). */

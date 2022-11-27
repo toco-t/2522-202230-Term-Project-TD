@@ -25,7 +25,6 @@ import java.util.ArrayList;
 public class BlossomStorm extends Application {
     @Override
     public void start(final Stage stage) throws IOException {
-        // Note: this is an early demo for rendering and does not use GameManager to create the map as intended
         // Create a GameManager.
         GameManager gameManager = new GameManager();
 
