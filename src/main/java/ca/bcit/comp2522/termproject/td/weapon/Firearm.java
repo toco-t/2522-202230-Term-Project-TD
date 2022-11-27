@@ -14,10 +14,21 @@ public class Firearm extends Weapon {
      * Constructs an object of type Firearm.
      *
      * @param name the name of this Firearm as a String
+     * @throws IllegalArgumentException if the requested weapon does not exist
      */
     public Firearm(final String name) {
         super(name);
-        accuracy = DEFAULT_ACCURACY;
+
+        switch (name) {
+            case "Remington M24" -> getM24Stats();
+            default -> throw new IllegalArgumentException("The requested weapon does not exist.");
+        }
+    }
+
+    /* Sets this Firearm's stats to that of the Remington M24. */
+    private void getM24Stats() {
+        setDamage(290);
+        accuracy = 190;
     }
 
     /**

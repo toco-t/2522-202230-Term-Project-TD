@@ -56,20 +56,34 @@ public class Unit implements Combatant, Drawable {
      *
      * @param name the name of the Unit as a String
      * @param location the starting location of the Unit as a Vector2D
+     * @throws IllegalArgumentException if the Unit does not exist
      */
     public Unit(final String name, final Vector2D location) {
         // replace this code with I/O to a unit bank of some sort. This is just a placeholder.
         this.name = name;
-        this.sprite = new Image("ayumi.png", VIEW_SIZE_X * SPRITE_SCALE, VIEW_SIZE_Y * SPRITE_SCALE, true, false);
         this.location = location;
         this.viewOffset = new Vector2D(0, 0);
-        this.affiliation = Affiliation.PLAYER;
-        this.turnState = TurnState.CAN_MOVE;
 
-        this.weapons = new ArrayList<>();
-        this.weapons.add(new Firearm("Remington M24"));
+        switch (name) {
+            case "Ayumi" -> getAyumiStats();
+            default -> throw new IllegalArgumentException("The requested Unit does not exist.");
+        }
 
         generateImageView();
+    }
+
+    private void getAyumiStats() {
+        sprite = new Image("ayumi.png", VIEW_SIZE_X * SPRITE_SCALE, VIEW_SIZE_Y * SPRITE_SCALE, true, false);
+        affiliation = Affiliation.PLAYER;
+        turnState = TurnState.CAN_MOVE;
+
+        weapons = new ArrayList<>();
+        weapons.add(new Firearm("Remington M24"));
+
+        health = 301;
+        maxHealth = 301;
+        defense = 90;
+        evasion = 80;
     }
 
     /**

@@ -31,7 +31,7 @@ public class UIManager {
         keyPrompts = new Text(512, 566, "[W][A][S][D] Adjust Camera     [ENTER] End Turn");
         keyPrompts.setFill(Color.WHITE);
 
-        selectedUnitHint = new Text(10, 546, "Ayumi (Remington M24) 0/0 HP");
+        selectedUnitHint = new Text(10, 546, "");
         selectedUnitHint.setFill(Color.WHITE);
 
         turnDisplay = new Text(455, 15, "PLAYER PHASE 01");
