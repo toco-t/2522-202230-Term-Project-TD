@@ -15,7 +15,6 @@ import javafx.scene.input.KeyEvent;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.concurrent.TimeoutException;
 
 
 /**
@@ -51,17 +50,56 @@ public class GameManager {
     }
 
     /**
+     * Ends the player phase.
+     */
+    public void endPlayerTurn() {
+        if (currentTurn == CurrentTurn.PLAYER_TURN) {
+            nextPhase();
+        }
+    }
+
+    /**
      * Advances to the next turn.
      */
     public void nextPhase() {
+        updateTurnCounter();
+        setUnitTurnState();
+        userInterface.changeTurnDisplay(currentTurn, turnNumber);
+
+        if (currentTurn == CurrentTurn.ENEMY_TURN) {
+            takeEnemyTurn();
+        }
+    }
+
+    /* Updates the phase and adds one to the turn counter if the enemy phase just passed. */
+    private void updateTurnCounter() {
         if (currentTurn == CurrentTurn.PLAYER_TURN) {
             currentTurn = CurrentTurn.ENEMY_TURN;
         } else {
             currentTurn = CurrentTurn.PLAYER_TURN;
             turnNumber++;
         }
+    }
 
-        userInterface.changeTurnDisplay(currentTurn, turnNumber);
+    /* Sets all the units of a particular team to be movable again. */
+    private void setUnitTurnState() {
+        ArrayList<Combatant> listToUse = switch (currentTurn) {
+            case PLAYER_TURN -> playerUnits;
+            case ENEMY_TURN -> enemyUnits;
+        };
+
+        for (Combatant combatant : listToUse) {
+            combatant.setTurnState(TurnState.CAN_MOVE);
+        }
+    }
+
+    /* Takes all enemies' turns. */
+    private void takeEnemyTurn() {
+        for (Combatant enemy : enemyUnits) {
+            System.out.printf("%s taking action.\n", enemy.getName());
+        }
+
+        nextPhase();
     }
 
     /**
@@ -86,7 +124,7 @@ public class GameManager {
         final double speedInPixelsPerFrame = 10;
 
         switch (keyEvent.getCode()) {
-            case ENTER -> nextPhase();
+            case ENTER -> endPlayerTurn();
             case W -> moveAllDrawables(new Vector2D(0, speedInPixelsPerFrame));
             case A -> moveAllDrawables(new Vector2D(speedInPixelsPerFrame, 0));
             case S -> moveAllDrawables(new Vector2D(0, -speedInPixelsPerFrame));
@@ -158,6 +196,10 @@ public class GameManager {
      * @param tile the Tile that was clicked
      */
     public void select(final Tile tile) {
+        if (currentTurn == CurrentTurn.ENEMY_TURN) {
+            return;
+        }
+
         Vector2D selectionLocation = tile.getLocation();
         Combatant clickedUnit = getCombatantAtLocation(selectionLocation);
 

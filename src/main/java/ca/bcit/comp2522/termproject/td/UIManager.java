@@ -34,7 +34,7 @@ public class UIManager {
         selectedUnitHint = new Text(10, 546, "Ayumi (Remington M24) 0/0 HP");
         selectedUnitHint.setFill(Color.WHITE);
 
-        turnDisplay = new Text(470, 15, "PLAYER PHASE 01");
+        turnDisplay = new Text(455, 15, "PLAYER PHASE 01");
         turnDisplay.setFill(Color.WHITE);
 
         levelDisplay = new Text(10, 15, "Mission -1 Test Mission");
