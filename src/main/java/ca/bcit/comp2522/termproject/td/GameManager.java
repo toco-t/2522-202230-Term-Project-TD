@@ -2,6 +2,7 @@ package ca.bcit.comp2522.termproject.td;
 
 import ca.bcit.comp2522.termproject.td.driver.SpriteRenderer;
 import ca.bcit.comp2522.termproject.td.enums.Affiliation;
+import ca.bcit.comp2522.termproject.td.enums.CurrentTurn;
 import ca.bcit.comp2522.termproject.td.enums.TurnState;
 import ca.bcit.comp2522.termproject.td.enums.Weather;
 import ca.bcit.comp2522.termproject.td.interfaces.Combatant;
@@ -24,6 +25,8 @@ import java.util.concurrent.TimeoutException;
  * @version 0.2
  */
 public class GameManager {
+    private int turnNumber;
+    private CurrentTurn currentTurn;
     private final ArrayList<Combatant> playerUnits;
     private final ArrayList<Combatant> enemyUnits;
     private final ArrayList<Drawable> entities;
@@ -40,8 +43,25 @@ public class GameManager {
         this.entities = new ArrayList<>();
         this.userInterface = new UIManager();
 
+        currentTurn = CurrentTurn.PLAYER_TURN;
+        turnNumber = 1;
+
         generateUnits(-1);
         createGameMap(-1);
+    }
+
+    /**
+     * Advances to the next turn.
+     */
+    public void nextPhase() {
+        if (currentTurn == CurrentTurn.PLAYER_TURN) {
+            currentTurn = CurrentTurn.ENEMY_TURN;
+        } else {
+            currentTurn = CurrentTurn.PLAYER_TURN;
+            turnNumber++;
+        }
+
+        userInterface.changeTurnDisplay(currentTurn, turnNumber);
     }
 
     /**
@@ -63,28 +83,16 @@ public class GameManager {
      * @param keyEvent the KeyEvent that invoked this method
      */
     public void panCameraTo(final KeyEvent keyEvent) {
-        Vector2D movementAmount;
         final double speedInPixelsPerFrame = 10;
 
         switch (keyEvent.getCode()) {
-            case W -> {
-                movementAmount = new Vector2D(0, speedInPixelsPerFrame);
-            }
-            case A -> {
-                movementAmount = new Vector2D(speedInPixelsPerFrame, 0);
-            }
-            case S -> {
-                movementAmount = new Vector2D(0, -speedInPixelsPerFrame);
-            }
-            case D -> {
-                movementAmount = new Vector2D(-speedInPixelsPerFrame, 0);
-            }
-            default -> {
-                return;
-            }
+            case ENTER -> nextPhase();
+            case W -> moveAllDrawables(new Vector2D(0, speedInPixelsPerFrame));
+            case A -> moveAllDrawables(new Vector2D(speedInPixelsPerFrame, 0));
+            case S -> moveAllDrawables(new Vector2D(0, -speedInPixelsPerFrame));
+            case D -> moveAllDrawables(new Vector2D(-speedInPixelsPerFrame, 0));
+            default -> { }
         }
-
-        moveAllDrawables(movementAmount);
     }
 
     /* Moves all drawable objects' offsets by a certain amount. */
@@ -163,7 +171,8 @@ public class GameManager {
             takeActionWithoutSelectedUnit(clickedUnit);
         }
 
-        updateDescriptionHint();
+        userInterface.changeSelectionHint(selectedUnit);
+        userInterface.changeUnitDisplay(selectedUnit);
     }
 
     /* Take action without a selected unit depending on the context. */
@@ -229,21 +238,6 @@ public class GameManager {
      */
     public void selectUnit(final Combatant unit) {
         this.selectedUnit = unit;
-    }
-
-    /* Updates the hint depending on the context. */
-    private void updateDescriptionHint() {
-        String selectionHint;
-        if (selectedUnit != null) {
-            selectionHint = switch (selectedUnit.getTurnState()) {
-                case CAN_MOVE -> "Click on a blue tile to move there, or a red tile to attack.";
-                case CAN_ATTACK -> "Click on a red tile to attack.";
-                default -> "This unit cannot take any further action.";
-            };
-        } else {
-            selectionHint = "Select a unit to move.";
-        }
-        userInterface.changeSelectionHint(selectionHint);
     }
 
     /**

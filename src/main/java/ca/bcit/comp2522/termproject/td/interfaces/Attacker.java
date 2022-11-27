@@ -7,6 +7,13 @@ package ca.bcit.comp2522.termproject.td.interfaces;
  * @version 0.1
  */
 public interface Attacker {
+
+    /**
+     * Returns the name of the Attacker.
+     *
+     * @return the name as a String
+     */
+    String getName();
     /**
      * Initiates an attack against another Combatant.
      *

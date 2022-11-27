@@ -20,6 +20,13 @@ public interface Combatant {
     String getName();
 
     /**
+     * Returns the name of the Combatant's weapon.
+     *
+     * @return the weapon name as a String
+     */
+    String getWeaponName();
+
+    /**
      * Returns the affiliation of this Combatant.
      *
      * @return the affiliation as an Affiliation
@@ -94,6 +101,13 @@ public interface Combatant {
      * @return the health as an int
      */
     int getHealth();
+
+    /**
+     * Returns the max health of this Combatant.
+     *
+     * @return the max health as an int
+     */
+    int getMaxHealth();
 
     /**
      * Adds or subtracts health from the Combatant.

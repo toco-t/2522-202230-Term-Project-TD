@@ -8,6 +8,7 @@ import ca.bcit.comp2522.termproject.td.interfaces.Attacker;
 import ca.bcit.comp2522.termproject.td.interfaces.Combatant;
 import ca.bcit.comp2522.termproject.td.Vector2D;
 import ca.bcit.comp2522.termproject.td.items.Item;
+import ca.bcit.comp2522.termproject.td.weapon.Firearm;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -65,6 +66,9 @@ public class Unit implements Combatant, Drawable {
         this.affiliation = Affiliation.PLAYER;
         this.turnState = TurnState.CAN_MOVE;
 
+        this.weapons = new ArrayList<>();
+        this.weapons.add(new Firearm("Remington M24"));
+
         generateImageView();
     }
 
@@ -85,6 +89,20 @@ public class Unit implements Combatant, Drawable {
      */
     public String getName() {
         return name;
+    }
+
+
+    /**
+     * Returns the name of the Unit's weapon.
+     *
+     * @throws IllegalStateException if there is no weapon at index 0 in the unit's weapon list
+     * @return the weapon name as a String
+     */
+    public String getWeaponName() {
+        if (weapons.get(0) == null) {
+            throw new IllegalStateException("Cannot attack without a weapon.");
+        }
+        return weapons.get(0).getName();
     }
 
     /**
