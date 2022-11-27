@@ -54,7 +54,7 @@ public class Tile implements Drawable {
         this.height = height;
         this.viewOffset = new Vector2D(0, 0);
 
-        generateImageView();
+        generateImageView(0, 0);
     }
 
     /**
@@ -124,12 +124,13 @@ public class Tile implements Drawable {
     }
 
     /* Generates an ImageView of this Tile, using its coordinates. */
-    private void generateImageView() {
+    private void generateImageView(final int xOffsetPixels, final int yOffsetPixels) {
         double scaledViewSizeX = VIEW_SIZE_X * SPRITE_SCALE;
         double scaledViewSizeY = VIEW_SIZE_Y * SPRITE_SCALE;
 
         imageView = new ImageView(sprite);
-        imageView.setViewport(new Rectangle2D(0, 0, VIEW_SIZE_X, VIEW_SIZE_Y));
+        imageView.setViewport(new Rectangle2D(xOffsetPixels, yOffsetPixels, VIEW_SIZE_X + xOffsetPixels,
+                VIEW_SIZE_Y + yOffsetPixels));
 
         updateImageViewPosition();
 
