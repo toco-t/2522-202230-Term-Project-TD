@@ -107,7 +107,7 @@ public class GameMap {
 
         for (int x = leftmostColumn; x <= rightmostColumn; x++) {
             for (int y = bottommostRow; y <= topmostRow; y++) {
-                Tile tile = new Tile(gameManager, Terrain.ROAD, testTile, new Vector2D(x, y));
+                Tile tile = new Tile(gameManager, Terrain.ROAD, testTile, new Vector2D(x, y), 0);
                 tiles.add(tile);
             }
         }

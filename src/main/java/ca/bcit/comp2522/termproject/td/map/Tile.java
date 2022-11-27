@@ -32,6 +32,7 @@ public class Tile implements Drawable {
     private Image sprite;
 
     private final Vector2D location;
+    private int height;
     private Vector2D viewOffset;
     private final Terrain terrain;
 
@@ -41,13 +42,16 @@ public class Tile implements Drawable {
      * @param gameManager the GameManager, used for handling events
      * @param terrain the terrain type of this Tile
      * @param sprite the sprite this Tile uses
-     * @param location the tile-coordinates of the Tile
+     * @param location the tile-coordinates of this Tile
+     * @param height the simulated height of this Tile
      */
-    public Tile(final GameManager gameManager, final Terrain terrain, final Image sprite, final Vector2D location) {
+    public Tile(final GameManager gameManager, final Terrain terrain, final Image sprite, final Vector2D location,
+                final int height) {
         this.gameManager = gameManager;
         this.terrain = terrain;
         this.sprite = sprite;
         this.location = location;
+        this.height = height;
         this.viewOffset = new Vector2D(0, 0);
 
         generateImageView();
@@ -102,6 +106,15 @@ public class Tile implements Drawable {
     }
 
     /**
+     * Returns the height of this Tile.
+     *
+     * @return the height as an int
+     */
+    public int getHeight() {
+        return height;
+    }
+
+    /**
      * Returns the terrain type of this Tile.
      *
      * @return the terrain type as a Terrain
@@ -132,7 +145,7 @@ public class Tile implements Drawable {
     private void updateImageViewPosition() {
         Vector2D screenSpaceCoordinates = getScreenSpaceCoordinates(viewOffset);
         imageView.setX(screenSpaceCoordinates.getXCoordinate());
-        imageView.setY(screenSpaceCoordinates.getYCoordinate());
+        imageView.setY(screenSpaceCoordinates.getYCoordinate() + height * (TILE_HEIGHT_IN_PIXELS / 2));
     }
 
     /* Gets the coordinates of this Unit in screen space (pixels). */
