@@ -12,13 +12,6 @@ import javafx.scene.image.ImageView;
  */
 public interface Drawable {
     /**
-     * Returns the sprite of this Drawable object.
-     *
-     * @return the sprite as an Image
-     */
-    Image getSprite();
-
-    /**
      * Returns the coordinates of this Drawable object.
      *
      * @return the coordinates as a Vector2D

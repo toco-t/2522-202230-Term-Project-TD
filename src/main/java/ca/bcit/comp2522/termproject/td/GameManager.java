@@ -27,6 +27,7 @@ public class GameManager {
     private final ArrayList<Combatant> playerUnits;
     private final ArrayList<Combatant> enemyUnits;
     private final ArrayList<Drawable> entities;
+    private final UIManager userInterface;
     private GameMap map;
     private Combatant selectedUnit;
 
@@ -37,6 +38,7 @@ public class GameManager {
         this.playerUnits = new ArrayList<>();
         this.enemyUnits = new ArrayList<>();
         this.entities = new ArrayList<>();
+        this.userInterface = new UIManager();
 
         generateUnits(-1);
         createGameMap(-1);
@@ -50,8 +52,9 @@ public class GameManager {
     public Group groupAllObjectsForRendering() {
         Group units = SpriteRenderer.groupDrawables(entities);
         Group tiles = SpriteRenderer.groupDrawables(map.getTilesForRendering());
+        Group userInterfaceElements = userInterface.getGroup();
 
-        return new Group(tiles, units);
+        return new Group(tiles, units, userInterfaceElements);
     }
 
     /**
@@ -159,6 +162,8 @@ public class GameManager {
         } else {
             takeActionWithoutSelectedUnit(clickedUnit);
         }
+
+        updateDescriptionHint();
     }
 
     /* Take action without a selected unit depending on the context. */
@@ -226,6 +231,21 @@ public class GameManager {
         this.selectedUnit = unit;
     }
 
+    /* Updates the hint depending on the context. */
+    private void updateDescriptionHint() {
+        String selectionHint;
+        if (selectedUnit != null) {
+            selectionHint = switch (selectedUnit.getTurnState()) {
+                case CAN_MOVE -> "Click on a blue tile to move there, or a red tile to attack.";
+                case CAN_ATTACK -> "Click on a red tile to attack.";
+                default -> "This unit cannot take any further action.";
+            };
+        } else {
+            selectionHint = "Select a unit to move.";
+        }
+        userInterface.changeSelectionHint(selectionHint);
+    }
+
     /**
      * Moves the selected Unit to the location at the specified coordinates.
      *
@@ -238,8 +258,6 @@ public class GameManager {
         } else if (selectedUnit.getTurnState() == TurnState.CAN_MOVE) {
             selectedUnit.moveTo(coordinates);
             selectedUnit.setTurnState(TurnState.CAN_ATTACK);
-            System.out.printf("Moved %s to (%f, %f).\n", selectedUnit.getName(),
-                    selectedUnit.getLocation().getXCoordinate(), selectedUnit.getLocation().getYCoordinate());
         } else {
             selectedUnit = null;
         }
@@ -257,7 +275,6 @@ public class GameManager {
         } else if (selectedUnit.getTurnState() == TurnState.CAN_ATTACK) {
             selectedUnit.attack(target);
             selectedUnit.setTurnState(TurnState.DONE);
-            System.out.printf("%s initiating attack against %s.\n", selectedUnit.getName(), target.getName());
             selectedUnit = null;
         }
     }
