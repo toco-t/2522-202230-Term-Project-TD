@@ -21,14 +21,37 @@ public class Firearm extends Weapon {
 
         switch (name) {
             case "Remington M24" -> getM24Stats();
+            case "H&K MP7" -> getMP7Stats();
+            case "AK-12" -> getAK12tats();
             default -> throw new IllegalArgumentException("The requested weapon does not exist.");
         }
     }
 
     /* Sets this Firearm's stats to that of the Remington M24. */
     private void getM24Stats() {
-        setDamage(290);
-        accuracy = 190;
+        final int m24Damage = 290;
+        final int m24Accuracy = 190;
+
+        setDamage(m24Damage);
+        accuracy = m24Accuracy;
+    }
+
+    /* Sets this Firearm's stats to that of the Remington M24. */
+    private void getMP7Stats() {
+        final int mp7Damage = 210;
+        final int mp7Accuracy = 132;
+
+        setDamage(mp7Damage);
+        accuracy = mp7Accuracy;
+    }
+
+    /* Sets this Firearm's stats to that of the Remington M24. */
+    private void getAK12tats() {
+        final int ak12Damage = 130;
+        final int ak12Accuracy = 127;
+
+        setDamage(ak12Damage);
+        accuracy = ak12Accuracy;
     }
 
     /**
