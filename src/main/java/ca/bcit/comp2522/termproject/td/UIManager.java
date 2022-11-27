@@ -87,7 +87,7 @@ public class UIManager {
     public void changeUnitDisplay(final Combatant combatant) {
         if (combatant != null) {
             String name = combatant.getName();
-            String weapon = "Remington M24";
+            String weapon = combatant.getWeaponName();
             int currentHealth = combatant.getHealth();
             int maxHealth = combatant.getMaxHealth();
 

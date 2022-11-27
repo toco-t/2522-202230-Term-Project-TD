@@ -79,6 +79,7 @@ public class Unit implements Combatant, Drawable {
         sprite = new Image("ayumi.png", VIEW_SIZE_X * SPRITE_SCALE, VIEW_SIZE_Y * SPRITE_SCALE, true, false);
         affiliation = Affiliation.PLAYER;
         turnState = TurnState.CAN_MOVE;
+        armourType = ArmourType.DEFAULT;
 
         weapons = new ArrayList<>();
         weapons.add(new Firearm("Remington M24"));
@@ -95,12 +96,13 @@ public class Unit implements Combatant, Drawable {
 
     /* Sets this unit's stats to that of Ayumi's. */
     private void getMiyakoStats() {
-        sprite = new Image("dmitri.png", VIEW_SIZE_X * SPRITE_SCALE, VIEW_SIZE_Y * SPRITE_SCALE, true, false);
+        sprite = new Image("miyako.png", VIEW_SIZE_X * SPRITE_SCALE, VIEW_SIZE_Y * SPRITE_SCALE, true, false);
         affiliation = Affiliation.PLAYER;
         turnState = TurnState.CAN_MOVE;
+        armourType = ArmourType.DEFAULT;
 
         weapons = new ArrayList<>();
-        weapons.add(new Firearm("Remington M24"));
+        weapons.add(new Firearm("H&K MP7"));
 
         final int miyakoHealth = 355;
         final int miyakoDefense = 100;
@@ -117,9 +119,10 @@ public class Unit implements Combatant, Drawable {
         sprite = new Image("dmitri.png", VIEW_SIZE_X * SPRITE_SCALE, VIEW_SIZE_Y * SPRITE_SCALE, true, false);
         affiliation = Affiliation.ENEMY;
         turnState = TurnState.DONE;
+        armourType = ArmourType.DEFAULT;
 
         weapons = new ArrayList<>();
-        weapons.add(new Firearm("Remington M24"));
+        weapons.add(new Firearm("AK-12"));
 
         final int dmitriHealth = 356;
         final int dmitriDefense = 115;
