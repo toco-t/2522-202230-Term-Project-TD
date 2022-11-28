@@ -184,9 +184,13 @@ public class GameManager {
         playerUnits.add(miyako);
         entities.add(miyako);
 
-        Unit dmitri = new Unit("Dmitri", new Vector2D(10, 0));
-        enemyUnits.add(dmitri);
-        entities.add(dmitri);
+        Unit dmitri1 = new Unit("Dmitri", new Vector2D(10, 0));
+        enemyUnits.add(dmitri1);
+        entities.add(dmitri1);
+
+        Unit dmitri2 = new Unit("Dmitri", new Vector2D(10, 1));
+        enemyUnits.add(dmitri2);
+        entities.add(dmitri2);
     }
 
     /**

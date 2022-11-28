@@ -278,8 +278,8 @@ public class Unit implements Combatant, Drawable {
 
         imageView = new ImageView(sprite);
         imageView.setMouseTransparent(true);
-        imageView.setViewport(new Rectangle2D(xOffsetPixels, yOffsetPixels, scaledViewSizeX + xOffsetPixels,
-                scaledViewSizeY + yOffsetPixels));
+        imageView.setViewport(new Rectangle2D(xOffsetPixels, yOffsetPixels, scaledViewSizeX,
+                scaledViewSizeY));
 
         updateImageViewPosition();
     }

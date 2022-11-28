@@ -141,13 +141,10 @@ public class Tile implements Drawable {
         double yOffsetPixels = VIEW_SIZE_Y * spritePosition.getYCoordinate();
 
         imageView = new ImageView(sprite);
-        imageView.setViewport(new Rectangle2D(xOffsetPixels, yOffsetPixels, VIEW_SIZE_X + xOffsetPixels,
-                VIEW_SIZE_Y + yOffsetPixels));
+        imageView.setViewport(new Rectangle2D(xOffsetPixels, yOffsetPixels, scaledViewSizeX,
+                scaledViewSizeY));
 
         updateImageViewPosition();
-
-        imageView.setFitWidth(scaledViewSizeX);
-        imageView.setFitHeight(scaledViewSizeY);
 
         imageView.setOnMouseClicked((MouseEvent event) -> gameManager.select(this));
         imageView.setOnMouseEntered((MouseEvent event) -> gameManager.hoverHint(this));

@@ -107,7 +107,7 @@ public class GameMap {
 
         for (int x = leftmostColumn; x <= rightmostColumn; x++) {
             for (int y = bottommostRow; y <= topmostRow; y++) {
-                Tile tile = new Tile(gameManager, Terrain.ROAD, cocoTextures, new Vector2D(3, 0), new Vector2D(x, y));
+                Tile tile = new Tile(gameManager, Terrain.ROAD, cocoTextures, new Vector2D(2, 0), new Vector2D(x, y));
                 tile.setHeight(0);
                 tiles.add(tile);
             }
@@ -115,18 +115,25 @@ public class GameMap {
 
         for (int wallHeight = 1; wallHeight <= 3; wallHeight++) {
             for (int y = topmostRow + 1; y >= bottommostRow; y--) {
-                Tile tile = new Tile(gameManager, Terrain.OBSTACLE, cocoTextures, new Vector2D(0, 1),
+                Tile tile = new Tile(gameManager, Terrain.OBSTACLE, cocoTextures, new Vector2D(0, 0),
                         new Vector2D(leftmostColumn - 1, y));
                 tile.setHeight(wallHeight);
                 tiles.add(tile);
             }
 
             for (int x = leftmostColumn; x <= rightmostColumn; x++) {
-                Tile tile = new Tile(gameManager, Terrain.OBSTACLE, cocoTextures, new Vector2D(0, 1),
+                Tile tile = new Tile(gameManager, Terrain.OBSTACLE, cocoTextures, new Vector2D(0, 0),
                         new Vector2D(x, topmostRow + 1));
                 tile.setHeight(wallHeight);
                 tiles.add(tile);
             }
+        }
+
+        for (int y = topmostRow; y >= bottommostRow; y--) {
+            Tile tile = new Tile(gameManager, Terrain.OBSTACLE, cocoTextures, new Vector2D(1, 1),
+                    new Vector2D(leftmostColumn, y));
+            tile.setHeight(0);
+            tiles.add(tile);
         }
     }
 }
