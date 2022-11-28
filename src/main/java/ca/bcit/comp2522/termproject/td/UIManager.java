@@ -3,23 +3,31 @@ package ca.bcit.comp2522.termproject.td;
 import ca.bcit.comp2522.termproject.td.enums.CurrentTurn;
 import ca.bcit.comp2522.termproject.td.interfaces.Combatant;
 import javafx.scene.Group;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
+
+//import javax.awt.Graphics2D;
 
 /**
  * Manages the game's User Interface.
  *
- * @author Nathan
- * @version 0.2
+ * @author Nathan & Toco
+ * @version 0.2.1
  */
 public class UIManager {
+//    private static final Graphics2D graphics = new Graphics2D();
     private final Text selectionHint;
     private final Text keyPrompts;
     private final Text selectedUnitHint;
     private final Text turnDisplay;
     private final Text levelDisplay;
+    private final Rectangle dialogueDisplay;
+    private final StackPane stack = new StackPane();
 
     /**
      * Constructs an object of type UIManager.
@@ -39,6 +47,18 @@ public class UIManager {
 
         levelDisplay = new Text(10, 15, "Test Mission");
         levelDisplay.setFill(Color.WHITE);
+
+        dialogueDisplay = new Rectangle(150, 360, 720, 150);
+        Color colour = new Color(0.2, 0.2, 0.2, 0.7);
+        dialogueDisplay.setFill(colour);
+
+        Text dialogue = new Text("Testing...");
+        dialogue.setFont(Font.font("verdana", 20));
+        dialogue.setFill(Color.WHITE);
+
+        stack.getChildren().addAll(dialogueDisplay, dialogue);
+        stack.setLayoutX(150);
+        stack.setLayoutY(360);
     }
 
     /**
@@ -103,6 +123,6 @@ public class UIManager {
      * @return the Group of UI elements
      */
     public Group getGroup() {
-        return new Group(selectionHint, selectedUnitHint, keyPrompts, turnDisplay, levelDisplay);
+        return new Group(selectionHint, selectedUnitHint, keyPrompts, turnDisplay, levelDisplay, stack);
     }
 }
