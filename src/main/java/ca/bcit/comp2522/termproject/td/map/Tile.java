@@ -149,9 +149,8 @@ public class Tile implements Drawable {
         imageView.setFitWidth(scaledViewSizeX);
         imageView.setFitHeight(scaledViewSizeY);
 
-        imageView.setOnMouseClicked((MouseEvent event) -> {
-            gameManager.select(this);
-        });
+        imageView.setOnMouseClicked((MouseEvent event) -> gameManager.select(this));
+        imageView.setOnMouseEntered((MouseEvent event) -> gameManager.hoverHint(this));
     }
 
     /* Updates the ImageView's position based on the offset. */

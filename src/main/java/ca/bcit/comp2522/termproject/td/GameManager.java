@@ -176,9 +176,17 @@ public class GameManager {
     }
 
     private void generateUnitsForTestMission() {
-        Unit ayumi = new Unit("Ayumi", new Vector2D(7, 0));
+        Unit ayumi = new Unit("Ayumi", new Vector2D(6, 0));
         playerUnits.add(ayumi);
         entities.add(ayumi);
+
+        Unit miyako = new Unit("Miyako", new Vector2D(6, 1));
+        playerUnits.add(miyako);
+        entities.add(miyako);
+
+        Unit dmitri = new Unit("Dmitri", new Vector2D(10, 0));
+        enemyUnits.add(dmitri);
+        entities.add(dmitri);
     }
 
     /**
@@ -188,6 +196,22 @@ public class GameManager {
      */
     public void createGameMap(final int mission) {
         this.map = new GameMap(this, Weather.OVERCAST, false, mission);
+    }
+
+    /**
+     * Responds to a Tile being hovered over by showing the hovered unit's stats.
+     *
+     * @param tile the Tile that was hovered over
+     */
+    public void hoverHint(final Tile tile) {
+        if (currentTurn == CurrentTurn.ENEMY_TURN) {
+            return;
+        }
+
+        Vector2D selectionLocation = tile.getLocation();
+        Combatant hoveredUnit = getCombatantAtLocation(selectionLocation);
+
+        userInterface.changeHoverHint(hoveredUnit);
     }
 
     /**
@@ -203,9 +227,6 @@ public class GameManager {
         Vector2D selectionLocation = tile.getLocation();
         Combatant clickedUnit = getCombatantAtLocation(selectionLocation);
 
-        System.out.printf("Selected at (%f, %f).\n", selectionLocation.getXCoordinate(),
-                selectionLocation.getYCoordinate());
-
         // a friendly unit is already selected, take action with them...
         if (selectedUnit != null) {
             takeActionWithSelectedUnit(selectionLocation, clickedUnit);
@@ -214,7 +235,6 @@ public class GameManager {
         }
 
         userInterface.changeSelectionHint(selectedUnit);
-        userInterface.changeUnitDisplay(selectedUnit);
     }
 
     /* Take action without a selected unit depending on the context. */
@@ -222,13 +242,7 @@ public class GameManager {
         // select unit if a unit is clicked but no unit is already selected
         if (clickedUnit != null && clickedUnit.getAffiliation() == Affiliation.PLAYER) {
             selectedUnit = clickedUnit;
-            System.out.printf("%s is selected.\n", selectedUnit.getName());
-        }
-
-        // open enemy info card if enemy is selected
-        if (clickedUnit != null && clickedUnit.getAffiliation() == Affiliation.ENEMY) {
-            System.out.printf("%s: %d", clickedUnit.getName(), clickedUnit.getHealth());
-            // open enemy info card
+            userInterface.changeUnitDisplay(selectedUnit);
         }
     }
 
@@ -242,16 +256,20 @@ public class GameManager {
         // attack enemy if occupied tile is clicked and a friendly unit is selected
         if (clickedUnit != null && clickedUnit.getAffiliation() == Affiliation.ENEMY) {
             attackEnemy(clickedUnit);
-        }
-
-        // select the other unit if it is a friendly
-        if (clickedUnit != null && clickedUnit.getAffiliation() == Affiliation.PLAYER) {
-            selectUnit(clickedUnit);
+            userInterface.changeUnitDisplay(selectedUnit);
+            userInterface.changeHoverHint(clickedUnit);
         }
 
         // deselect unit if clicked again
         if (clickedUnit == selectedUnit) {
             selectedUnit = null;
+            userInterface.changeUnitDisplay(null);
+        }
+
+        // select the other unit if it is a friendly
+        if (clickedUnit != null && clickedUnit.getAffiliation() == Affiliation.PLAYER) {
+            selectUnit(clickedUnit);
+            userInterface.changeUnitDisplay(selectedUnit);
         }
     }
 
@@ -308,10 +326,24 @@ public class GameManager {
     public void attackEnemy(final Combatant target) throws IllegalArgumentException {
         if (target == null) {
             throw new IllegalArgumentException("The target to attack cannot be null.");
-        } else if (selectedUnit.getTurnState() == TurnState.CAN_ATTACK) {
+        } else if (selectedUnit.getTurnState() != TurnState.DONE) {
             selectedUnit.attack(target);
             selectedUnit.setTurnState(TurnState.DONE);
             selectedUnit = null;
+        }
+    }
+
+    /**
+     * Displays the selected enemy target's stats.
+     *
+     * @param target the Combatant whose stats will be revealed
+     * @throws IllegalArgumentException if target is null
+     */
+    public void displayEnemyStats(final Combatant target) throws IllegalArgumentException {
+        if (target == null) {
+            throw new IllegalArgumentException("The enemy is null.");
+        } else {
+            userInterface.changeUnitDisplay(target);
         }
     }
 }

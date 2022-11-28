@@ -66,24 +66,72 @@ public class Unit implements Combatant, Drawable {
 
         switch (name) {
             case "Ayumi" -> getAyumiStats();
+            case "Miyako" -> getMiyakoStats();
+            case "Dmitri" -> getDmitriStats();
             default -> throw new IllegalArgumentException("The requested Unit does not exist.");
         }
 
         generateImageView(new Vector2D(0, 0));
     }
 
+    /* Sets this unit's stats to that of Ayumi's. */
     private void getAyumiStats() {
         sprite = new Image("ayumi.png", VIEW_SIZE_X * SPRITE_SCALE, VIEW_SIZE_Y * SPRITE_SCALE, true, false);
         affiliation = Affiliation.PLAYER;
         turnState = TurnState.CAN_MOVE;
+        armourType = ArmourType.DEFAULT;
 
         weapons = new ArrayList<>();
         weapons.add(new Firearm("Remington M24"));
 
-        health = 301;
-        maxHealth = 301;
-        defense = 90;
-        evasion = 80;
+        final int ayumiHealth = 301;
+        final int ayumiDefense = 90;
+        final int ayumiEvasion = 80;
+
+        health = ayumiHealth;
+        maxHealth = ayumiHealth;
+        defense = ayumiDefense;
+        evasion = ayumiEvasion;
+    }
+
+    /* Sets this unit's stats to that of Ayumi's. */
+    private void getMiyakoStats() {
+        sprite = new Image("miyako.png", VIEW_SIZE_X * SPRITE_SCALE, VIEW_SIZE_Y * SPRITE_SCALE, true, false);
+        affiliation = Affiliation.PLAYER;
+        turnState = TurnState.CAN_MOVE;
+        armourType = ArmourType.DEFAULT;
+
+        weapons = new ArrayList<>();
+        weapons.add(new Firearm("H&K MP7"));
+
+        final int miyakoHealth = 355;
+        final int miyakoDefense = 100;
+        final int miyakoEvasion = 190;
+
+        health = miyakoHealth;
+        maxHealth = miyakoHealth;
+        defense = miyakoDefense;
+        evasion = miyakoEvasion;
+    }
+
+    /* Sets this unit's stats to that of Ayumi's. */
+    private void getDmitriStats() {
+        sprite = new Image("dmitri.png", VIEW_SIZE_X * SPRITE_SCALE, VIEW_SIZE_Y * SPRITE_SCALE, true, false);
+        affiliation = Affiliation.ENEMY;
+        turnState = TurnState.DONE;
+        armourType = ArmourType.DEFAULT;
+
+        weapons = new ArrayList<>();
+        weapons.add(new Firearm("AK-12"));
+
+        final int dmitriHealth = 416;
+        final int dmitriDefense = 125;
+        final int dmitriEvasion = 120;
+
+        health = dmitriHealth;
+        maxHealth = dmitriHealth;
+        defense = dmitriDefense;
+        evasion = dmitriEvasion;
     }
 
     /**
@@ -496,6 +544,8 @@ public class Unit implements Combatant, Drawable {
         if (weapons.get(0) == null) {
             throw new IllegalStateException("Cannot attack without a weapon.");
         }
-        weapons.get(0).attack(target, 0);
+
+        final int distanceToTarget = location.manhattanDistance(target.getLocation());
+        weapons.get(0).attack(target, distanceToTarget);
     }
 }

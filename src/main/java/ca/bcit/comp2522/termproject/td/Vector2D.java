@@ -92,6 +92,24 @@ public class Vector2D {
     }
 
     /**
+     * Calculates the Manhattan distance between this Vector2D and another Vector2D.
+     *
+     * @param vector the other Vector2D to subtract
+     * @return the Manhattan distance as an int
+     * @throws IllegalArgumentException if the other Vector2D is null
+     */
+    public int manhattanDistance(final Vector2D vector) {
+        if (vector == null) {
+            throw new IllegalArgumentException("Vector cannot be null...");
+        }
+
+        int xDistance = (int) Math.round(Math.abs(this.xCoordinate - vector.getXCoordinate()));
+        int yDistance = (int) Math.round(Math.abs(this.yCoordinate - vector.getYCoordinate()));
+
+        return xDistance + yDistance;
+    }
+
+    /**
      * Converts a coordinate pair from tile-space to screen-space.
      *
      * @param tileWidthInPixels the width, in pixels, of each tile

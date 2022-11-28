@@ -19,6 +19,7 @@ public abstract class Weapon implements Attacker {
     private static final String DEFAULT_DESCRIPTION = "I like to keep this for close encounters.";
     private static final int DEFAULT_DAMAGE = 250;
     private static final int DEFAULT_RANGE = 5;
+    private static final int DEFAULT_ACCURACY = 250;
     private static final DamageType DEFAULT_DAMAGE_TYPE = DamageType.STANDARD;
     private static final ProjectileSize DEFAULT_PROJECTILE_SIZE = ProjectileSize.BULLET;
     private static final Random RANDOM_NUMBER_GENERATOR = new Random();
@@ -30,6 +31,7 @@ public abstract class Weapon implements Attacker {
     private final String description;
     private int damage;
     private int hits;
+    private int accuracy;
     private int range; // might use a custom range table for more advanced damage calculation later
     private final DamageType damageType;
     private final ProjectileSize projectileSize;
@@ -92,6 +94,42 @@ public abstract class Weapon implements Attacker {
     }
 
     /**
+     * Returns the number of hits for this Weapon.
+     *
+     * @return the hits as an int
+     */
+    public int getHits() {
+        return hits;
+    }
+
+    /**
+     * Sets the number of hits for this Weapon.
+     *
+     * @param hits the hits as an int
+     */
+    public void setHits(final int hits) {
+        this.hits = hits;
+    }
+
+    /**
+     * Returns the accuracy of this Weapon.
+     *
+     * @return the accuracy as an int
+     */
+    public int getAccuracy() {
+        return accuracy;
+    }
+
+    /**
+     * Sets the accuracy of this Weapon.
+     *
+     * @param accuracy the accuracy as an int
+     */
+    public void setAccuracy(final int accuracy) {
+        this.accuracy = accuracy;
+    }
+
+    /**
      * Returns the range of this Weapon. One range unit is equivalent to one grid square.
      *
      * @return the range as an int
@@ -149,8 +187,8 @@ public abstract class Weapon implements Attacker {
         int damagePerHit = unroundedDamagePerHit.intValue();
 
         // TODO: ask chris if using wrapping or casting is better
-        double baseAccuracy = 1;
-        double accuracyModifier = getAccuracyModifier(target);
+        final double baseAccuracy = (double) accuracy / (target.getEvasion() * 2);
+        double accuracyModifier = getAccuracyModifier(target, distance);
         double accuracyPerHit = baseAccuracy * accuracyModifier;
 
         if (canBreakTargetERA(target)) {
@@ -164,28 +202,37 @@ public abstract class Weapon implements Attacker {
     private int simulateHits(final int damagePerHit, final double accuracyPerHit) {
         int totalDamageDealt = 0;
 
+        System.out.println("\nInitiating combat");
+
         for (int i = 0; i < hits; i++) {
             if (RANDOM_NUMBER_GENERATOR.nextDouble() < accuracyPerHit) {
                 totalDamageDealt += damagePerHit;
             }
         }
 
+        System.out.printf("Accuracy: %.00f%%. Total Damage: %d\n", accuracyPerHit * 100, totalDamageDealt);
+
         return totalDamageDealt;
     }
 
     /* Returns a multiplier for a particular attack's chance of hitting. */
-    private double getAccuracyModifier(final Combatant target) {
+    private double getAccuracyModifier(final Combatant target, final int distance) {
         double modifier = 1;
 
+        // 50% accuracy against aerial enemies
         if (target.isAerial()) {
             final double aerialPenalty = 0.5;
             modifier *= aerialPenalty;
         }
 
-        if (damageType == DamageType.STANDARD && target.getArmourType() == ArmourType.DEFAULT) {
+        // 20% accuracy if trying to clobber infantry with a dart
+        if (damageType == DamageType.STANDARD && projectileSize == ProjectileSize.SHELL
+                && target.getArmourType() == ArmourType.DEFAULT) {
             final double highCaliberAgainstInfantryPenalty = 0.2;
             modifier *= highCaliberAgainstInfantryPenalty;
         }
+
+        modifier *= getRangeModifier(distance);
 
         return modifier;
     }
@@ -195,9 +242,24 @@ public abstract class Weapon implements Attacker {
         return projectileSize == ProjectileSize.SHELL || damageType == DamageType.EXPLOSIVE;
     }
 
+    /* Calculates the accuracy modifier based on distance from the target. */
+    private double getRangeModifier(final int distance) {
+        final double accuracyBonusPerTile = 0.2;
+        final double pointBlankAccuracyModifier = 1 + (range * accuracyBonusPerTile);
+
+        final double finalRangeModifier = pointBlankAccuracyModifier - (distance * accuracyBonusPerTile);
+
+        if (finalRangeModifier < 0) {
+            return 0;
+        } else {
+            return finalRangeModifier;
+        }
+    }
+
     /* Returns a multiplier for attack damage. */
     private double getDamageModifier(final Combatant target) {
         // TODO: make this method clean
+        // Refer to Blossom Storm documentation for the armour damage table.
         switch (target.getArmourType()) {
             case DEFAULT -> {
                 final double bulletDamageModifier = 1;
@@ -250,6 +312,7 @@ public abstract class Weapon implements Attacker {
         }
     }
 
+    /* Applies one of the four modifiers depending on the projectile size and damage type. */
     private double applyBulletArmourModifiers(final double bulletDamageModifier, final double explosiveDamageModifier,
                                               final double dartDamageModifier, final double heatDamageModifier) {
         if (projectileSize == ProjectileSize.BULLET) {
