@@ -544,6 +544,8 @@ public class Unit implements Combatant, Drawable {
         if (weapons.get(0) == null) {
             throw new IllegalStateException("Cannot attack without a weapon.");
         }
-        weapons.get(0).attack(target, 0);
+
+        final int distanceToTarget = location.manhattanDistance(target.getLocation());
+        weapons.get(0).attack(target, distanceToTarget);
     }
 }

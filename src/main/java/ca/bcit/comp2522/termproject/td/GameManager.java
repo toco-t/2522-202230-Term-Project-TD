@@ -211,9 +211,6 @@ public class GameManager {
         Vector2D selectionLocation = tile.getLocation();
         Combatant clickedUnit = getCombatantAtLocation(selectionLocation);
 
-        System.out.printf("Selected at (%f, %f).\n", selectionLocation.getXCoordinate(),
-                selectionLocation.getYCoordinate());
-
         // a friendly unit is already selected, take action with them...
         if (selectedUnit != null) {
             takeActionWithSelectedUnit(selectionLocation, clickedUnit);
@@ -230,7 +227,6 @@ public class GameManager {
         if (clickedUnit != null && clickedUnit.getAffiliation() == Affiliation.PLAYER) {
             selectedUnit = clickedUnit;
             userInterface.changeUnitDisplay(selectedUnit);
-            System.out.printf("%s is selected.\n", selectedUnit.getName());
         }
 
         // open enemy info card if enemy is selected
