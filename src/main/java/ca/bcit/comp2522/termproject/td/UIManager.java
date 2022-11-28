@@ -18,6 +18,7 @@ public class UIManager {
     private final Text selectionHint;
     private final Text keyPrompts;
     private final Text selectedUnitHint;
+    private final Text hoverHint;
     private final Text turnDisplay;
     private final Text levelDisplay;
 
@@ -28,11 +29,15 @@ public class UIManager {
         selectionHint = new Text(10, 566, "Select a unit to move.");
         selectionHint.setFill(Color.WHITE);
 
-        keyPrompts = new Text(512, 566, "[W][A][S][D] Adjust Camera     [ENTER] End Turn");
+        keyPrompts = new Text(700, 566, "[W][A][S][D] Adjust Camera     [ENTER] End Turn");
         keyPrompts.setFill(Color.WHITE);
 
         selectedUnitHint = new Text(10, 546, "");
         selectedUnitHint.setFill(Color.WHITE);
+
+        hoverHint = new Text(700, 546, "");
+        hoverHint.setFill(Color.WHITE);
+        hoverHint.setTextAlignment(TextAlignment.RIGHT);
 
         turnDisplay = new Text(455, 15, "PLAYER PHASE 01");
         turnDisplay.setFill(Color.WHITE);
@@ -85,15 +90,29 @@ public class UIManager {
      * @param combatant the selected unit
      */
     public void changeUnitDisplay(final Combatant combatant) {
+        changeHint(combatant, selectedUnitHint);
+    }
+
+    /**
+     * Updates the text when hovering over a unit.
+     *
+     * @param combatant the selected unit
+     */
+    public void changeHoverHint(final Combatant combatant) {
+        changeHint(combatant, hoverHint);
+    }
+
+    /* Changes the targetText to show the combatant's stats. */
+    private void changeHint(final Combatant combatant, final Text targetText) {
         if (combatant != null) {
             String name = combatant.getName();
             String weapon = combatant.getWeaponName();
             int currentHealth = combatant.getHealth();
             int maxHealth = combatant.getMaxHealth();
 
-            selectedUnitHint.setText(String.format("%s (%s) %d/%d HP", name, weapon, currentHealth, maxHealth));
+            targetText.setText(String.format("%s (%s) %d/%d HP", name, weapon, currentHealth, maxHealth));
         } else {
-            selectedUnitHint.setText("");
+            targetText.setText("");
         }
     }
 
@@ -103,6 +122,6 @@ public class UIManager {
      * @return the Group of UI elements
      */
     public Group getGroup() {
-        return new Group(selectionHint, selectedUnitHint, keyPrompts, turnDisplay, levelDisplay);
+        return new Group(selectionHint, selectedUnitHint, hoverHint, keyPrompts, turnDisplay, levelDisplay);
     }
 }

@@ -199,6 +199,22 @@ public class GameManager {
     }
 
     /**
+     * Responds to a Tile being hovered over by showing the hovered unit's stats.
+     *
+     * @param tile the Tile that was hovered over
+     */
+    public void hoverHint(final Tile tile) {
+        if (currentTurn == CurrentTurn.ENEMY_TURN) {
+            return;
+        }
+
+        Vector2D selectionLocation = tile.getLocation();
+        Combatant hoveredUnit = getCombatantAtLocation(selectionLocation);
+
+        userInterface.changeHoverHint(hoveredUnit);
+    }
+
+    /**
      * Responds to a Tile being clicked, and takes action according to the context (whether a unit is selected).
      *
      * @param tile the Tile that was clicked
@@ -228,11 +244,6 @@ public class GameManager {
             selectedUnit = clickedUnit;
             userInterface.changeUnitDisplay(selectedUnit);
         }
-
-        // open enemy info card if enemy is selected
-        if (clickedUnit != null && clickedUnit.getAffiliation() == Affiliation.ENEMY) {
-            displayEnemyStats(clickedUnit);
-        }
     }
 
     /* Take action with a selected unit depending on the context. */
@@ -245,18 +256,20 @@ public class GameManager {
         // attack enemy if occupied tile is clicked and a friendly unit is selected
         if (clickedUnit != null && clickedUnit.getAffiliation() == Affiliation.ENEMY) {
             attackEnemy(clickedUnit);
-        }
-
-        // select the other unit if it is a friendly
-        if (clickedUnit != null && clickedUnit.getAffiliation() == Affiliation.PLAYER) {
-            selectUnit(clickedUnit);
             userInterface.changeUnitDisplay(selectedUnit);
+            userInterface.changeHoverHint(clickedUnit);
         }
 
         // deselect unit if clicked again
         if (clickedUnit == selectedUnit) {
             selectedUnit = null;
             userInterface.changeUnitDisplay(null);
+        }
+
+        // select the other unit if it is a friendly
+        if (clickedUnit != null && clickedUnit.getAffiliation() == Affiliation.PLAYER) {
+            selectUnit(clickedUnit);
+            userInterface.changeUnitDisplay(selectedUnit);
         }
     }
 
