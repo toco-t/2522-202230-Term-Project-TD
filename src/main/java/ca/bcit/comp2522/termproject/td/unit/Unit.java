@@ -124,9 +124,9 @@ public class Unit implements Combatant, Drawable {
         weapons = new ArrayList<>();
         weapons.add(new Firearm("AK-12"));
 
-        final int dmitriHealth = 356;
-        final int dmitriDefense = 115;
-        final int dmitriEvasion = 80;
+        final int dmitriHealth = 416;
+        final int dmitriDefense = 125;
+        final int dmitriEvasion = 120;
 
         health = dmitriHealth;
         maxHealth = dmitriHealth;

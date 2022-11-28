@@ -19,6 +19,7 @@ public abstract class Weapon implements Attacker {
     private static final String DEFAULT_DESCRIPTION = "I like to keep this for close encounters.";
     private static final int DEFAULT_DAMAGE = 250;
     private static final int DEFAULT_RANGE = 5;
+    private static final int DEFAULT_ACCURACY = 250;
     private static final DamageType DEFAULT_DAMAGE_TYPE = DamageType.STANDARD;
     private static final ProjectileSize DEFAULT_PROJECTILE_SIZE = ProjectileSize.BULLET;
     private static final Random RANDOM_NUMBER_GENERATOR = new Random();
@@ -30,6 +31,7 @@ public abstract class Weapon implements Attacker {
     private final String description;
     private int damage;
     private int hits;
+    private int accuracy;
     private int range; // might use a custom range table for more advanced damage calculation later
     private final DamageType damageType;
     private final ProjectileSize projectileSize;
@@ -110,6 +112,24 @@ public abstract class Weapon implements Attacker {
     }
 
     /**
+     * Returns the accuracy of this Weapon.
+     *
+     * @return the accuracy as an int
+     */
+    public int getAccuracy() {
+        return accuracy;
+    }
+
+    /**
+     * Sets the accuracy of this Weapon.
+     *
+     * @param accuracy the accuracy as an int
+     */
+    public void setAccuracy(final int accuracy) {
+        this.accuracy = accuracy;
+    }
+
+    /**
      * Returns the range of this Weapon. One range unit is equivalent to one grid square.
      *
      * @return the range as an int
@@ -167,7 +187,7 @@ public abstract class Weapon implements Attacker {
         int damagePerHit = unroundedDamagePerHit.intValue();
 
         // TODO: ask chris if using wrapping or casting is better
-        double baseAccuracy = 1;
+        final double baseAccuracy = (double) accuracy / (target.getEvasion() * 2);
         double accuracyModifier = getAccuracyModifier(target, distance);
         double accuracyPerHit = baseAccuracy * accuracyModifier;
 

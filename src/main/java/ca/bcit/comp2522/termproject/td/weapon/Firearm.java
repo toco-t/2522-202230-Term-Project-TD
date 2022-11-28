@@ -1,5 +1,7 @@
 package ca.bcit.comp2522.termproject.td.weapon;
 
+import ca.bcit.comp2522.termproject.td.interfaces.Combatant;
+
 /**
  * A firearm that deals ranged weapon. Includes infantry guns, tank cannons, and rocket tubes.
  *
@@ -7,8 +9,6 @@ package ca.bcit.comp2522.termproject.td.weapon;
  * @version 0.1
  */
 public class Firearm extends Weapon {
-    private static final int DEFAULT_ACCURACY = 250;
-    private int accuracy;
 
     /**
      * Constructs an object of type Firearm.
@@ -37,7 +37,7 @@ public class Firearm extends Weapon {
         setHits(m24Hits);
         setRange(m24Range);
         setDamage(m24Damage);
-        accuracy = m24Accuracy;
+        setAccuracy(m24Accuracy);
 
     }
 
@@ -51,37 +51,19 @@ public class Firearm extends Weapon {
         setHits(mp7Hits);
         setRange(mp7Range);
         setDamage(mp7Damage);
-        accuracy = mp7Accuracy;
+        setAccuracy(mp7Accuracy);
     }
 
     /* Sets this Firearm's stats to that of the Remington M24. */
     private void getAK12tats() {
         final int ak12Hits = 3;
         final int ak12Range = 5;
-        final int ak12Damage = 130;
-        final int ak12Accuracy = 127;
+        final int ak12Damage = 200;
+        final int ak12Accuracy = 142;
 
         setHits(ak12Hits);
         setRange(ak12Range);
         setDamage(ak12Damage);
-        accuracy = ak12Accuracy;
-    }
-
-    /**
-     * Returns the accuracy of this Firearm.
-     *
-     * @return the accuracy as an int
-     */
-    public int getAccuracy() {
-        return accuracy;
-    }
-
-    /**
-     * Sets the accuracy of this Firearm.
-     *
-     * @param accuracy the accuracy as an int
-     */
-    public void setAccuracy(final int accuracy) {
-        this.accuracy = accuracy;
+        setAccuracy(ak12Accuracy);
     }
 }
