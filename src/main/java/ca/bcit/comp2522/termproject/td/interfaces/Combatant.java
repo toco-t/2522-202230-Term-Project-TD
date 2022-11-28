@@ -27,6 +27,13 @@ public interface Combatant {
     String getWeaponName();
 
     /**
+     * Returns the equipped weapon.
+     *
+     * @return the equipped weapon as an Attacker
+     */
+    Attacker getEquippedWeapon();
+
+    /**
      * Returns the affiliation of this Combatant.
      *
      * @return the affiliation as an Affiliation

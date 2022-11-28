@@ -181,21 +181,42 @@ public abstract class Weapon implements Attacker {
      * @return the damage that may result from the attack
      */
     public int calculateDamage(final Combatant target, final int distance) {
-        int baseDamageDealt = damage - target.getDefense();
-        double damageModifier = getDamageModifier(target);
-        Double unroundedDamagePerHit = baseDamageDealt * damageModifier;
-        int damagePerHit = unroundedDamagePerHit.intValue();
+        int damagePerHit = getDamagePerHit(target);
 
         // TODO: ask chris if using wrapping or casting is better
-        final double baseAccuracy = (double) accuracy / (target.getEvasion() * 2);
-        double accuracyModifier = getAccuracyModifier(target, distance);
-        double accuracyPerHit = baseAccuracy * accuracyModifier;
+        double accuracyPerHit = getAccuracyPerHit(target, distance);
 
         if (canBreakTargetERA(target)) {
             target.breakERA();
         }
 
         return simulateHits(damagePerHit, accuracyPerHit);
+    }
+
+    /**
+     * Returns the chance of a hit registering on the target.
+     *
+     * @param target the Combatant to attack
+     * @param distance the distance from the target in grid squares
+     * @return the accuracy of the attack as a double
+     */
+    public double getAccuracyPerHit(final Combatant target, final int distance) {
+        final double baseAccuracy = (double) accuracy / (target.getEvasion() * 2);
+        double accuracyModifier = getAccuracyModifier(target, distance);
+        return baseAccuracy * accuracyModifier;
+    }
+
+    /**
+     * Returns the amount of damage dealt per hit.
+     *
+     * @param target the Combatant to attack
+     * @return the damage dealt per hit as an int
+     */
+    public int getDamagePerHit(final Combatant target) {
+        int baseDamageDealt = damage - target.getDefense();
+        double damageModifier = getDamageModifier(target);
+        Double unroundedDamagePerHit = baseDamageDealt * damageModifier;
+        return unroundedDamagePerHit.intValue();
     }
 
     /* Simulates a number of attacks and returns the result. */
@@ -340,12 +361,11 @@ public abstract class Weapon implements Attacker {
      * Calculates maximum damage resulting from a combat initiation. This assumes all bullets hit the target.
      *
      * @param target the Combatant to attack
-     * @param distance the distance from the target in grid squares
      * @return the total damage that may result from the attack
      */
     @Override
-    public int calculateMaxDamage(final Combatant target, final int distance) {
-        return 0;
+    public int calculateMaxDamage(final Combatant target) {
+        return getDamagePerHit(target) * hits;
     }
 
     /**

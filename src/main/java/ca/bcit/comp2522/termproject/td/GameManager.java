@@ -216,6 +216,12 @@ public class GameManager {
         Combatant hoveredUnit = getCombatantAtLocation(selectionLocation);
 
         userInterface.changeHoverHint(hoveredUnit);
+
+        if (selectedUnit != null && hoveredUnit != null && hoveredUnit.getAffiliation() == Affiliation.ENEMY) {
+            userInterface.displayCombatForecast(selectedUnit, hoveredUnit, selectedUnit.getEquippedWeapon());
+        } else {
+            userInterface.hideCombatForecast();
+        }
     }
 
     /**

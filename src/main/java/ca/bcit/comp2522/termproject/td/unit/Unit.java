@@ -168,6 +168,19 @@ public class Unit implements Combatant, Drawable {
     }
 
     /**
+     * Returns the equipped weapon.
+     *
+     * @return the equipped weapon as an Attacker
+     */
+    @Override
+    public Attacker getEquippedWeapon() {
+        if (weapons.get(0) == null) {
+            throw new IllegalStateException("Cannot attack without a weapon.");
+        }
+        return weapons.get(0);
+    }
+
+    /**
      * Sets the name of this Unit.
      *
      * @param name the name as a String

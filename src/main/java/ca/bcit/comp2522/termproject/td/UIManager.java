@@ -1,6 +1,7 @@
 package ca.bcit.comp2522.termproject.td;
 
 import ca.bcit.comp2522.termproject.td.enums.CurrentTurn;
+import ca.bcit.comp2522.termproject.td.interfaces.Attacker;
 import ca.bcit.comp2522.termproject.td.interfaces.Combatant;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
@@ -19,6 +20,7 @@ public class UIManager {
     private final Text keyPrompts;
     private final Text selectedUnitHint;
     private final Text hoverHint;
+    private final Text combatForecastDisplay;
     private final Text turnDisplay;
     private final Text levelDisplay;
 
@@ -37,7 +39,9 @@ public class UIManager {
 
         hoverHint = new Text(700, 546, "");
         hoverHint.setFill(Color.WHITE);
-        hoverHint.setTextAlignment(TextAlignment.RIGHT);
+
+        combatForecastDisplay = new Text(480, 546, "DMG: 120\nACC: 29%");
+        combatForecastDisplay.setFill(Color.WHITE);
 
         turnDisplay = new Text(455, 15, "PLAYER PHASE 01");
         turnDisplay.setFill(Color.WHITE);
@@ -102,6 +106,33 @@ public class UIManager {
         changeHint(combatant, hoverHint);
     }
 
+    /**
+     * Displays combat stats before battle.
+     *
+     * @param initiator the initiator of the attack
+     * @param target the target of the attack
+     * @param attacker the weapon being used to attack
+     */
+    public void displayCombatForecast(final Combatant initiator, final Combatant target, final Attacker attacker) {
+        final int damagePerHit = attacker.getDamagePerHit(target);
+        final int hits = attacker.getHits();
+
+        final int distanceToTarget = initiator.getLocation().manhattanDistance(target.getLocation());
+        final double accuracyPerHit = attacker.getAccuracyPerHit(target, distanceToTarget);
+
+        final String combatForecast = String.format("DMG: %d ✕ %d\nACC: %.00f%%", damagePerHit, hits,
+                accuracyPerHit * 100);
+
+        combatForecastDisplay.setText(combatForecast);
+    }
+
+    /**
+     * Hides the combat forecast.
+     */
+    public void hideCombatForecast() {
+        combatForecastDisplay.setText("");
+    }
+
     /* Changes the targetText to show the combatant's stats. */
     private void changeHint(final Combatant combatant, final Text targetText) {
         if (combatant != null) {
@@ -122,6 +153,7 @@ public class UIManager {
      * @return the Group of UI elements
      */
     public Group getGroup() {
-        return new Group(selectionHint, selectedUnitHint, hoverHint, keyPrompts, turnDisplay, levelDisplay);
+        return new Group(selectionHint, selectedUnitHint, hoverHint, combatForecastDisplay, keyPrompts, turnDisplay,
+                levelDisplay);
     }
 }
