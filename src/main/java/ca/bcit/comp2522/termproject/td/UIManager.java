@@ -40,7 +40,7 @@ public class UIManager {
         hoverHint = new Text(700, 546, "");
         hoverHint.setFill(Color.WHITE);
 
-        combatForecastDisplay = new Text(480, 546, "DMG: 120\nACC: 29%");
+        combatForecastDisplay = new Text(480, 546, "");
         combatForecastDisplay.setFill(Color.WHITE);
 
         turnDisplay = new Text(455, 15, "PLAYER PHASE 01");
