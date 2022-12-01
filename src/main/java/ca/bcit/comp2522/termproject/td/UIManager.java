@@ -67,7 +67,16 @@ public class UIManager {
             hintToDisplay = "Select a unit to move.";
         }
 
-        selectionHint.setText(hintToDisplay);
+        changeSelectionHintTo(hintToDisplay);
+    }
+
+    /**
+     * Changes the selection hint to a specific string.
+     *
+     * @param string the string to display
+     */
+    public void changeSelectionHintTo(final String string) {
+        selectionHint.setText(string);
     }
 
     /**

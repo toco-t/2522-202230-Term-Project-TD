@@ -1,5 +1,6 @@
 package ca.bcit.comp2522.termproject.td.unit;
 
+import ca.bcit.comp2522.termproject.td.enums.Terrain;
 import ca.bcit.comp2522.termproject.td.enums.TurnState;
 import ca.bcit.comp2522.termproject.td.interfaces.Drawable;
 import ca.bcit.comp2522.termproject.td.enums.Affiliation;
@@ -8,6 +9,7 @@ import ca.bcit.comp2522.termproject.td.interfaces.Attacker;
 import ca.bcit.comp2522.termproject.td.interfaces.Combatant;
 import ca.bcit.comp2522.termproject.td.Vector2D;
 import ca.bcit.comp2522.termproject.td.items.Item;
+import ca.bcit.comp2522.termproject.td.map.Tile;
 import ca.bcit.comp2522.termproject.td.weapon.Firearm;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
@@ -87,11 +89,13 @@ public class Unit implements Combatant, Drawable {
         final int ayumiHealth = 301;
         final int ayumiDefense = 90;
         final int ayumiEvasion = 80;
+        final int ayumiMovementRange = 4;
 
         health = ayumiHealth;
         maxHealth = ayumiHealth;
         defense = ayumiDefense;
         evasion = ayumiEvasion;
+        movementRange = ayumiMovementRange;
     }
 
     /* Sets this unit's stats to that of Ayumi's. */
@@ -107,11 +111,13 @@ public class Unit implements Combatant, Drawable {
         final int miyakoHealth = 355;
         final int miyakoDefense = 100;
         final int miyakoEvasion = 190;
+        final int miyakoMovementRange = 4;
 
         health = miyakoHealth;
         maxHealth = miyakoHealth;
         defense = miyakoDefense;
         evasion = miyakoEvasion;
+        movementRange = miyakoMovementRange;
     }
 
     /* Sets this unit's stats to that of Ayumi's. */
@@ -127,11 +133,13 @@ public class Unit implements Combatant, Drawable {
         final int dmitriHealth = 416;
         final int dmitriDefense = 125;
         final int dmitriEvasion = 120;
+        final int dmitriMovementRange = 4;
 
         health = dmitriHealth;
         maxHealth = dmitriHealth;
         defense = dmitriDefense;
         evasion = dmitriEvasion;
+        movementRange = dmitriMovementRange;
     }
 
     /**
@@ -545,6 +553,19 @@ public class Unit implements Combatant, Drawable {
         // TODO: check if destination is valid
         location = destination;
         updateImageViewPosition();
+    }
+
+    /**
+     * Returns whether this Unit can move to the destination Tile.
+     *
+     * @param tile the destination Tile
+     * @return true if the Unit can move to the destination, otherwise false
+     */
+    public boolean canMoveTo(final Tile tile) {
+        boolean inMovementRange = location.manhattanDistance(tile.getLocation()) <= movementRange;
+        boolean notMovingToObstacle = tile.getTerrain() != Terrain.OBSTACLE;
+        boolean notMovingToAirspaceIfUnitNotAerial = tile.getTerrain() == Terrain.AIRSPACE && aerial;
+        return (inMovementRange && (notMovingToObstacle || notMovingToAirspaceIfUnitNotAerial));
     }
 
     /**

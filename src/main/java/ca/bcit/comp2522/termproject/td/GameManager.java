@@ -257,12 +257,11 @@ public class GameManager {
 
     /* Take action with a selected unit depending on the context. */
     private void takeActionWithSelectedUnit(final Tile tile) {
-        Vector2D selectionLocation = tile.getLocation();
         Combatant clickedUnit = getCombatantAtLocation(tile.getLocation());
 
         // move unit if an empty tile is clicked and a unit is selected
         if (clickedUnit == null) {
-            moveUnit(selectionLocation);
+            moveUnit(tile);
         }
 
         // attack enemy if occupied tile is clicked and a friendly unit is selected
@@ -315,15 +314,21 @@ public class GameManager {
     /**
      * Moves the selected Unit to the location at the specified coordinates.
      *
-     * @param coordinates destination for this move, a Vector2D
+     * @param tile destination for this move, a Tile
      * @throws IllegalArgumentException when the specified coordinates is null
      */
-    public void moveUnit(final Vector2D coordinates) throws IllegalArgumentException {
+    public void moveUnit(final Tile tile) throws IllegalArgumentException {
+        Vector2D coordinates = tile.getLocation();
         if (coordinates == null) {
             throw new IllegalArgumentException("Coordinates cannot be null...");
         } else if (selectedUnit.getTurnState() == TurnState.CAN_MOVE) {
-            selectedUnit.moveTo(coordinates);
-            selectedUnit.setTurnState(TurnState.CAN_ATTACK);
+            if (selectedUnit.canMoveTo(tile)) {
+                selectedUnit.moveTo(coordinates);
+                selectedUnit.setTurnState(TurnState.CAN_ATTACK);
+            } else {
+                userInterface.changeSelectionHintTo("Cannot move to the specified location.");
+            }
+
         } else {
             selectedUnit = null;
         }
