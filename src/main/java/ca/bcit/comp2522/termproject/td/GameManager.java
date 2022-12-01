@@ -234,21 +234,20 @@ public class GameManager {
             return;
         }
 
-        Vector2D selectionLocation = tile.getLocation();
-        Combatant clickedUnit = getCombatantAtLocation(selectionLocation);
-
         // a friendly unit is already selected, take action with them...
         if (selectedUnit != null) {
-            takeActionWithSelectedUnit(selectionLocation, clickedUnit);
+            takeActionWithSelectedUnit(tile);
         } else {
-            takeActionWithoutSelectedUnit(clickedUnit);
+            takeActionWithoutSelectedUnit(tile);
         }
 
         userInterface.changeSelectionHint(selectedUnit);
     }
 
     /* Take action without a selected unit depending on the context. */
-    private void takeActionWithoutSelectedUnit(final Combatant clickedUnit) {
+    private void takeActionWithoutSelectedUnit(final Tile tile) {
+        Combatant clickedUnit = getCombatantAtLocation(tile.getLocation());
+
         // select unit if a unit is clicked but no unit is already selected
         if (clickedUnit != null && clickedUnit.getAffiliation() == Affiliation.PLAYER) {
             selectedUnit = clickedUnit;
@@ -257,7 +256,10 @@ public class GameManager {
     }
 
     /* Take action with a selected unit depending on the context. */
-    private void takeActionWithSelectedUnit(final Vector2D selectionLocation, final Combatant clickedUnit) {
+    private void takeActionWithSelectedUnit(final Tile tile) {
+        Vector2D selectionLocation = tile.getLocation();
+        Combatant clickedUnit = getCombatantAtLocation(tile.getLocation());
+
         // move unit if an empty tile is clicked and a unit is selected
         if (clickedUnit == null) {
             moveUnit(selectionLocation);
@@ -277,7 +279,7 @@ public class GameManager {
         }
 
         // select the other unit if it is a friendly
-        if (clickedUnit != null && clickedUnit.getAffiliation() == Affiliation.PLAYER) {
+        if (clickedUnit != null && selectedUnit != null && clickedUnit.getAffiliation() == Affiliation.PLAYER) {
             selectUnit(clickedUnit);
             userInterface.changeUnitDisplay(selectedUnit);
         }
