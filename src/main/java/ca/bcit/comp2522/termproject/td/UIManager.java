@@ -118,7 +118,13 @@ public class UIManager {
         final int hits = attacker.getHits();
 
         final int distanceToTarget = initiator.getLocation().manhattanDistance(target.getLocation());
-        final double accuracyPerHit = attacker.getAccuracyPerHit(target, distanceToTarget);
+        double accuracyPerHit = attacker.getAccuracyPerHit(target, distanceToTarget);
+
+        if (accuracyPerHit < 0) {
+            accuracyPerHit = 0;
+        } else if (accuracyPerHit > 1) {
+            accuracyPerHit = 1;
+        }
 
         final String combatForecast = String.format("DMG: %d ✕ %d\nACC: %.00f%%", damagePerHit, hits,
                 accuracyPerHit * 100);
