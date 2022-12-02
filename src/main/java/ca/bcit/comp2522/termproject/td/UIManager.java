@@ -11,8 +11,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
-//import javax.awt.Graphics2D;
-
 /**
  * Manages the game's User Interface.
  *
@@ -27,6 +25,7 @@ public class UIManager {
     private final Text turnDisplay;
     private final Text levelDisplay;
     private final Rectangle dialogueDisplay;
+    private final Text dialogue;
     private final StackPane stack = new StackPane();
 
     /**
@@ -52,9 +51,11 @@ public class UIManager {
         Color colour = new Color(0.2, 0.2, 0.2, 0.7);
         dialogueDisplay.setFill(colour);
 
-        Text dialogue = new Text("Testing...");
+        dialogue = new Text("First Mission - Battle in CoCo");
         dialogue.setFont(Font.font("verdana", 20));
         dialogue.setFill(Color.WHITE);
+        dialogue.setWrappingWidth(640);
+        dialogue.setTextAlignment(TextAlignment.valueOf("CENTER"));
 
         stack.getChildren().addAll(dialogueDisplay, dialogue);
         stack.setLayoutX(150);
@@ -114,6 +115,20 @@ public class UIManager {
             selectedUnitHint.setText(String.format("%s (%s) %d/%d HP", name, weapon, currentHealth, maxHealth));
         } else {
             selectedUnitHint.setText("");
+        }
+    }
+
+    /**
+     * Updates the dialogue.
+     *
+     * @param message next line of the script, a String
+     */
+    public void changeDialogueDisplay(final String message) {
+        if (message != null) {
+            this.dialogue.setText(message);
+        } else {
+            stack.setVisible(false);
+            dialogueDisplay.setVisible(false);
         }
     }
 
