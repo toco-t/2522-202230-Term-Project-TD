@@ -13,7 +13,6 @@ import ca.bcit.comp2522.termproject.td.unit.Unit;
 import javafx.scene.Group;
 import javafx.scene.input.KeyEvent;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -33,7 +32,7 @@ public class  GameManager {
     private final UIManager userInterface;
     private GameMap map;
     private Combatant selectedUnit;
-    private CutsceneManager cutscene;
+    private final CutsceneManager cutscene;
 
     /**
      * Constructs an object of type GameManager.
@@ -132,7 +131,7 @@ public class  GameManager {
             case A -> moveAllDrawables(new Vector2D(speedInPixelsPerFrame, 0));
             case S -> moveAllDrawables(new Vector2D(0, -speedInPixelsPerFrame));
             case D -> moveAllDrawables(new Vector2D(-speedInPixelsPerFrame, 0));
-            case SPACE -> System.out.println(cutscene.loadScript());
+            case SPACE -> userInterface.changeDialogueDisplay(cutscene.loadScript());
 
             default -> { }
         }
