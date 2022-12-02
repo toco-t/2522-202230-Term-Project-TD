@@ -17,7 +17,7 @@ public class CutsceneManager {
     }
 
     public String loadScript() {
-        File file = new File("/Users/toco/IdeaProjects/2522-202230-Term-Project-TD/src/main/resources/script.txt");
+        File file = new File("src/main/resources/script.txt");
         String buffer = "";
 
         try {
