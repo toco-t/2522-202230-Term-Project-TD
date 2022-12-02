@@ -23,7 +23,7 @@ import java.util.Collections;
  * @author Toco Tachibana
  * @version 0.2
  */
-public class GameManager {
+public class  GameManager {
     private int turnNumber;
     private CurrentTurn currentTurn;
     private final ArrayList<Combatant> playerUnits;
@@ -32,6 +32,7 @@ public class GameManager {
     private final UIManager userInterface;
     private GameMap map;
     private Combatant selectedUnit;
+    private final CutsceneManager cutscene;
 
     /**
      * Constructs an object of type GameManager.
@@ -41,6 +42,7 @@ public class GameManager {
         this.enemyUnits = new ArrayList<>();
         this.entities = new ArrayList<>();
         this.userInterface = new UIManager();
+        this.cutscene = new CutsceneManager();
 
         currentTurn = CurrentTurn.PLAYER_TURN;
         turnNumber = 1;
@@ -129,6 +131,8 @@ public class GameManager {
             case A -> moveAllDrawables(new Vector2D(speedInPixelsPerFrame, 0));
             case S -> moveAllDrawables(new Vector2D(0, -speedInPixelsPerFrame));
             case D -> moveAllDrawables(new Vector2D(-speedInPixelsPerFrame, 0));
+            case SPACE -> userInterface.changeDialogueDisplay(cutscene.loadScript());
+
             default -> { }
         }
     }

@@ -24,7 +24,7 @@ import java.util.ArrayList;
  */
 public class BlossomStorm extends Application {
     @Override
-    public void start(final Stage stage) throws IOException {
+    public void start(final Stage stage) {
         // Create a GameManager.
         GameManager gameManager = new GameManager();
 
