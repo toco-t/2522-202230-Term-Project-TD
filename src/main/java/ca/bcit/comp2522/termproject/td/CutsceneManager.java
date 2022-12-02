@@ -12,10 +12,18 @@ public class CutsceneManager {
 
     private int lineNumber;
 
+    /**
+     * Construct an object of type CutsceneManager.
+     */
     public CutsceneManager() {
         this.lineNumber = 0;
     }
 
+    /**
+     * Retrieves the specified line of the script from script.txt.
+     *
+     * @return the next line of the script, a String
+     */
     public String loadScript() {
         File file = new File("src/main/resources/script.txt");
         String buffer = "";

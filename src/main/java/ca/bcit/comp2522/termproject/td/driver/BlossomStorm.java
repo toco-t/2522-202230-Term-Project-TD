@@ -1,11 +1,6 @@
 package ca.bcit.comp2522.termproject.td.driver;
 
-import ca.bcit.comp2522.termproject.td.interfaces.Drawable;
 import ca.bcit.comp2522.termproject.td.GameManager;
-import ca.bcit.comp2522.termproject.td.Vector2D;
-import ca.bcit.comp2522.termproject.td.enums.Weather;
-import ca.bcit.comp2522.termproject.td.map.GameMap;
-import ca.bcit.comp2522.termproject.td.unit.Unit;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -13,8 +8,6 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
-import java.io.IOException;
-import java.util.ArrayList;
 
 /**
  * Driver for the game.
