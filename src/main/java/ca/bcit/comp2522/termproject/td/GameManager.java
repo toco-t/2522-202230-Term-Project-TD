@@ -72,6 +72,11 @@ public class GameManager {
 
         if (currentTurn == CurrentTurn.ENEMY_TURN) {
             takeEnemyTurn();
+
+            selectedUnit = null;
+            userInterface.changeUnitDisplay(null);
+            userInterface.changeSelectionHint(null);
+            clearHighlights();
         }
     }
 
