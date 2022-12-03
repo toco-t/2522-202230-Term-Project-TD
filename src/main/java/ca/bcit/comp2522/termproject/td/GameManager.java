@@ -51,8 +51,8 @@ public class GameManager {
         currentTurn = CurrentTurn.PLAYER_TURN;
         turnNumber = 1;
 
-        generateUnits(-1);
-        createGameMap(-1);
+        generateUnits(0);
+        createGameMap(0);
     }
 
     /**
@@ -191,11 +191,29 @@ public class GameManager {
      * @throws IllegalArgumentException if the mission does not exist
      */
     public void generateUnits(final int mission) {
-        if (mission == -1) {
-            generateUnitsForTestMission();
-        } else {
-            throw new IllegalArgumentException("The requested mission does not exist.");
+        switch (mission) {
+            case -1 -> generateUnitsForTestMission();
+            case 0 -> generateUnitsForCurryHouseMission();
+            default -> throw new IllegalArgumentException("The requested mission does not exist.");
         }
+    }
+
+    private void generateUnitsForCurryHouseMission() {
+        Unit ayumi = new Unit("Ayumi", new Vector2D(7, -1), viewOffset);
+        playerUnits.add(ayumi);
+        entities.add(ayumi);
+
+        Unit miyako = new Unit("Miyako", new Vector2D(7, 0), viewOffset);
+        playerUnits.add(miyako);
+        entities.add(miyako);
+
+        Unit dmitri1 = new Unit("Dmitri", new Vector2D(10, 0), viewOffset);
+        enemyUnits.add(dmitri1);
+        entities.add(dmitri1);
+
+        Unit dmitri2 = new Unit("Dmitri", new Vector2D(10, 1), viewOffset);
+        enemyUnits.add(dmitri2);
+        entities.add(dmitri2);
     }
 
     private void generateUnitsForTestMission() {
@@ -313,6 +331,9 @@ public class GameManager {
         if (currentTurn == CurrentTurn.ENEMY_TURN) {
             return;
         }
+
+        System.out.printf("Clicked (%f, %f)\n", tile.getLocation().getXCoordinate(),
+                tile.getLocation().getYCoordinate());
 
         // a friendly unit is already selected, take action with them...
         if (selectedUnit != null) {
