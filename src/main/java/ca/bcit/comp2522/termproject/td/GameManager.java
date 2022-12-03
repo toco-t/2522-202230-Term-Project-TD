@@ -242,6 +242,7 @@ public class GameManager {
     public void highlightOptions(final Combatant combatant) {
         ArrayList<Vector2D> movementOptions = map.getMovementOptions(combatant);
         Image movableTile = new Image("tile_movable.png");
+        Image targetTile = new Image("tile_target.png");
 
         for (Vector2D movementOption : movementOptions) {
             TileHighlight highlight = new TileHighlight(movableTile, movementOption);
