@@ -16,6 +16,7 @@ import javafx.scene.text.TextAlignment;
  * @version 0.2
  */
 public class UIManager {
+    private final Group hudElements;
     private final Text selectionHint;
     private final Text keyPrompts;
     private final Text selectedUnitHint;
@@ -48,6 +49,9 @@ public class UIManager {
 
         levelDisplay = new Text(10, 15, "Test Mission");
         levelDisplay.setFill(Color.WHITE);
+
+        hudElements = new Group(selectionHint, selectedUnitHint, hoverHint, combatForecastDisplay, keyPrompts,
+                turnDisplay, levelDisplay);
     }
 
     /**
@@ -168,7 +172,6 @@ public class UIManager {
      * @return the Group of UI elements
      */
     public Group getGroup() {
-        return new Group(selectionHint, selectedUnitHint, hoverHint, combatForecastDisplay, keyPrompts, turnDisplay,
-                levelDisplay);
+        return hudElements;
     }
 }

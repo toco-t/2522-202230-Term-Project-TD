@@ -1,16 +1,15 @@
 package ca.bcit.comp2522.termproject.td;
 
 import ca.bcit.comp2522.termproject.td.driver.SpriteRenderer;
-import ca.bcit.comp2522.termproject.td.enums.Affiliation;
-import ca.bcit.comp2522.termproject.td.enums.CurrentTurn;
-import ca.bcit.comp2522.termproject.td.enums.TurnState;
-import ca.bcit.comp2522.termproject.td.enums.Weather;
+import ca.bcit.comp2522.termproject.td.enums.*;
 import ca.bcit.comp2522.termproject.td.interfaces.Combatant;
 import ca.bcit.comp2522.termproject.td.interfaces.Drawable;
 import ca.bcit.comp2522.termproject.td.map.GameMap;
 import ca.bcit.comp2522.termproject.td.map.Tile;
+import ca.bcit.comp2522.termproject.td.map.TileHighlight;
 import ca.bcit.comp2522.termproject.td.unit.Unit;
 import javafx.scene.Group;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 
 import java.util.ArrayList;
@@ -32,6 +31,8 @@ public class GameManager {
     private final UIManager userInterface;
     private GameMap map;
     private Combatant selectedUnit;
+    private ArrayList<Drawable> tileHighlights;
+    private Group tileHighlightGroup;
 
     /**
      * Constructs an object of type GameManager.
@@ -41,6 +42,7 @@ public class GameManager {
         this.enemyUnits = new ArrayList<>();
         this.entities = new ArrayList<>();
         this.userInterface = new UIManager();
+        this.tileHighlights = new ArrayList<>();
 
         currentTurn = CurrentTurn.PLAYER_TURN;
         turnNumber = 1;
@@ -111,8 +113,9 @@ public class GameManager {
         Group units = SpriteRenderer.groupDrawables(entities);
         Group tiles = SpriteRenderer.groupDrawables(map.getTilesForRendering());
         Group userInterfaceElements = userInterface.getGroup();
+        tileHighlightGroup = new Group();
 
-        return new Group(tiles, units, userInterfaceElements);
+        return new Group(tiles, tileHighlightGroup, units, userInterfaceElements);
     }
 
     /**
@@ -142,6 +145,13 @@ public class GameManager {
     /* Moves all units' (both players and enemies) offsets by a certain amount. */
     private void moveAllUnits(final Vector2D delta) {
         for (Drawable drawable : entities) {
+            drawable.moveImageView(delta);
+        }
+    }
+
+    /* Moves all tile highlights' offsets by a certain amount. */
+    private void moveAllHighlights(final Vector2D delta) {
+        for (Drawable drawable : tileHighlights) {
             drawable.moveImageView(delta);
         }
     }
@@ -225,6 +235,22 @@ public class GameManager {
     }
 
     /**
+     * Highlights possible movement options on the game map.
+     *
+     * @param combatant the Combatant to move
+     */
+    public void highlightOptions(final Combatant combatant) {
+        ArrayList<Vector2D> movementOptions = map.getMovementOptions(combatant);
+        Image movableTile = new Image("tile_movable.png");
+
+        for (Vector2D movementOption : movementOptions) {
+            TileHighlight highlight = new TileHighlight(movableTile, movementOption);
+            tileHighlightGroup.getChildren().add(highlight.getImageView());
+            tileHighlights.add(highlight);
+        }
+    }
+
+    /**
      * Responds to a Tile being clicked, and takes action according to the context (whether a unit is selected).
      *
      * @param tile the Tile that was clicked
@@ -252,6 +278,7 @@ public class GameManager {
         if (clickedUnit != null && clickedUnit.getAffiliation() == Affiliation.PLAYER) {
             selectedUnit = clickedUnit;
             userInterface.changeUnitDisplay(selectedUnit);
+            highlightOptions(selectedUnit);
         }
     }
 

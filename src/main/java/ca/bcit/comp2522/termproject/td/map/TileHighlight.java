@@ -14,12 +14,12 @@ import java.util.Objects;
 import static ca.bcit.comp2522.termproject.td.Vector2D.tileCoordinateToScreenSpace;
 
 /**
- * Tile in a Map.
+ * Tile Highlight that shows potential movement options.
  *
- * @author Toco Tachibana
- * @version 0.2
+ * @author Nathan
+ * @version 0.3
  */
-public class Tile implements Drawable {
+public class TileHighlight implements Drawable {
     private static final double VIEW_SIZE_X = 128;
     private static final double VIEW_SIZE_Y = 128;
 
@@ -28,32 +28,24 @@ public class Tile implements Drawable {
 
     private static final double SPRITE_SCALE = 1;
     private ImageView imageView;
-    private final GameManager gameManager;
     private Image sprite;
 
     private final Vector2D location;
     private int height;
     private final Vector2D viewOffset;
-    private final Terrain terrain;
 
     /**
      * Constructs an object of type Tile.
      *
-     * @param gameManager the GameManager, used for handling clicking events
-     * @param terrain the terrain type of this Tile
-     * @param spriteSheet the sprite this Tile uses
+     * @param sprite the sprite this Tile uses
      * @param location the tile-coordinates of this Tile
-     * @param spriteLocation the location of the sprite within the sprite sheet
      */
-    public Tile(final GameManager gameManager, final Terrain terrain, final Image spriteSheet,
-                final Vector2D spriteLocation, final Vector2D location) {
-        this.gameManager = gameManager;
-        this.terrain = terrain;
-        this.sprite = spriteSheet;
+    public TileHighlight(final Image sprite, final Vector2D location) {
+        this.sprite = sprite;
         this.location = location;
         this.viewOffset = new Vector2D(0, 0);
 
-        generateImageView(spriteLocation);
+        generateImageView();
     }
 
     /**
@@ -123,31 +115,17 @@ public class Tile implements Drawable {
         updateImageViewPosition();
     }
 
-    /**
-     * Returns the terrain type of this Tile.
-     *
-     * @return the terrain type as a Terrain
-     */
-    public Terrain getTerrain() {
-        return terrain;
-    }
-
     /* Generates an ImageView of this Tile, using its coordinates. */
-    private void generateImageView(final Vector2D spritePosition) {
+    private void generateImageView() {
         double scaledViewSizeX = VIEW_SIZE_X * SPRITE_SCALE;
         double scaledViewSizeY = VIEW_SIZE_Y * SPRITE_SCALE;
 
-        double xOffsetPixels = VIEW_SIZE_X * spritePosition.getXCoordinate();
-        double yOffsetPixels = VIEW_SIZE_Y * spritePosition.getYCoordinate();
-
         imageView = new ImageView(sprite);
-        imageView.setViewport(new Rectangle2D(xOffsetPixels, yOffsetPixels, scaledViewSizeX,
+        imageView.setViewport(new Rectangle2D(0, 0, scaledViewSizeX,
                 scaledViewSizeY));
+        imageView.setMouseTransparent(true);
 
         updateImageViewPosition();
-
-        imageView.setOnMouseClicked((MouseEvent event) -> gameManager.select(this));
-        imageView.setOnMouseEntered((MouseEvent event) -> gameManager.hoverHint(this));
     }
 
     /* Updates the ImageView's position based on the offset. */
@@ -164,43 +142,5 @@ public class Tile implements Drawable {
 
         return new Vector2D(screenSpaceCoordinates.getXCoordinate() + offset.getXCoordinate(),
                 screenSpaceCoordinates.getYCoordinate() + offset.getYCoordinate());
-    }
-
-    /**
-     * Returns the String representation of this Tile.
-     *
-     * @return toString as a String
-     */
-    @Override
-    public String toString() {
-        return String.format("Tile{ coordinates = %s, terrain = %s}", location.toString(), terrain.toString());
-    }
-
-    /**
-     * Returns true if the specified object is equal to this Tile, else false.
-     *
-     * @param object the specified item to compare, an Object
-     * @return true if this Tile and the specified object are euqal, else false
-     */
-    @Override
-    public boolean equals(final Object object) {
-        if (this == object) {
-            return true;
-        }
-        if (object == null || getClass() != object.getClass()) {
-            return false;
-        }
-        Tile tile = (Tile) object;
-        return Objects.equals(location, tile.location) && terrain == tile.terrain;
-    }
-
-    /**
-     * Returns the hash code of this Tile.
-     *
-     * @return hashCode as an int
-     */
-    @Override
-    public int hashCode() {
-        return Objects.hash(location, terrain);
     }
 }
