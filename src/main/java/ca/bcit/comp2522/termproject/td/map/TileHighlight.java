@@ -39,11 +39,12 @@ public class TileHighlight implements Drawable {
      *
      * @param sprite the sprite this Tile uses
      * @param location the tile-coordinates of this Tile
+     * @param viewOffset the offset to apply to the ImageView to simulate a camera
      */
-    public TileHighlight(final Image sprite, final Vector2D location) {
+    public TileHighlight(final Image sprite, final Vector2D location, final Vector2D viewOffset) {
         this.sprite = sprite;
         this.location = location;
-        this.viewOffset = new Vector2D(0, 0);
+        this.viewOffset = viewOffset;
 
         generateImageView();
     }
@@ -65,7 +66,6 @@ public class TileHighlight implements Drawable {
      */
     @Override
     public void moveImageView(final Vector2D offsetDelta) {
-        viewOffset.add(offsetDelta);
         updateImageViewPosition();
     }
 

@@ -33,6 +33,7 @@ public class GameManager {
     private Combatant selectedUnit;
     private ArrayList<Drawable> tileHighlights;
     private Group tileHighlightGroup;
+    private Vector2D viewOffset;
 
     /**
      * Constructs an object of type GameManager.
@@ -43,6 +44,7 @@ public class GameManager {
         this.entities = new ArrayList<>();
         this.userInterface = new UIManager();
         this.tileHighlights = new ArrayList<>();
+        this.viewOffset = new Vector2D(0, 0);
 
         currentTurn = CurrentTurn.PLAYER_TURN;
         turnNumber = 1;
@@ -138,7 +140,9 @@ public class GameManager {
 
     /* Moves all drawable objects' offsets by a certain amount. */
     private void moveAllDrawables(final Vector2D delta) {
+        viewOffset.add(delta);
         moveAllUnits(delta);
+        moveAllHighlights(delta);
         map.moveTiles(delta);
     }
 
@@ -186,19 +190,19 @@ public class GameManager {
     }
 
     private void generateUnitsForTestMission() {
-        Unit ayumi = new Unit("Ayumi", new Vector2D(6, 0));
+        Unit ayumi = new Unit("Ayumi", new Vector2D(6, 0), viewOffset);
         playerUnits.add(ayumi);
         entities.add(ayumi);
 
-        Unit miyako = new Unit("Miyako", new Vector2D(6, 1));
+        Unit miyako = new Unit("Miyako", new Vector2D(6, 1), viewOffset);
         playerUnits.add(miyako);
         entities.add(miyako);
 
-        Unit dmitri1 = new Unit("Dmitri", new Vector2D(10, 0));
+        Unit dmitri1 = new Unit("Dmitri", new Vector2D(10, 0), viewOffset);
         enemyUnits.add(dmitri1);
         entities.add(dmitri1);
 
-        Unit dmitri2 = new Unit("Dmitri", new Vector2D(10, 1));
+        Unit dmitri2 = new Unit("Dmitri", new Vector2D(10, 1), viewOffset);
         enemyUnits.add(dmitri2);
         entities.add(dmitri2);
     }
@@ -266,7 +270,7 @@ public class GameManager {
                                           final ArrayList<Vector2D> enemyPositions, final Image movableTile) {
         for (Vector2D movementOption : movementOptions) {
             if (!enemyPositions.contains(movementOption)) {
-                TileHighlight highlight = new TileHighlight(movableTile, movementOption);
+                TileHighlight highlight = new TileHighlight(movableTile, movementOption, viewOffset);
                 tileHighlightGroup.getChildren().add(highlight.getImageView());
                 tileHighlights.add(highlight);
             }
@@ -275,7 +279,7 @@ public class GameManager {
 
     private void highlightAttackOptions(final ArrayList<Vector2D> enemyPositions, final Image targetTile) {
         for (Vector2D enemyPosition : enemyPositions) {
-            TileHighlight highlight = new TileHighlight(targetTile, enemyPosition);
+            TileHighlight highlight = new TileHighlight(targetTile, enemyPosition, viewOffset);
             tileHighlightGroup.getChildren().add(highlight.getImageView());
             tileHighlights.add(highlight);
         }

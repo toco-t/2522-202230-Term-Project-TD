@@ -58,13 +58,14 @@ public class Unit implements Combatant, Drawable {
      *
      * @param name the name of the Unit as a String
      * @param location the starting location of the Unit as a Vector2D
+     * @param viewOffset the offset to apply to the ImageView to simulate a camera
      * @throws IllegalArgumentException if the Unit does not exist
      */
-    public Unit(final String name, final Vector2D location) {
+    public Unit(final String name, final Vector2D location, final Vector2D viewOffset) {
         // replace this code with I/O to a unit bank of some sort. This is just a placeholder.
         this.name = name;
         this.location = location;
-        this.viewOffset = new Vector2D(0, 0);
+        this.viewOffset = viewOffset;
 
         switch (name) {
             case "Ayumi" -> getAyumiStats();
@@ -267,7 +268,6 @@ public class Unit implements Combatant, Drawable {
      */
     @Override
     public void moveImageView(final Vector2D offsetDelta) {
-        viewOffset.add(offsetDelta);
         updateImageViewPosition();
     }
 
