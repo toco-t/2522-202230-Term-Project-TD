@@ -1,16 +1,15 @@
 package ca.bcit.comp2522.termproject.td;
 
 import ca.bcit.comp2522.termproject.td.driver.SpriteRenderer;
-import ca.bcit.comp2522.termproject.td.enums.Affiliation;
-import ca.bcit.comp2522.termproject.td.enums.CurrentTurn;
-import ca.bcit.comp2522.termproject.td.enums.TurnState;
-import ca.bcit.comp2522.termproject.td.enums.Weather;
+import ca.bcit.comp2522.termproject.td.enums.*;
 import ca.bcit.comp2522.termproject.td.interfaces.Combatant;
 import ca.bcit.comp2522.termproject.td.interfaces.Drawable;
 import ca.bcit.comp2522.termproject.td.map.GameMap;
 import ca.bcit.comp2522.termproject.td.map.Tile;
+import ca.bcit.comp2522.termproject.td.map.TileHighlight;
 import ca.bcit.comp2522.termproject.td.unit.Unit;
 import javafx.scene.Group;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 
 import java.util.ArrayList;
@@ -23,7 +22,7 @@ import java.util.Collections;
  * @author Toco Tachibana
  * @version 0.2
  */
-public class  GameManager {
+public class GameManager {
     private int turnNumber;
     private CurrentTurn currentTurn;
     private final ArrayList<Combatant> playerUnits;
@@ -33,6 +32,9 @@ public class  GameManager {
     private GameMap map;
     private Combatant selectedUnit;
     private final CutsceneManager cutscene;
+    private ArrayList<Drawable> tileHighlights;
+    private Group tileHighlightGroup;
+    private Vector2D viewOffset;
 
     /**
      * Constructs an object of type GameManager.
@@ -43,6 +45,8 @@ public class  GameManager {
         this.entities = new ArrayList<>();
         this.userInterface = new UIManager();
         this.cutscene = new CutsceneManager();
+        this.tileHighlights = new ArrayList<>();
+        this.viewOffset = new Vector2D(0, 0);
 
         currentTurn = CurrentTurn.PLAYER_TURN;
         turnNumber = 1;
@@ -70,6 +74,11 @@ public class  GameManager {
 
         if (currentTurn == CurrentTurn.ENEMY_TURN) {
             takeEnemyTurn();
+
+            selectedUnit = null;
+            userInterface.changeUnitDisplay(null);
+            userInterface.changeSelectionHint(null);
+            clearHighlights();
         }
     }
 
@@ -113,8 +122,9 @@ public class  GameManager {
         Group units = SpriteRenderer.groupDrawables(entities);
         Group tiles = SpriteRenderer.groupDrawables(map.getTilesForRendering());
         Group userInterfaceElements = userInterface.getGroup();
+        tileHighlightGroup = new Group();
 
-        return new Group(tiles, units, userInterfaceElements);
+        return new Group(tiles, tileHighlightGroup, units, userInterfaceElements);
     }
 
     /**
@@ -139,13 +149,22 @@ public class  GameManager {
 
     /* Moves all drawable objects' offsets by a certain amount. */
     private void moveAllDrawables(final Vector2D delta) {
+        viewOffset.add(delta);
         moveAllUnits(delta);
+        moveAllHighlights(delta);
         map.moveTiles(delta);
     }
 
     /* Moves all units' (both players and enemies) offsets by a certain amount. */
     private void moveAllUnits(final Vector2D delta) {
         for (Drawable drawable : entities) {
+            drawable.moveImageView(delta);
+        }
+    }
+
+    /* Moves all tile highlights' offsets by a certain amount. */
+    private void moveAllHighlights(final Vector2D delta) {
+        for (Drawable drawable : tileHighlights) {
             drawable.moveImageView(delta);
         }
     }
@@ -180,19 +199,19 @@ public class  GameManager {
     }
 
     private void generateUnitsForTestMission() {
-        Unit ayumi = new Unit("Ayumi", new Vector2D(6, 0));
+        Unit ayumi = new Unit("Ayumi", new Vector2D(6, 0), viewOffset);
         playerUnits.add(ayumi);
         entities.add(ayumi);
 
-        Unit miyako = new Unit("Miyako", new Vector2D(6, 1));
+        Unit miyako = new Unit("Miyako", new Vector2D(6, 1), viewOffset);
         playerUnits.add(miyako);
         entities.add(miyako);
 
-        Unit dmitri1 = new Unit("Dmitri", new Vector2D(10, 0));
+        Unit dmitri1 = new Unit("Dmitri", new Vector2D(10, 0), viewOffset);
         enemyUnits.add(dmitri1);
         entities.add(dmitri1);
 
-        Unit dmitri2 = new Unit("Dmitri", new Vector2D(10, 1));
+        Unit dmitri2 = new Unit("Dmitri", new Vector2D(10, 1), viewOffset);
         enemyUnits.add(dmitri2);
         entities.add(dmitri2);
     }
@@ -229,6 +248,63 @@ public class  GameManager {
     }
 
     /**
+     * Clears all map highlighting.
+     */
+    public void clearHighlights() {
+        tileHighlightGroup.getChildren().clear();
+        tileHighlights.clear();
+    }
+
+    /**
+     * Highlights possible movement options on the game map.
+     *
+     * @param combatant the Combatant to move
+     */
+    public void highlightOptions(final Combatant combatant) {
+        ArrayList<Vector2D> movementOptions = map.getMovementOptions(combatant);
+        ArrayList<Vector2D> enemyPositions = getEnemyPositions();
+        Image movableTile = new Image("tile_movable.png");
+        Image targetTile = new Image("tile_target.png");
+
+        if (combatant.getTurnState() == TurnState.CAN_MOVE) {
+            highlightMovementOptions(movementOptions, enemyPositions, movableTile);
+        }
+
+        if (combatant.getTurnState() != TurnState.DONE) {
+            highlightAttackOptions(enemyPositions, targetTile);
+        }
+    }
+
+    private void highlightMovementOptions(final ArrayList<Vector2D> movementOptions,
+                                          final ArrayList<Vector2D> enemyPositions, final Image movableTile) {
+        for (Vector2D movementOption : movementOptions) {
+            if (!enemyPositions.contains(movementOption)) {
+                TileHighlight highlight = new TileHighlight(movableTile, movementOption, viewOffset);
+                tileHighlightGroup.getChildren().add(highlight.getImageView());
+                tileHighlights.add(highlight);
+            }
+        }
+    }
+
+    private void highlightAttackOptions(final ArrayList<Vector2D> enemyPositions, final Image targetTile) {
+        for (Vector2D enemyPosition : enemyPositions) {
+            TileHighlight highlight = new TileHighlight(targetTile, enemyPosition, viewOffset);
+            tileHighlightGroup.getChildren().add(highlight.getImageView());
+            tileHighlights.add(highlight);
+        }
+    }
+
+    private ArrayList<Vector2D> getEnemyPositions() {
+        ArrayList<Vector2D> enemyPositions = new ArrayList<>();
+
+        for (Combatant enemy : enemyUnits) {
+            enemyPositions.add(enemy.getLocation());
+        }
+
+        return enemyPositions;
+    }
+
+    /**
      * Responds to a Tile being clicked, and takes action according to the context (whether a unit is selected).
      *
      * @param tile the Tile that was clicked
@@ -238,52 +314,58 @@ public class  GameManager {
             return;
         }
 
-        Vector2D selectionLocation = tile.getLocation();
-        Combatant clickedUnit = getCombatantAtLocation(selectionLocation);
-
         // a friendly unit is already selected, take action with them...
         if (selectedUnit != null) {
-            takeActionWithSelectedUnit(selectionLocation, clickedUnit);
+            takeActionWithSelectedUnit(tile);
         } else {
-            takeActionWithoutSelectedUnit(clickedUnit);
+            takeActionWithoutSelectedUnit(tile);
         }
 
         userInterface.changeSelectionHint(selectedUnit);
     }
 
     /* Take action without a selected unit depending on the context. */
-    private void takeActionWithoutSelectedUnit(final Combatant clickedUnit) {
+    private void takeActionWithoutSelectedUnit(final Tile tile) {
+        Combatant clickedUnit = getCombatantAtLocation(tile.getLocation());
+
         // select unit if a unit is clicked but no unit is already selected
         if (clickedUnit != null && clickedUnit.getAffiliation() == Affiliation.PLAYER) {
             selectedUnit = clickedUnit;
             userInterface.changeUnitDisplay(selectedUnit);
+            highlightOptions(selectedUnit);
         }
     }
 
     /* Take action with a selected unit depending on the context. */
-    private void takeActionWithSelectedUnit(final Vector2D selectionLocation, final Combatant clickedUnit) {
-        // move unit if an empty tile is clicked and a unit is selected
-        if (clickedUnit == null) {
-            moveUnit(selectionLocation);
-        }
+    private void takeActionWithSelectedUnit(final Tile tile) {
+        Combatant clickedUnit = getCombatantAtLocation(tile.getLocation());
 
-        // attack enemy if occupied tile is clicked and a friendly unit is selected
-        if (clickedUnit != null && clickedUnit.getAffiliation() == Affiliation.ENEMY) {
+        if (clickedUnit == null && validateUnitMove(tile)) {
+            // move unit if an empty tile is clicked and a unit is selected
+            moveUnit(tile);
+            clearHighlights();
+            highlightOptions(selectedUnit);
+        } else if (clickedUnit == null && !validateUnitMove(tile)) {
+            // deselect if tile outside movement range is clicked
+            selectedUnit = null;
+            clearHighlights();
+        } else if (clickedUnit != null && clickedUnit.getAffiliation() == Affiliation.ENEMY) {
+            // attack enemy if occupied tile is clicked and a friendly unit is selected
             attackEnemy(clickedUnit);
             userInterface.changeUnitDisplay(selectedUnit);
             userInterface.changeHoverHint(clickedUnit);
-        }
-
-        // deselect unit if clicked again
-        if (clickedUnit == selectedUnit) {
+            clearHighlights();
+        } else if (clickedUnit == selectedUnit) {
+            // deselect unit if clicked again
             selectedUnit = null;
             userInterface.changeUnitDisplay(null);
-        }
-
-        // select the other unit if it is a friendly
-        if (clickedUnit != null && clickedUnit.getAffiliation() == Affiliation.PLAYER) {
+            clearHighlights();
+        } else if (clickedUnit != null && clickedUnit.getAffiliation() == Affiliation.PLAYER) {
+            // select the other unit if it is a friendly
             selectUnit(clickedUnit);
             userInterface.changeUnitDisplay(selectedUnit);
+            clearHighlights();
+            highlightOptions(selectedUnit);
         }
     }
 
@@ -317,18 +399,27 @@ public class  GameManager {
     /**
      * Moves the selected Unit to the location at the specified coordinates.
      *
-     * @param coordinates destination for this move, a Vector2D
+     * @param tile destination for this move, a Tile
      * @throws IllegalArgumentException when the specified coordinates is null
      */
-    public void moveUnit(final Vector2D coordinates) throws IllegalArgumentException {
+    public void moveUnit(final Tile tile) throws IllegalArgumentException {
+        Vector2D coordinates = tile.getLocation();
         if (coordinates == null) {
             throw new IllegalArgumentException("Coordinates cannot be null...");
-        } else if (selectedUnit.getTurnState() == TurnState.CAN_MOVE) {
+        }
+
+        if (validateUnitMove(tile)) {
             selectedUnit.moveTo(coordinates);
             selectedUnit.setTurnState(TurnState.CAN_ATTACK);
-        } else {
-            selectedUnit = null;
         }
+    }
+
+    private boolean validateUnitMove(final Tile tile) throws IllegalArgumentException {
+        if (tile == null) {
+            throw new IllegalArgumentException("Tile cannot be null for unit movement validation.");
+        }
+
+        return selectedUnit.canMoveTo(tile) && selectedUnit.getTurnState() == TurnState.CAN_MOVE;
     }
 
     /**

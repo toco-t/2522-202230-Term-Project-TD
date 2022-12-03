@@ -18,6 +18,7 @@ import javafx.scene.text.TextAlignment;
  * @version 0.2
  */
 public class UIManager {
+    private final Group hudElements;
     private final Text selectionHint;
     private final Text keyPrompts;
     private final Text selectedUnitHint;
@@ -54,6 +55,9 @@ public class UIManager {
         levelDisplay = new Text(10, 15, "Test Mission");
         levelDisplay.setFill(Color.WHITE);
 
+        hudElements = new Group(selectionHint, selectedUnitHint, hoverHint, combatForecastDisplay, keyPrompts,
+                turnDisplay, levelDisplay);
+
         dialogueDisplay = new Rectangle(0, 0, 780, 160);
         Color colour = new Color(0.2, 0.2, 0.2, 0.7);
         dialogueDisplay.setFill(colour);
@@ -87,7 +91,16 @@ public class UIManager {
             hintToDisplay = "Select a unit to move.";
         }
 
-        selectionHint.setText(hintToDisplay);
+        changeSelectionHintTo(hintToDisplay);
+    }
+
+    /**
+     * Changes the selection hint to a specific string.
+     *
+     * @param string the string to display
+     */
+    public void changeSelectionHintTo(final String string) {
+        selectionHint.setText(string);
     }
 
     /**
@@ -114,16 +127,7 @@ public class UIManager {
      * @param combatant the selected unit
      */
     public void changeUnitDisplay(final Combatant combatant) {
-        if (combatant != null) {
-            String name = combatant.getName();
-            String weapon = "Remington M24";
-            int currentHealth = combatant.getHealth();
-            int maxHealth = combatant.getMaxHealth();
-
-            selectedUnitHint.setText(String.format("%s (%s) %d/%d HP", name, weapon, currentHealth, maxHealth));
-        } else {
-            selectedUnitHint.setText("");
-        }
+        changeHint(combatant, selectedUnitHint);
     }
 
     /**
@@ -202,7 +206,6 @@ public class UIManager {
      * @return the Group of UI elements
      */
     public Group getGroup() {
-        return new Group(selectionHint, selectedUnitHint, hoverHint, combatForecastDisplay, keyPrompts, turnDisplay,
-                levelDisplay, stack);
+        return hudElements;
     }
 }

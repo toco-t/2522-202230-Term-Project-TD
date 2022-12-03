@@ -3,6 +3,7 @@ package ca.bcit.comp2522.termproject.td.map;
 import ca.bcit.comp2522.termproject.td.*;
 import ca.bcit.comp2522.termproject.td.enums.Terrain;
 import ca.bcit.comp2522.termproject.td.enums.Weather;
+import ca.bcit.comp2522.termproject.td.interfaces.Combatant;
 import ca.bcit.comp2522.termproject.td.interfaces.Drawable;
 import javafx.scene.image.Image;
 
@@ -79,6 +80,23 @@ public class GameMap {
         for (Drawable tile : tiles) {
             tile.moveImageView(delta);
         }
+    }
+
+    /**
+     * Returns a list of tile-space coordinates where the combatant to move to on the map.
+     *
+     * @param combatant the Combatant to move
+     * @return a list of Vector2D representing possible tile-space coordinates
+     */
+    public ArrayList<Vector2D> getMovementOptions(final Combatant combatant) {
+        ArrayList<Vector2D> movementOptions = new ArrayList<>();
+        for (Tile tile : tiles) {
+            if (combatant.canMoveTo(tile)) {
+                movementOptions.add(tile.getLocation());
+            }
+        }
+
+        return movementOptions;
     }
 
     /**
