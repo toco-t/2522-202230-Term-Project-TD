@@ -113,6 +113,7 @@ public class GameMap {
         }
     }
 
+    /* Generates the tiles for the Curry House mission. */
     private void generateCurryHouseMission() {
         final int leftmostColumn = 5;
         final int rightmostColumn = 20;

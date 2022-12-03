@@ -148,6 +148,10 @@ public class Tile implements Drawable {
 
         imageView.setOnMouseClicked((MouseEvent event) -> gameManager.select(this));
         imageView.setOnMouseEntered((MouseEvent event) -> gameManager.hoverHint(this));
+
+        if (terrain == Terrain.OBSTACLE) {
+            imageView.setMouseTransparent(true);
+        }
     }
 
     /* Updates the ImageView's position based on the offset. */
