@@ -16,11 +16,18 @@ public interface Attacker {
     String getName();
 
     /**
-     * Returns the number of hits for this Weapon.
+     * Returns the number of hits for this Attacker.
      *
      * @return the hits as an int
      */
     int getHits();
+
+    /**
+     * Returns the range of this Attacker. One range unit is equivalent to one grid square.
+     *
+     * @return the range as an int
+     */
+    int getRange();
 
     /**
      * Initiates an attack against another Combatant.

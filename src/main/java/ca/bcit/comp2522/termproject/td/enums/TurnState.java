@@ -9,5 +9,6 @@ package ca.bcit.comp2522.termproject.td.enums;
 public enum TurnState {
     CAN_MOVE,
     CAN_ATTACK,
-    DONE
+    DONE,
+    DEAD
 }

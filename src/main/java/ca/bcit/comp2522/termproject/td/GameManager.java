@@ -2,6 +2,7 @@ package ca.bcit.comp2522.termproject.td;
 
 import ca.bcit.comp2522.termproject.td.driver.SpriteRenderer;
 import ca.bcit.comp2522.termproject.td.enums.*;
+import ca.bcit.comp2522.termproject.td.interfaces.Attacker;
 import ca.bcit.comp2522.termproject.td.interfaces.Combatant;
 import ca.bcit.comp2522.termproject.td.interfaces.Drawable;
 import ca.bcit.comp2522.termproject.td.map.GameMap;
@@ -107,10 +108,38 @@ public class GameManager {
     /* Takes all enemies' turns. */
     private void takeEnemyTurn() {
         for (Combatant enemy : enemyUnits) {
-            System.out.printf("%s taking action.\n", enemy.getName());
+            System.out.printf("\n%s taking action.\n", enemy.getName());
+
+            Combatant playerToTarget = playerInRange(enemy);
+
+            if (playerToTarget != null) {
+                enemy.attack(playerToTarget);
+                System.out.printf("%s initiating attack against %s.\n", enemy.getName(), playerToTarget.getName());
+            }
         }
 
         nextPhase();
+    }
+
+    /* Returns the player in range, or null if none are in range. */
+    private Combatant playerInRange(final Combatant enemy) {
+        Combatant playerToTarget = null;
+        Attacker enemyWeapon = enemy.getEquippedWeapon();
+        double highestAccuracy = 0;
+
+        for (Combatant player : playerUnits) {
+            int distance = enemy.getLocation().manhattanDistance(player.getLocation());
+
+            if (distance <= enemyWeapon.getRange()) {
+                double accuracyPerHit = enemyWeapon.getAccuracyPerHit(player, distance);
+                if (accuracyPerHit > highestAccuracy) {
+                    highestAccuracy = accuracyPerHit;
+                    playerToTarget = player;
+                }
+            }
+        }
+
+        return playerToTarget;
     }
 
     /**
