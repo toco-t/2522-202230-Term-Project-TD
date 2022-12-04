@@ -124,23 +124,38 @@ public class GameMap {
         Image cocoTextures = new Image("coco_textures.png");
 
         // generate walkable flooring
-        for (int x = leftmostColumn + 2; x <= rightmostColumn; x++) {
-            for (int y = bottommostRow; y <= topmostRow; y++) {
-                Tile tile = new Tile(gameManager, Terrain.ROAD, cocoTextures, new Vector2D(2, 0), new Vector2D(x, y));
-                tile.setHeight(0);
-                tiles.add(tile);
-            }
-        }
+        generateFlooring(true, cocoTextures, new Vector2D(7, 2),
+                new Vector2D(7, -4));
+        generateFlooring(true, cocoTextures, new Vector2D(8, 2),
+                new Vector2D(8, 1));
+        generateFlooring(true, cocoTextures, new Vector2D(8, 0),
+                new Vector2D(20, -2));
+        generateFlooring(true, cocoTextures, new Vector2D(11, -3),
+                new Vector2D(11, -4));
+        generateFlooring(true, cocoTextures, new Vector2D(15, -3),
+                new Vector2D(15, -4));
+        generateFlooring(true, cocoTextures, new Vector2D(16, 1),
+                new Vector2D(20, 1));
+        generateFlooring(true, cocoTextures, new Vector2D(16, 2),
+                new Vector2D(16, 2));
+        generateFlooring(true, cocoTextures, new Vector2D(19, -3),
+                new Vector2D(20, -4));
+        generateFlooring(true, cocoTextures, new Vector2D(20, 2),
+                new Vector2D(20, 2));
 
         // generate non-walkable flooring
-        for (int x = leftmostColumn; x < leftmostColumn + 2; x++) {
-            for (int y = bottommostRow; y <= topmostRow; y++) {
-                Tile tile = new Tile(gameManager, Terrain.OBSTACLE, cocoTextures, new Vector2D(2, 0),
-                        new Vector2D(x, y));
-                tile.setHeight(0);
-                tiles.add(tile);
-            }
-        }
+        generateFlooring(false, cocoTextures, new Vector2D(5, 2),
+                new Vector2D(6, -4));
+        generateFlooring(false, cocoTextures, new Vector2D(8, -3),
+                new Vector2D(10, -4));
+        generateFlooring(false, cocoTextures, new Vector2D(12, -3),
+                new Vector2D(14, -4));
+        generateFlooring(false, cocoTextures, new Vector2D(16, -3),
+                new Vector2D(18, -4));
+        generateFlooring(false, cocoTextures, new Vector2D(17, 2),
+                new Vector2D(19, 2));
+        generateFlooring(false, cocoTextures, new Vector2D(9, 2),
+                new Vector2D(15, 1));
 
         // generate walls
         for (int wallHeight = 1; wallHeight <= 3; wallHeight++) {
@@ -175,12 +190,32 @@ public class GameMap {
         generateTableAndChairs(cocoTextures, new Vector2D(12, -4));
         generateTableAndChairs(cocoTextures, new Vector2D(16, -3));
         generateTableAndChairs(cocoTextures, new Vector2D(16, -4));
+        generateTableAndChairs(cocoTextures, new Vector2D(17, 2));
 
         generateTable(cocoTextures, new Vector2D(9, 2));
         generateTable(cocoTextures, new Vector2D(15, 2));
 
         for (int i = 9; i <= 15; i++) {
             generateTable(cocoTextures, new Vector2D(i, 1));
+        }
+    }
+
+    private void generateFlooring(final boolean walkable, final Image cocoTextures, final Vector2D northwestCorner,
+                                  final Vector2D southeastCorner) {
+        for (int x = (int) northwestCorner.getXCoordinate(); x <= southeastCorner.getXCoordinate(); x++) {
+            for (int y = (int) southeastCorner.getYCoordinate(); y <= northwestCorner.getYCoordinate(); y++) {
+                Terrain terrain;
+                if (walkable) {
+                    terrain = Terrain.ROAD;
+                } else {
+                    terrain = Terrain.OBSTACLE;
+                }
+
+                Tile tile = new Tile(gameManager, terrain, cocoTextures, new Vector2D(2, 0),
+                        new Vector2D(x, y));
+                tile.setHeight(0);
+                tiles.add(tile);
+            }
         }
     }
 

@@ -207,13 +207,29 @@ public class GameManager {
         playerUnits.add(miyako);
         entities.add(miyako);
 
-        Unit dmitri1 = new Unit("Dmitri", new Vector2D(10, 0), viewOffset);
+        Unit dmitri1 = new Unit("Dmitri", new Vector2D(13, -1), viewOffset);
         enemyUnits.add(dmitri1);
         entities.add(dmitri1);
 
-        Unit dmitri2 = new Unit("Dmitri", new Vector2D(10, 1), viewOffset);
+        Unit dmitri2 = new Unit("Dmitri", new Vector2D(13, 0), viewOffset);
         enemyUnits.add(dmitri2);
         entities.add(dmitri2);
+
+        Unit dimitri3 = new Unit("Dmitri", new Vector2D(16, -1), viewOffset);
+        enemyUnits.add(dimitri3);
+        entities.add(dimitri3);
+
+        Unit dmitri4 = new Unit("Dmitri", new Vector2D(16, 2), viewOffset);
+        enemyUnits.add(dmitri4);
+        entities.add(dmitri4);
+
+        Unit dmitri5 = new Unit("Dmitri", new Vector2D(20, 1), viewOffset);
+        enemyUnits.add(dmitri5);
+        entities.add(dmitri5);
+
+        Unit dmitri6 = new Unit("Dmitri", new Vector2D(20, -2), viewOffset);
+        enemyUnits.add(dmitri6);
+        entities.add(dmitri6);
     }
 
     private void generateUnitsForTestMission() {
