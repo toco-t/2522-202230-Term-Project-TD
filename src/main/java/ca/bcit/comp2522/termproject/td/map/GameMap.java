@@ -176,7 +176,7 @@ public class GameMap {
 
         // generate west counter
         for (int y = topmostRow; y >= bottommostRow; y--) {
-            generateTable(cocoTextures, new Vector2D(leftmostColumn, y));
+            generateTable(cocoTextures, new Vector2D(leftmostColumn - 1, y + 1));
         }
 
         // generate west counter chairs
@@ -192,11 +192,11 @@ public class GameMap {
         generateTableAndChairs(cocoTextures, new Vector2D(16, -4));
         generateTableAndChairs(cocoTextures, new Vector2D(17, 2));
 
-        generateTable(cocoTextures, new Vector2D(9, 2));
-        generateTable(cocoTextures, new Vector2D(15, 2));
+//        generateTable(cocoTextures, new Vector2D(9, 2));
+        generateTable(cocoTextures, new Vector2D(15, 3));
 
         for (int i = 9; i <= 15; i++) {
-            generateTable(cocoTextures, new Vector2D(i, 1));
+            generateCounter(cocoTextures, new Vector2D(i, 2));
         }
     }
 
@@ -211,7 +211,7 @@ public class GameMap {
                     terrain = Terrain.OBSTACLE;
                 }
 
-                Tile tile = new Tile(gameManager, terrain, cocoTextures, new Vector2D(2, 0),
+                Tile tile = new Tile(gameManager, terrain, cocoTextures, new Vector2D(1, 0),
                         new Vector2D(x, y));
                 tile.setHeight(0);
                 tiles.add(tile);
@@ -220,26 +220,26 @@ public class GameMap {
     }
 
     private void generateChair(final Image cocoTextures, final Vector2D position) {
-        Tile chair = new Tile(gameManager, Terrain.OBSTACLE, cocoTextures, new Vector2D(1, 1), position);
+        Tile chair = new Tile(gameManager, Terrain.OBSTACLE, cocoTextures, new Vector2D(2, 1), position);
         chair.setHeight(0);
         tiles.add(chair);
     }
 
     private void generateTable(final Image cocoTextures, final Vector2D position) {
-        Tile table = new Tile(gameManager, Terrain.OBSTACLE, cocoTextures, new Vector2D(0, 1), position);
-        table.setHeight(1);
+        Tile table = new Tile(gameManager, Terrain.OBSTACLE, cocoTextures, new Vector2D(2, 0), position);
+        table.setHeight(0);
         tiles.add(table);
     }
 
     private void generateCounter(final Image cocoTextures, final Vector2D position) {
-        Tile table = new Tile(gameManager, Terrain.OBSTACLE, cocoTextures, new Vector2D(0, 1), position);
-        table.setHeight(1);
+        Tile table = new Tile(gameManager, Terrain.OBSTACLE, cocoTextures, new Vector2D(3, 0), position);
+        table.setHeight(0);
         tiles.add(table);
     }
 
     private void generateTableAndChairs(final Image cocoTextures, final Vector2D position) {
         generateChair(cocoTextures, position);
-        generateTable(cocoTextures, new Vector2D(position.getXCoordinate() + 1, position.getYCoordinate()));
+        generateTable(cocoTextures, new Vector2D(position.getXCoordinate(), position.getYCoordinate() + 1));
         generateChair(cocoTextures, new Vector2D(position.getXCoordinate() + 2, position.getYCoordinate()));
     }
 

@@ -254,7 +254,7 @@ public class GameManager {
         enemyUnits.add(dimitri3);
         entities.add(dimitri3);
 
-        Unit dmitri4 = new Unit("Dmitri", new Vector2D(16, 2), viewOffset);
+        Unit dmitri4 = new Unit("Dmitri", new Vector2D(16, 0), viewOffset);
         enemyUnits.add(dmitri4);
         entities.add(dmitri4);
 
