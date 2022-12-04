@@ -34,6 +34,9 @@ public class GameManager {
     private Combatant selectedUnit;
     private final CutsceneManager cutscene;
     private ArrayList<Drawable> tileHighlights;
+    private Group unitsGroup;
+    private Group tilesGroup;
+    private Group userInterfaceGroup;
     private Group tileHighlightGroup;
     private Vector2D viewOffset;
 
@@ -115,6 +118,9 @@ public class GameManager {
             if (playerToTarget != null) {
                 enemy.attack(playerToTarget);
                 System.out.printf("%s initiating attack against %s.\n", enemy.getName(), playerToTarget.getName());
+                if (playerToTarget.getTurnState() == TurnState.DEAD) {
+                    playerUnits.remove(playerToTarget);
+                }
             }
         }
 
@@ -148,12 +154,12 @@ public class GameManager {
      * @return the Group of units and tiles
      */
     public Group groupAllObjectsForRendering() {
-        Group units = SpriteRenderer.groupDrawables(entities);
-        Group tiles = SpriteRenderer.groupDrawables(map.getTilesForRendering());
-        Group userInterfaceElements = userInterface.getGroup();
+        unitsGroup = SpriteRenderer.groupDrawables(entities);
+        tilesGroup = SpriteRenderer.groupDrawables(map.getTilesForRendering());
+        userInterfaceGroup = userInterface.getGroup();
         tileHighlightGroup = new Group();
 
-        return new Group(tiles, tileHighlightGroup, units, userInterfaceElements);
+        return new Group(tilesGroup, tileHighlightGroup, unitsGroup, userInterfaceGroup);
     }
 
     /**
@@ -501,6 +507,11 @@ public class GameManager {
             selectedUnit.attack(target);
             selectedUnit.setTurnState(TurnState.DONE);
             selectedUnit = null;
+
+            if (target.getTurnState() == TurnState.DEAD) {
+                System.out.printf("Killed in Action: %s\n", target.getName());
+                enemyUnits.remove(target);
+            }
         }
     }
 

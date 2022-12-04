@@ -536,8 +536,10 @@ public class Unit implements Combatant, Drawable {
     public void changeHealth(final int delta) {
         health += delta;
 
-        if (health < 0) {
+        if (health <= 0) {
             health = 0;
+            turnState = TurnState.DEAD;
+            imageView.setVisible(false);
         }
         if (health > maxHealth) {
             health = maxHealth;
@@ -550,7 +552,6 @@ public class Unit implements Combatant, Drawable {
      * @param destination the location to move to
      */
     public void moveTo(final Vector2D destination) {
-        // TODO: check if destination is valid
         location = destination;
         updateImageViewPosition();
     }
