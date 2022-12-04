@@ -192,11 +192,11 @@ public class GameMap {
         generateTableAndChairs(cocoTextures, new Vector2D(16, -4));
         generateTableAndChairs(cocoTextures, new Vector2D(17, 2));
 
-//        generateTable(cocoTextures, new Vector2D(9, 2));
-        generateTable(cocoTextures, new Vector2D(15, 3));
+        generateCounter(cocoTextures, new Vector2D(9, 2));
+        generateCounter(cocoTextures, new Vector2D(15, 2));
 
         for (int i = 9; i <= 15; i++) {
-            generateCounter(cocoTextures, new Vector2D(i, 2));
+            generateCounter(cocoTextures, new Vector2D(i, 1));
         }
     }
 
@@ -232,8 +232,8 @@ public class GameMap {
     }
 
     private void generateCounter(final Image cocoTextures, final Vector2D position) {
-        Tile table = new Tile(gameManager, Terrain.OBSTACLE, cocoTextures, new Vector2D(3, 0), position);
-        table.setHeight(0);
+        Tile table = new Tile(gameManager, Terrain.OBSTACLE, cocoTextures, new Vector2D(1, 1), position);
+        table.setHeight(1);
         tiles.add(table);
     }
 
