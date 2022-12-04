@@ -136,7 +136,7 @@ public class GameManager {
         for (Combatant player : playerUnits) {
             int distance = enemy.getLocation().manhattanDistance(player.getLocation());
 
-            if (distance <= enemyWeapon.getRange()) {
+            if (distance <= enemyWeapon.getRange() || enemy.getHealth() < enemy.getMaxHealth()) {
                 double accuracyPerHit = enemyWeapon.getAccuracyPerHit(player, distance);
                 if (accuracyPerHit > highestAccuracy) {
                     highestAccuracy = accuracyPerHit;
@@ -503,7 +503,9 @@ public class GameManager {
     public void attackEnemy(final Combatant target) throws IllegalArgumentException {
         if (target == null) {
             throw new IllegalArgumentException("The target to attack cannot be null.");
-        } else if (selectedUnit.getTurnState() != TurnState.DONE) {
+        }
+
+        if (selectedUnit.getTurnState() != TurnState.DONE) {
             selectedUnit.attack(target);
             selectedUnit.setTurnState(TurnState.DONE);
             selectedUnit = null;
