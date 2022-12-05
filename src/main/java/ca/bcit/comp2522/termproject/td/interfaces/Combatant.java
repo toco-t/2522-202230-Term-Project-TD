@@ -10,8 +10,8 @@ import ca.bcit.comp2522.termproject.td.map.Tile;
 /**
  * An object that is capable of attacking and receiving damage from Combatants.
  *
- * @author Nathan
- * @version 0.1
+ * @author Nathan Ng
+ * @version 0.3
  */
 public interface Combatant {
     /**
@@ -88,7 +88,6 @@ public interface Combatant {
      * Removes ERA armour and replaces it with MEDIUM armour.
      */
     void breakERA();
-
 
     /**
      * Returns the turn state of this Combatant.

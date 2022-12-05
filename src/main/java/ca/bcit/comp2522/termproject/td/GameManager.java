@@ -1,6 +1,5 @@
 package ca.bcit.comp2522.termproject.td;
 
-import ca.bcit.comp2522.termproject.td.driver.SpriteRenderer;
 import ca.bcit.comp2522.termproject.td.enums.*;
 import ca.bcit.comp2522.termproject.td.interfaces.Attacker;
 import ca.bcit.comp2522.termproject.td.interfaces.Combatant;
@@ -11,6 +10,7 @@ import ca.bcit.comp2522.termproject.td.map.TileHighlight;
 import ca.bcit.comp2522.termproject.td.unit.Unit;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 
 import java.util.ArrayList;
@@ -20,8 +20,8 @@ import java.util.Collections;
 /**
  * Game manager.
  *
- * @author Toco Tachibana
- * @version 0.2
+ * @author Toco Tachibana & Nathan Ng
+ * @version 0.3
  */
 public class GameManager {
     private int turnNumber;
@@ -33,13 +33,13 @@ public class GameManager {
     private GameMap map;
     private Combatant selectedUnit;
     private final CutsceneManager cutscene;
-    private ArrayList<Drawable> tileHighlights;
+    private final ArrayList<Drawable> tileHighlights;
     private Group unitsGroup;
     private Group tilesGroup;
     private Group userInterfaceGroup;
     private Group tileHighlightGroup;
     private Group cutsceneGroup;
-    private Vector2D viewOffset;
+    private final Vector2D viewOffset;
 
     /**
      * Constructs an object of type GameManager.
@@ -159,13 +159,30 @@ public class GameManager {
      * @return the Group of units and tiles
      */
     public Group groupAllObjectsForRendering() {
-        unitsGroup = SpriteRenderer.groupDrawables(entities);
-        tilesGroup = SpriteRenderer.groupDrawables(map.getTilesForRendering());
+        unitsGroup = groupDrawables(entities);
+        tilesGroup = groupDrawables(map.getTilesForRendering());
         userInterfaceGroup = userInterface.getGroup();
         tileHighlightGroup = new Group();
         cutsceneGroup = cutscene.getGroup();
 
         return new Group(tilesGroup, tileHighlightGroup, unitsGroup, userInterfaceGroup, cutsceneGroup);
+    }
+
+    /**
+     * Converts an ArrayList of Tiles to a Group, converting coordinates as necessary.
+     *
+     * @param drawables an ArrayList of Tiles to convert
+     * @return the Group of converted ImageView nodes
+     */
+    public Group groupDrawables(final ArrayList<Drawable> drawables) {
+        ArrayList<ImageView> drawableViews = new ArrayList<>();
+
+        for (Drawable drawable : drawables) {
+            drawableViews.add(drawable.getImageView());
+        }
+
+        ImageView[] imageViews = new ImageView[drawables.size()];
+        return new Group(drawableViews.toArray(imageViews));
     }
 
     /**
@@ -208,21 +225,6 @@ public class GameManager {
         for (Drawable drawable : tileHighlights) {
             drawable.moveImageView(delta);
         }
-    }
-
-    /**
-     * Loads all the units to the specified list.
-     *
-     * @param listToLoad the specified list, an ArrayList of Combatant
-     * @param units variable length of units, an array
-     * @throws IllegalArgumentException when units is empty
-     */
-    public void loadUnits(final ArrayList<Combatant> listToLoad, final Combatant... units) {
-        if (units == null) {
-            throw new IllegalArgumentException("Units cannot be null...");
-        }
-
-        Collections.addAll(listToLoad, units);
     }
 
     /**

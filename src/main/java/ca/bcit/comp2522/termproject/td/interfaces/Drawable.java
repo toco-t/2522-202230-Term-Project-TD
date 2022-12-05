@@ -7,7 +7,7 @@ import javafx.scene.image.ImageView;
 /**
  * Represents an object that has a sprite.
  *
- * @author Nathan
+ * @author Nathan Ng
  * @version 0.1
  */
 public interface Drawable {

@@ -3,7 +3,7 @@ package ca.bcit.comp2522.termproject.td.enums;
 /**
  * Represents various states a unit may be in.
  *
- * @author Nathan
+ * @author Nathan Ng
  * @version 0.3
  */
 public enum TurnState {

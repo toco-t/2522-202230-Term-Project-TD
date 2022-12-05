@@ -3,7 +3,7 @@ package ca.bcit.comp2522.termproject.td.enums;
 /**
  * Represents weather conditions on the battlefield.
  *
- * @author Nathan
+ * @author Nathan Ng
  * @version 0.1
  */
 public enum Weather {

@@ -3,8 +3,8 @@ package ca.bcit.comp2522.termproject.td.interfaces;
 /**
  * Represents objects that can inflict damage on Combatants.
  *
- * @author Nathan
- * @version 0.1
+ * @author Nathan Ng
+ * @version 0.3
  */
 public interface Attacker {
 
@@ -30,7 +30,7 @@ public interface Attacker {
     int getRange();
 
     /**
-     * Initiates an attack against another Combatant.
+     * Initiates an attack against a Combatant.
      *
      * @param target the Combatant to attack
      * @param distance the distance from the target in grid squares

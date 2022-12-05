@@ -12,14 +12,14 @@ import java.util.ArrayList;
 /**
  * GameMap that consists of number of Tiles.
  *
- * @author Toco Tachibana
- * @version 0.2
+ * @author Toco Tachibana & Nathan Ng
+ * @version 0.3
  */
 public class GameMap {
-    private GameManager gameManager;
-
     private static final Weather DEFAULT_WEATHER = Weather.SUNNY;
     private static final boolean DEFAULT_CONDITION = false;
+
+    private final GameManager gameManager;
 
     private final ArrayList<Tile> tiles;
     private final Weather weather;
@@ -41,16 +41,6 @@ public class GameMap {
         this.isNighttime = isNighttime;
 
         generateMap(mission);
-    }
-
-    /**
-     * Constructs an object of type Map, no params.
-     *
-     * @param gameManager the GameManager, used for handling events
-     * @param mission     the mission number as an int
-     */
-    public GameMap(final GameManager gameManager, final int mission) {
-        this(gameManager, DEFAULT_WEATHER, DEFAULT_CONDITION, mission);
     }
 
     /**
@@ -123,7 +113,53 @@ public class GameMap {
 
         Image cocoTextures = new Image("coco_textures.png");
 
-        // generate walkable flooring
+        generateWalkableFlooring(cocoTextures);
+        generateNonWalkableFlooring(cocoTextures);
+        generateWalls(leftmostColumn, rightmostColumn, topmostRow, bottommostRow, cocoTextures);
+
+        // generate west counter
+        for (int y = topmostRow; y >= bottommostRow; y--) {
+            generateTable(cocoTextures, new Vector2D(leftmostColumn - 1, y + 1));
+        }
+
+        // generate west counter chairs
+        for (int y = topmostRow; y >= bottommostRow; y--) {
+            generateChair(cocoTextures, new Vector2D(leftmostColumn + 1, y));
+        }
+
+        generateTablesAndChairs(cocoTextures);
+
+        generateCounter(cocoTextures, new Vector2D(9, 2));
+        generateCounter(cocoTextures, new Vector2D(15, 2));
+
+        // generate main counter
+        for (int i = 9; i <= 15; i++) {
+            generateCounter(cocoTextures, new Vector2D(i, 1));
+        }
+    }
+
+    /* Generates outer walls. */
+    private void generateWalls(final int leftmostColumn, final int rightmostColumn, final int topmostRow,
+                               final int bottommostRow, final Image cocoTextures) {
+        for (int wallHeight = 1; wallHeight <= 3; wallHeight++) {
+            for (int y = topmostRow + 1; y >= bottommostRow; y--) {
+                Tile tile = new Tile(gameManager, Terrain.OBSTACLE, cocoTextures, new Vector2D(0, 1),
+                        new Vector2D(leftmostColumn - 1, y));
+                tile.setHeight(wallHeight);
+                tiles.add(tile);
+            }
+
+            for (int x = leftmostColumn; x <= rightmostColumn; x++) {
+                Tile tile = new Tile(gameManager, Terrain.OBSTACLE, cocoTextures, new Vector2D(0, 1),
+                        new Vector2D(x, topmostRow + 1));
+                tile.setHeight(wallHeight);
+                tiles.add(tile);
+            }
+        }
+    }
+
+    /* Generates flooring tiles that can be moved to. */
+    private void generateWalkableFlooring(final Image cocoTextures) {
         generateFlooring(true, cocoTextures, new Vector2D(7, 2),
                 new Vector2D(7, -4));
         generateFlooring(true, cocoTextures, new Vector2D(8, 2),
@@ -142,8 +178,10 @@ public class GameMap {
                 new Vector2D(20, -4));
         generateFlooring(true, cocoTextures, new Vector2D(20, 2),
                 new Vector2D(20, 2));
+    }
 
-        // generate non-walkable flooring
+    /* Generates flooring tiles that cannot be moved to. */
+    private void generateNonWalkableFlooring(final Image cocoTextures) {
         generateFlooring(false, cocoTextures, new Vector2D(5, 2),
                 new Vector2D(6, -4));
         generateFlooring(false, cocoTextures, new Vector2D(8, -3),
@@ -156,34 +194,10 @@ public class GameMap {
                 new Vector2D(19, 2));
         generateFlooring(false, cocoTextures, new Vector2D(9, 2),
                 new Vector2D(15, 1));
+    }
 
-        // generate walls
-        for (int wallHeight = 1; wallHeight <= 3; wallHeight++) {
-            for (int y = topmostRow + 1; y >= bottommostRow; y--) {
-                Tile tile = new Tile(gameManager, Terrain.OBSTACLE, cocoTextures, new Vector2D(0, 1),
-                        new Vector2D(leftmostColumn - 1, y));
-                tile.setHeight(wallHeight);
-                tiles.add(tile);
-            }
-
-            for (int x = leftmostColumn; x <= rightmostColumn; x++) {
-                Tile tile = new Tile(gameManager, Terrain.OBSTACLE, cocoTextures, new Vector2D(0, 1),
-                        new Vector2D(x, topmostRow + 1));
-                tile.setHeight(wallHeight);
-                tiles.add(tile);
-            }
-        }
-
-        // generate west counter
-        for (int y = topmostRow; y >= bottommostRow; y--) {
-            generateTable(cocoTextures, new Vector2D(leftmostColumn - 1, y + 1));
-        }
-
-        // generate west counter chairs
-        for (int y = topmostRow; y >= bottommostRow; y--) {
-            generateChair(cocoTextures, new Vector2D(leftmostColumn + 1, y));
-        }
-
+    /* Generates tables and chairs. */
+    private void generateTablesAndChairs(final Image cocoTextures) {
         generateTableAndChairs(cocoTextures, new Vector2D(8, -3));
         generateTableAndChairs(cocoTextures, new Vector2D(8, -4));
         generateTableAndChairs(cocoTextures, new Vector2D(12, -3));
@@ -191,13 +205,6 @@ public class GameMap {
         generateTableAndChairs(cocoTextures, new Vector2D(16, -3));
         generateTableAndChairs(cocoTextures, new Vector2D(16, -4));
         generateTableAndChairs(cocoTextures, new Vector2D(17, 2));
-
-        generateCounter(cocoTextures, new Vector2D(9, 2));
-        generateCounter(cocoTextures, new Vector2D(15, 2));
-
-        for (int i = 9; i <= 15; i++) {
-            generateCounter(cocoTextures, new Vector2D(i, 1));
-        }
     }
 
     private void generateFlooring(final boolean walkable, final Image cocoTextures, final Vector2D northwestCorner,

@@ -22,8 +22,8 @@ import static ca.bcit.comp2522.termproject.td.Vector2D.tileCoordinateToScreenSpa
 /**
  * Represents a character or vehicle on the battlefield.
  *
- * @author Nathan
- * @version 0.2
+ * @author Nathan Ng
+ * @version 0.3
  */
 public class Unit implements Combatant, Drawable {
     private static final double VIEW_SIZE_X = 20;
@@ -261,16 +261,6 @@ public class Unit implements Combatant, Drawable {
         return location;
     }
 
-    /**
-     * Moves the ImageView of this Unit without changing its actual coordinates.
-     *
-     * @param offsetDelta the amount to move the Unit by, as a Vector2D
-     */
-    @Override
-    public void moveImageView(final Vector2D offsetDelta) {
-        updateImageViewPosition();
-    }
-
     /* Gets the coordinates of this Unit in screen space (pixels). */
     private Vector2D getScreenSpaceCoordinates(final Vector2D offset) {
         double scaledViewSizeX = VIEW_SIZE_X * SPRITE_SCALE;
@@ -287,29 +277,6 @@ public class Unit implements Combatant, Drawable {
                 * (verticalPositionInTile) - scaledViewSizeY + offset.getYCoordinate();
 
         return new Vector2D(adjustedXCoordinate, adjustedYCoordinate);
-    }
-
-    /* Generates an ImageView of this Unit, using its coordinates. */
-    private void generateImageView(final Vector2D spritePosition) {
-        double scaledViewSizeX = VIEW_SIZE_X * SPRITE_SCALE;
-        double scaledViewSizeY = VIEW_SIZE_Y * SPRITE_SCALE;
-
-        double xOffsetPixels = VIEW_SIZE_X * spritePosition.getXCoordinate();
-        double yOffsetPixels = VIEW_SIZE_Y * spritePosition.getYCoordinate();
-
-        imageView = new ImageView(sprite);
-        imageView.setMouseTransparent(true);
-        imageView.setViewport(new Rectangle2D(xOffsetPixels, yOffsetPixels, scaledViewSizeX,
-                scaledViewSizeY));
-
-        updateImageViewPosition();
-    }
-
-    /* Updates the ImageView's position based on the offset. */
-    private void updateImageViewPosition() {
-        Vector2D screenSpaceCoordinates = getScreenSpaceCoordinates(viewOffset);
-        imageView.setX(screenSpaceCoordinates.getXCoordinate());
-        imageView.setY(screenSpaceCoordinates.getYCoordinate());
     }
 
     /**
@@ -526,6 +493,39 @@ public class Unit implements Combatant, Drawable {
      */
     public void setEvasion(final int evasion) {
         this.evasion = evasion;
+    }
+
+    /**
+     * Moves the ImageView of this Unit without changing its actual coordinates.
+     *
+     * @param offsetDelta the amount to move the Unit by, as a Vector2D
+     */
+    @Override
+    public void moveImageView(final Vector2D offsetDelta) {
+        updateImageViewPosition();
+    }
+
+    /* Generates an ImageView of this Unit, using its coordinates. */
+    private void generateImageView(final Vector2D spritePosition) {
+        double scaledViewSizeX = VIEW_SIZE_X * SPRITE_SCALE;
+        double scaledViewSizeY = VIEW_SIZE_Y * SPRITE_SCALE;
+
+        double xOffsetPixels = VIEW_SIZE_X * spritePosition.getXCoordinate();
+        double yOffsetPixels = VIEW_SIZE_Y * spritePosition.getYCoordinate();
+
+        imageView = new ImageView(sprite);
+        imageView.setMouseTransparent(true);
+        imageView.setViewport(new Rectangle2D(xOffsetPixels, yOffsetPixels, scaledViewSizeX,
+                scaledViewSizeY));
+
+        updateImageViewPosition();
+    }
+
+    /* Updates the ImageView's position based on the offset. */
+    private void updateImageViewPosition() {
+        Vector2D screenSpaceCoordinates = getScreenSpaceCoordinates(viewOffset);
+        imageView.setX(screenSpaceCoordinates.getXCoordinate());
+        imageView.setY(screenSpaceCoordinates.getYCoordinate());
     }
 
     /**

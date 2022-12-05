@@ -17,7 +17,7 @@ import javafx.stage.Stage;
 /**
  * Driver for the game.
  *
- * @author Nathan
+ * @author Nathan Ng & Toco Tachibana
  * @version 0.3
  */
 public class BlossomStorm extends Application {

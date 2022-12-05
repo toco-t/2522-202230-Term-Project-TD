@@ -13,8 +13,8 @@ import javafx.scene.text.Text;
 /**
  * Manages the game's User Interface.
  *
- * @author Nathan & Toco
- * @version 0.2
+ * @author Nathan Ng & Toco Tachibana
+ * @version 0.3
  */
 public class UIManager {
     private final Group hudElements;

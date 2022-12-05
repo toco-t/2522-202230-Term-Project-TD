@@ -17,7 +17,7 @@ import java.util.Objects;
  * Cutscene Manager.
  *
  * @author Toco
- * @version 0.1
+ * @version 0.3
  */
 public class CutsceneManager {
 

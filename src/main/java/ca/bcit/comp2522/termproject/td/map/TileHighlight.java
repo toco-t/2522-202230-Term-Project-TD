@@ -60,16 +60,6 @@ public class TileHighlight implements Drawable {
     }
 
     /**
-     * Moves the ImageView of this Tile without changing its actual coordinates.
-     *
-     * @param offsetDelta the amount to move the Tile by, as a Vector2D
-     */
-    @Override
-    public void moveImageView(final Vector2D offsetDelta) {
-        updateImageViewPosition();
-    }
-
-    /**
      * Returns the sprite of this Tile.
      *
      * @return the sprite as an Image
@@ -112,6 +102,16 @@ public class TileHighlight implements Drawable {
      */
     public void setHeight(final int height) {
         this.height = height;
+        updateImageViewPosition();
+    }
+
+    /**
+     * Moves the ImageView of this Tile without changing its actual coordinates.
+     *
+     * @param offsetDelta the amount to move the Tile by, as a Vector2D
+     */
+    @Override
+    public void moveImageView(final Vector2D offsetDelta) {
         updateImageViewPosition();
     }
 

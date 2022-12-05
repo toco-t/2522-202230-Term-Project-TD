@@ -3,8 +3,8 @@ package ca.bcit.comp2522.termproject.td;
 /**
  * Two-dimensional vector.
  *
- * @author Toco Tachibana
- * @version 0.1
+ * @author Toco Tachibana & Nathan Ng
+ * @version 0.2
  */
 public class Vector2D {
     private double xCoordinate;

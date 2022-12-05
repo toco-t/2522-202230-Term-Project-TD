@@ -16,8 +16,8 @@ import static ca.bcit.comp2522.termproject.td.Vector2D.tileCoordinateToScreenSpa
 /**
  * Tile in a Map.
  *
- * @author Toco Tachibana
- * @version 0.2
+ * @author Toco Tachibana & Nathan Ng
+ * @version 0.3
  */
 public class Tile implements Drawable {
     private static final double VIEW_SIZE_X = 128;
@@ -64,17 +64,6 @@ public class Tile implements Drawable {
     @Override
     public ImageView getImageView() {
         return imageView;
-    }
-
-    /**
-     * Moves the ImageView of this Tile without changing its actual coordinates.
-     *
-     * @param offsetDelta the amount to move the Tile by, as a Vector2D
-     */
-    @Override
-    public void moveImageView(final Vector2D offsetDelta) {
-        viewOffset.add(offsetDelta);
-        updateImageViewPosition();
     }
 
     /**
@@ -130,6 +119,17 @@ public class Tile implements Drawable {
      */
     public Terrain getTerrain() {
         return terrain;
+    }
+
+    /**
+     * Moves the ImageView of this Tile without changing its actual coordinates.
+     *
+     * @param offsetDelta the amount to move the Tile by, as a Vector2D
+     */
+    @Override
+    public void moveImageView(final Vector2D offsetDelta) {
+        viewOffset.add(offsetDelta);
+        updateImageViewPosition();
     }
 
     /* Generates an ImageView of this Tile, using its coordinates. */
