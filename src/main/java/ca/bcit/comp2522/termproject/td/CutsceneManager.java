@@ -107,6 +107,18 @@ public class CutsceneManager {
         endOfTurns.setVisible(false);
     }
 
+    /**
+     * Displays death quotes when Unit gets killed in battle.
+     *
+     * @param name name of Unit that got killed, a String
+     */
+    public void displayDeathQuotes(final String name) {
+        dialogue.setText(name + ": Ah, it was a miserable life...\n"
+                + "What could I expect but a miserable death...");
+        dialogueBackground.setVisible(true);
+        dialogueDisplay.setVisible(true);
+    }
+
 
     /**
      * Retrieves the specified line of the script from script.txt.

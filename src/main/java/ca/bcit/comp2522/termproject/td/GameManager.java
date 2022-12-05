@@ -120,6 +120,7 @@ public class GameManager {
                 enemy.attack(playerToTarget);
                 System.out.printf("%s initiating attack against %s.\n", enemy.getName(), playerToTarget.getName());
                 if (playerToTarget.getTurnState() == TurnState.DEAD) {
+                    cutscene.displayDeathQuotes(playerToTarget.getName());
                     playerUnits.remove(playerToTarget);
                 }
             }
@@ -513,7 +514,7 @@ public class GameManager {
             selectedUnit = null;
 
             if (target.getTurnState() == TurnState.DEAD) {
-                System.out.printf("Killed in Action: %s\n", target.getName());
+                cutscene.displayDeathQuotes(target.getName());
                 enemyUnits.remove(target);
             }
         }
