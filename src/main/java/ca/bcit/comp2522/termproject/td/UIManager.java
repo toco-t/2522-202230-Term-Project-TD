@@ -6,12 +6,9 @@ import ca.bcit.comp2522.termproject.td.interfaces.Combatant;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
 
 /**
  * Manages the game's User Interface.
@@ -29,7 +26,8 @@ public class UIManager {
     private final Text combatForecastDisplay;
     private final Text turnDisplay;
     private final Text levelDisplay;
-    private final ImageView gameOverText;
+    private final ImageView defeatImage;
+    private final ImageView victoryImage;
 
 
     /**
@@ -61,13 +59,19 @@ public class UIManager {
         levelDisplay.setFill(Color.WHITE);
 
         Image gameOverImage = new Image("game_over.png");
-        gameOverText = new ImageView(gameOverImage);
-        gameOverText.setX(25);
-        gameOverText.setY(150);
-        gameOverText.setVisible(false);
+        defeatImage = new ImageView(gameOverImage);
+        defeatImage.setX(25);
+        defeatImage.setY(150);
+        defeatImage.setVisible(false);
+
+        Image winImage = new Image("victory.png");
+        victoryImage = new ImageView(winImage);
+        victoryImage.setX(25);
+        victoryImage.setY(150);
+        victoryImage.setVisible(false);
 
         hudElements = new Group(hintBackground, selectionHint, selectedUnitHint, hoverHint, combatForecastDisplay,
-                keyPrompts, turnDisplay, levelDisplay, gameOverText);
+                keyPrompts, turnDisplay, levelDisplay, defeatImage, victoryImage);
     }
 
     /**
@@ -186,7 +190,14 @@ public class UIManager {
      * Displays the Game Over text.
      */
     public void showGameOver() {
-        gameOverText.setVisible(true);
+        defeatImage.setVisible(true);
+    }
+
+    /**
+     * Displays the Victory text.
+     */
+    public void showVictory() {
+        victoryImage.setVisible(true);
     }
 
     /**

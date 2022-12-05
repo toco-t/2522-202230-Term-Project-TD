@@ -58,7 +58,7 @@ public class Firearm extends Weapon {
     private void getAK12tats() {
         final int ak12Hits = 3;
         final int ak12Range = 5;
-        final int ak12Damage = 200;
+        final int ak12Damage = 150;
         final int ak12Accuracy = 142;
 
         setHits(ak12Hits);

@@ -511,6 +511,9 @@ public class GameManager {
             if (target.getTurnState() == TurnState.DEAD) {
                 cutscene.displayDeathQuotes(target.getName());
                 enemyUnits.remove(target);
+                if (enemyUnits.isEmpty()) {
+                    userInterface.showVictory();
+                }
             }
         }
     }
