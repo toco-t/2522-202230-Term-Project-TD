@@ -42,7 +42,13 @@ public class BlossomStorm extends Application {
         pressStartText.setFill(Color.WHITE);
         pressStartText.setFont(Font.font(18));
 
-        Group root = new Group(titleBGView, logoView, pressStartText);
+        Text developers = new Text(10, 550, "Toco Tachibana\nNathan Ng");
+        developers.setFill(Color.GRAY);
+
+        Text version = new Text(1000, 566, "0.3");
+        version.setFill(Color.GRAY);
+
+        Group root = new Group(titleBGView, logoView, pressStartText, developers, version);
         Scene scene = new Scene(root, 1024, 576, Color.BLACK);
         scene.setOnKeyPressed(this::startScreenInput);
 
