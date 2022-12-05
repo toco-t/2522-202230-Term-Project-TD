@@ -1,5 +1,4 @@
 <h1 align="center"> BlossomStorm </h1>
-<p>COMP2522.termproject</P>
 
 ## Table of Contents
 
@@ -85,8 +84,7 @@ It has the following subfolders and files:
 
 
 ## Features
-*
-*
+Unlike many games of this genre, characters in BlossomStorm have access to a wide assortment of modern weapons and vehicles. Firearms will be the primary method of attacking; due to this, most combat in this game will be at range. Accuracy will be a significant factor in the player’s strategy: attacking distance, gun class, environmental conditions, fire type, and more will determine a character’s accuracy. Additionally, multi-hit attacks will play a large part in combat as fully automatic weapons are commonplace.
 
 ## Creators
 *Nathan Ng* (https://github.com/nng32)
