@@ -245,29 +245,21 @@ public class GameManager {
         playerUnits.add(miyako);
         entities.add(miyako);
 
-        Unit dmitri1 = new Unit("Dmitri", new Vector2D(13, -1), viewOffset);
-        enemyUnits.add(dmitri1);
-        entities.add(dmitri1);
+        Unit ruInfantry = new Unit("RU Infantry", new Vector2D(16, -1), viewOffset);
+        enemyUnits.add(ruInfantry);
+        entities.add(ruInfantry);
 
-        Unit dmitri2 = new Unit("Dmitri", new Vector2D(13, 0), viewOffset);
-        enemyUnits.add(dmitri2);
-        entities.add(dmitri2);
+        Unit ruInfantry2 = new Unit("RU Infantry", new Vector2D(16, 2), viewOffset);
+        enemyUnits.add(ruInfantry2);
+        entities.add(ruInfantry2);
 
-        Unit dimitri3 = new Unit("Dmitri", new Vector2D(16, -1), viewOffset);
-        enemyUnits.add(dimitri3);
-        entities.add(dimitri3);
+        Unit ruInfantry3 = new Unit("RU Infantry", new Vector2D(20, 1), viewOffset);
+        enemyUnits.add(ruInfantry3);
+        entities.add(ruInfantry3);
 
-        Unit dmitri4 = new Unit("Dmitri", new Vector2D(16, 2), viewOffset);
-        enemyUnits.add(dmitri4);
-        entities.add(dmitri4);
-
-        Unit dmitri5 = new Unit("Dmitri", new Vector2D(20, 1), viewOffset);
-        enemyUnits.add(dmitri5);
-        entities.add(dmitri5);
-
-        Unit dmitri6 = new Unit("Dmitri", new Vector2D(20, -2), viewOffset);
-        enemyUnits.add(dmitri6);
-        entities.add(dmitri6);
+        Unit ruInfantry4 = new Unit("RU Infantry", new Vector2D(20, -2), viewOffset);
+        enemyUnits.add(ruInfantry4);
+        entities.add(ruInfantry4);
     }
 
     private void generateUnitsForTestMission() {

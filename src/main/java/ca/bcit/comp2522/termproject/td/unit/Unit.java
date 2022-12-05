@@ -70,7 +70,7 @@ public class Unit implements Combatant, Drawable {
         switch (name) {
             case "Ayumi" -> getAyumiStats();
             case "Miyako" -> getMiyakoStats();
-            case "Dmitri" -> getDmitriStats();
+            case "RU Infantry" -> getDmitriStats();
             default -> throw new IllegalArgumentException("The requested Unit does not exist.");
         }
 
