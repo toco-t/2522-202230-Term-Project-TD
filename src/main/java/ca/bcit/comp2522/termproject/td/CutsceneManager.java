@@ -38,7 +38,7 @@ public class CutsceneManager {
 
         dialogueBackground = new ImageView(new Image("cutscene_background.png"));
 
-        dialogue = new Text("First Encounter");
+        dialogue = new Text("BREAKING NEWS\nRUSSIA DECLARES WAR ON JAPAN");
         dialogue.setFont(Font.font("IMPACT", 28));
         dialogue.setFill(Color.WHITE);
         dialogue.setWrappingWidth(720);
@@ -48,7 +48,7 @@ public class CutsceneManager {
         dialogueDisplay.setLayoutX(150);
         dialogueDisplay.setLayoutY(400);
 
-        instruction = new Text("PRESS ⎵ ");
+        instruction = new Text("Press SPACE ▼");
         instruction.setFont(Font.font("VERDANA", 14));
         instruction.setFill(Color.WHITE);
         instruction.setX(820);
