@@ -30,7 +30,7 @@ public class Firearm extends Weapon {
     /* Sets this Firearm's stats to that of the Remington M24. */
     private void getM24Stats() {
         final int m24Hits = 1;
-        final int m24Range = 7;
+        final int m24Range = 8;
         final int m24Damage = 290;
         final int m24Accuracy = 190;
 

@@ -122,6 +122,9 @@ public class GameManager {
                 if (playerToTarget.getTurnState() == TurnState.DEAD) {
                     cutscene.displayDeathQuotes(playerToTarget.getName());
                     playerUnits.remove(playerToTarget);
+                    if (playerUnits.isEmpty()) {
+                        userInterface.showGameOver();
+                    }
                 }
             }
         }

@@ -29,6 +29,7 @@ public class UIManager {
     private final Text combatForecastDisplay;
     private final Text turnDisplay;
     private final Text levelDisplay;
+    private final Text gameOverText;
 
 
     /**
@@ -59,8 +60,13 @@ public class UIManager {
         levelDisplay = new Text(10, 15, "First Encounter");
         levelDisplay.setFill(Color.WHITE);
 
+        gameOverText = new Text(200, 50, "GAME OVER");
+        gameOverText.setFill(Color.RED);
+        gameOverText.setFont(Font.font(42));
+        gameOverText.setVisible(false);
+
         hudElements = new Group(hintBackground, selectionHint, selectedUnitHint, hoverHint, combatForecastDisplay,
-                keyPrompts, turnDisplay, levelDisplay);
+                keyPrompts, turnDisplay, levelDisplay, gameOverText);
     }
 
     /**
@@ -173,6 +179,13 @@ public class UIManager {
         } else {
             targetText.setText("");
         }
+    }
+
+    /**
+     * Displays the Game Over text.
+     */
+    public void showGameOver() {
+        gameOverText.setVisible(true);
     }
 
     /**
