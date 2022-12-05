@@ -63,12 +63,14 @@ public class UIManager {
         defeatImage.setX(25);
         defeatImage.setY(150);
         defeatImage.setVisible(false);
+        defeatImage.setMouseTransparent(true);
 
         Image winImage = new Image("victory.png");
         victoryImage = new ImageView(winImage);
         victoryImage.setX(25);
         victoryImage.setY(150);
         victoryImage.setVisible(false);
+        defeatImage.setMouseTransparent(true);
 
         hudElements = new Group(hintBackground, selectionHint, selectedUnitHint, hoverHint, combatForecastDisplay,
                 keyPrompts, turnDisplay, levelDisplay, defeatImage, victoryImage);
