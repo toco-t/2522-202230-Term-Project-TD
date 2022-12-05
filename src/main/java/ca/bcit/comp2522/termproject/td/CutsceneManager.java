@@ -1,5 +1,6 @@
 package ca.bcit.comp2522.termproject.td;
 
+import ca.bcit.comp2522.termproject.td.enums.CurrentTurn;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -24,6 +25,9 @@ public class CutsceneManager {
     private final ImageView dialogueBackground;
     private final Text dialogue;
     private final StackPane dialogueDisplay;
+    private final Text instruction;
+    private final ImageView endOfTurnsBackground;
+    private final Text endOfTurns;
 
     /**
      * Construct an object of type CutsceneManager.
@@ -43,14 +47,24 @@ public class CutsceneManager {
         dialogueDisplay.setLayoutX(150);
         dialogueDisplay.setLayoutY(400);
 
-        Text instruction = new Text("PRESS ⎵ ");
+        instruction = new Text("PRESS ⎵ ");
         instruction.setFont(Font.font("VERDANA", 14));
         instruction.setFill(Color.WHITE);
         instruction.setX(820);
         instruction.setY(500);
 
+        endOfTurnsBackground = new ImageView(new Image("turns_background.png"));
 
-        cutscene = new Group(dialogueBackground, dialogueDisplay, instruction);
+        endOfTurns = new Text("Player's Turn");
+        endOfTurns.setFont(Font.font("IMPACT", 36));
+        endOfTurns.setFill(Color.WHITE);
+        endOfTurns.setLayoutX(420);
+        endOfTurns.setLayoutY(300);
+
+        endOfTurnsBackground.setVisible(false);
+        endOfTurns.setVisible(false);
+
+        cutscene = new Group(dialogueBackground, dialogueDisplay, instruction, endOfTurnsBackground, endOfTurns);
     }
 
     /**
@@ -63,8 +77,34 @@ public class CutsceneManager {
             this.dialogue.setFont(Font.font("VERDANA", 20));
             this.dialogue.setText(message);
         } else {
-            cutscene.setVisible(false);
+            dialogueBackground.setVisible(false);
+            dialogueDisplay.setVisible(false);
+            instruction.setVisible(false);
         }
+    }
+
+    /**
+     * Displays the current turn to the player.
+     *
+     * @param player either player or enemy, CurrentTurn
+     */
+    public void showEndOfTurnsDisplay(final CurrentTurn player) {
+        if (player == CurrentTurn.PLAYER_TURN) {
+            endOfTurns.setText("PLAYER'S TURN...");
+        } else {
+            endOfTurns.setText("ENEMY'S TURN...");
+        }
+
+        endOfTurnsBackground.setVisible(true);
+        endOfTurns.setVisible(true);
+    }
+
+    /**
+     * Hides the current turn from the screen.
+     */
+    public void hideEndOfTurnsDisplay() {
+        endOfTurnsBackground.setVisible(false);
+        endOfTurns.setVisible(false);
     }
 
 
