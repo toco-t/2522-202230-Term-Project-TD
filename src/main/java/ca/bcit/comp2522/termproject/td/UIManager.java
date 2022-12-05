@@ -211,4 +211,20 @@ public class UIManager {
     public Group getGroup() {
         return hudElements;
     }
+
+    /**
+     * Returns the string representation of this UIManager.
+     *
+     * @return toString
+     */
+    @Override
+    public String toString() {
+        return "UIManager{"
+                + "hudElements=" + hudElements + ", hintBackground=" + hintBackground
+                + ", selectionHint=" + selectionHint + ", keyPrompts=" + keyPrompts
+                + ", selectedUnitHint=" + selectedUnitHint + ", hoverHint=" + hoverHint
+                + ", combatForecastDisplay=" + combatForecastDisplay + ", turnDisplay=" + turnDisplay
+                + ", levelDisplay=" + levelDisplay + ", defeatImage=" + defeatImage
+                + ", victoryImage=" + victoryImage + '}';
+    }
 }
