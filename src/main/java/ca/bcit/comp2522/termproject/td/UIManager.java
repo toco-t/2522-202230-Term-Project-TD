@@ -87,7 +87,8 @@ public class UIManager {
             hintToDisplay = switch (selectedUnit.getTurnState()) {
                 case CAN_MOVE -> "CLICK on a BLUE tile to move there, or a RED tile to attack.";
                 case CAN_ATTACK -> "CLICK on a RED tile to attack.";
-                default -> "This unit cannot take any further action.";
+                default -> "This unit cannot take any further action. After all units have moved,"
+                        + " press ENTER to end your turn.";
             };
         } else {
             hintToDisplay = "SELECT a unit to move.";
