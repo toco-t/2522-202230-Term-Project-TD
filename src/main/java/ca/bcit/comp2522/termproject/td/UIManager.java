@@ -217,7 +217,7 @@ public class UIManager {
     /**
      * Returns the string representation of this UIManager.
      *
-     * @return toString
+     * @return toString of this UIManager as a String
      */
     @Override
     public String toString() {
@@ -266,7 +266,7 @@ public class UIManager {
     /**
      * Returns the unique hashCode of this UIManager.
      *
-     * @return hashCode as an int
+     * @return unique hashCode as an int
      */
     @Override
     public int hashCode() {

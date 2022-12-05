@@ -17,6 +17,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 
 /**
@@ -36,11 +37,7 @@ public class GameManager {
     private Combatant selectedUnit;
     private final CutsceneManager cutscene;
     private final ArrayList<Drawable> tileHighlights;
-    private Group unitsGroup;
-    private Group tilesGroup;
-    private Group userInterfaceGroup;
     private Group tileHighlightGroup;
-    private Group cutsceneGroup;
     private final Vector2D viewOffset;
 
     /**
@@ -161,11 +158,11 @@ public class GameManager {
      * @return the Group of units and tiles
      */
     public Group groupAllObjectsForRendering() {
-        unitsGroup = groupDrawables(entities);
-        tilesGroup = groupDrawables(map.getTilesForRendering());
-        userInterfaceGroup = userInterface.getGroup();
+        Group unitsGroup = groupDrawables(entities);
+        Group tilesGroup = groupDrawables(map.getTilesForRendering());
+        Group userInterfaceGroup = userInterface.getGroup();
         tileHighlightGroup = new Group();
-        cutsceneGroup = cutscene.getGroup();
+        Group cutsceneGroup = cutscene.getGroup();
 
         return new Group(tilesGroup, tileHighlightGroup, unitsGroup, userInterfaceGroup, cutsceneGroup);
     }
@@ -534,5 +531,93 @@ public class GameManager {
         } else {
             userInterface.changeUnitDisplay(target);
         }
+    }
+
+    /**
+     * Returns the string representation of this GameManager.
+     *
+     * @return toString of this GameManager as a String
+     */
+    @Override
+    public String toString() {
+        return "GameManager{" + "turnNumber=" + turnNumber + ", currentTurn=" + currentTurn
+                + ", playerUnits=" + playerUnits + ", enemyUnits=" + enemyUnits + ", entities=" + entities
+                + ", userInterface=" + userInterface + ", map=" + map + ", selectedUnit=" + selectedUnit
+                + ", cutscene=" + cutscene + ", tileHighlights=" + tileHighlights
+                + ", tileHighlightGroup=" + tileHighlightGroup + ", viewOffset=" + viewOffset + '}';
+    }
+
+    /**
+     * Returns true if the specified object is equal to this GameManager, else False.
+     *
+     * @param   o object to be compared for equality with this GameManager
+     * @return  true if the specified object is equal to this GameManager, else False
+     */
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        GameManager that = (GameManager) o;
+
+        if (turnNumber != that.turnNumber) {
+            return false;
+        }
+        if (currentTurn != that.currentTurn) {
+            return false;
+        }
+        if (!Objects.equals(playerUnits, that.playerUnits)) {
+            return false;
+        }
+        if (!Objects.equals(enemyUnits, that.enemyUnits)) {
+            return false;
+        }
+        if (!Objects.equals(entities, that.entities)) {
+            return false;
+        }
+
+        return Objects.equals(map, that.map);
+    }
+
+    /**
+     * Returns the unique hashCode of this GameManager.
+     *
+     * @return unique hashCode as an int
+     */
+    @Override
+    public int hashCode() {
+        final int multiplier = 31;
+        int result = turnNumber;
+        if (currentTurn != null) {
+            result = multiplier * result + currentTurn.hashCode();
+        } else {
+            result = multiplier * result;
+        }
+        if (playerUnits != null) {
+            result = multiplier * result + playerUnits.hashCode();
+        } else {
+            result = multiplier * result;
+        }
+        if (enemyUnits != null) {
+            result = multiplier * result + enemyUnits.hashCode();
+        } else {
+            result = multiplier * result;
+        }
+        if (entities != null) {
+            result = multiplier * result + entities.hashCode();
+        } else {
+            result = multiplier * result;
+        }
+        if (map != null) {
+            result = multiplier * result + map.hashCode();
+        } else {
+            result = multiplier * result;
+        }
+
+        return result;
     }
 }
