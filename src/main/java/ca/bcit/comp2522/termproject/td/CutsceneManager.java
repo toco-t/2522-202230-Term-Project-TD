@@ -130,7 +130,6 @@ public class CutsceneManager {
         dialogueDisplay.setVisible(true);
     }
 
-
     /**
      * Retrieves the specified line of the script from script.txt.
      *
@@ -150,7 +149,7 @@ public class CutsceneManager {
             }
             lineNumber++;
         } catch (IOException e) {
-            System.out.println(e);
+            e.printStackTrace();
         }
 
         return buffer;
@@ -163,5 +162,87 @@ public class CutsceneManager {
      */
     public Group getGroup() {
         return cutscene;
+    }
+
+
+    /**
+     * Returns the String representation of this CutsceneManager.
+     *
+     * @return toString of this CutsceneManager as a String
+     */
+    @Override
+    public String toString() {
+        return "CutsceneManager{" + "cutscene=" + cutscene + ", lineNumber=" + lineNumber
+                + ", dialogueBackground=" + dialogueBackground + ", dialogue=" + dialogue
+                + ", dialogueDisplay=" + dialogueDisplay + ", instruction=" + instruction
+                + ", endOfTurnsBackground=" + endOfTurnsBackground + ", endOfTurns=" + endOfTurns + '}';
+    }
+
+    /**
+     * Returns true if the specified object is equal to this CutsceneManager, else False.
+     *
+     * @param   o object to be compared for equality with this CutsceneManager
+     * @return  true if the specified object is equal to this CutsceneManager, else False
+     */
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        CutsceneManager that = (CutsceneManager) o;
+
+        if (lineNumber != that.lineNumber) {
+            return false;
+        }
+        if (!Objects.equals(cutscene, that.cutscene)) {
+            return false;
+        }
+        if (!Objects.equals(dialogue, that.dialogue)) {
+            return false;
+        }
+        if (!Objects.equals(dialogueDisplay, that.dialogueDisplay)) {
+            return false;
+        }
+        if (!Objects.equals(instruction, that.instruction)) {
+            return false;
+        }
+        return Objects.equals(endOfTurns, that.endOfTurns);
+    }
+
+    /**
+     * Returns the unique hashCode of this CutsceneManager.
+     *
+     * @return unique hashCode as an int
+     */
+    @Override
+    public int hashCode() {
+        final int multiplier = 31;
+        int result;
+        if (cutscene != null) {
+            result = cutscene.hashCode();
+        } else {
+            result = 0;
+        }
+        result = multiplier * result + lineNumber;
+        if (dialogue != null) {
+            result = multiplier * result + dialogue.hashCode();
+        } else {
+            result = multiplier * result;
+        }
+        if (instruction != null) {
+            result = multiplier * result + instruction.hashCode();
+        } else {
+            result = multiplier * result;
+        }
+        if (endOfTurns != null) {
+            result = multiplier * result + endOfTurns.hashCode();
+        } else {
+            result = multiplier * result;
+        }
+        return result;
     }
 }
