@@ -4,6 +4,8 @@ import ca.bcit.comp2522.termproject.td.enums.CurrentTurn;
 import ca.bcit.comp2522.termproject.td.interfaces.Attacker;
 import ca.bcit.comp2522.termproject.td.interfaces.Combatant;
 import javafx.scene.Group;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -19,6 +21,7 @@ import javafx.scene.text.TextAlignment;
  */
 public class UIManager {
     private final Group hudElements;
+    private final Rectangle hintBackground;
     private final Text selectionHint;
     private final Text keyPrompts;
     private final Text selectedUnitHint;
@@ -26,15 +29,16 @@ public class UIManager {
     private final Text combatForecastDisplay;
     private final Text turnDisplay;
     private final Text levelDisplay;
-    private final Rectangle dialogueDisplay;
-    private final Text dialogue;
-    private final StackPane stack = new StackPane();
+
 
     /**
      * Constructs an object of type UIManager.
      */
     public UIManager() {
-        selectionHint = new Text(10, 566, "Select a unit to move.");
+        hintBackground = new Rectangle(0, 526, 1024, 50);
+        hintBackground.setFill(new Color(0.3, 0.3, 0.3,  0.5));
+
+        selectionHint = new Text(10, 566, "SELECT a unit to move.");
         selectionHint.setFill(Color.WHITE);
 
         keyPrompts = new Text(700, 566, "[W][A][S][D] Adjust Camera     [ENTER] End Turn");
@@ -55,23 +59,8 @@ public class UIManager {
         levelDisplay = new Text(10, 15, "Test Mission");
         levelDisplay.setFill(Color.WHITE);
 
-        hudElements = new Group(selectionHint, selectedUnitHint, hoverHint, combatForecastDisplay, keyPrompts,
-                turnDisplay, levelDisplay);
-
-        dialogueDisplay = new Rectangle(0, 0, 780, 160);
-        Color colour = new Color(0.2, 0.2, 0.2, 0.7);
-        dialogueDisplay.setFill(colour);
-
-        dialogue = new Text("First Mission - Battle in CoCo");
-        dialogue.setFont(Font.font("VERDANA", 20));
-
-        dialogue.setFill(Color.WHITE);
-        dialogue.setWrappingWidth(720);
-        dialogue.setTextAlignment(TextAlignment.valueOf("CENTER"));
-
-        stack.getChildren().addAll(dialogueDisplay, dialogue);
-        stack.setLayoutX(150);
-        stack.setLayoutY(360);
+        hudElements = new Group(hintBackground, selectionHint, selectedUnitHint, hoverHint, combatForecastDisplay,
+                keyPrompts, turnDisplay, levelDisplay);
     }
 
     /**
@@ -83,12 +72,12 @@ public class UIManager {
         String hintToDisplay;
         if (selectedUnit != null) {
             hintToDisplay = switch (selectedUnit.getTurnState()) {
-                case CAN_MOVE -> "Click on a blue tile to move there, or a red tile to attack.";
-                case CAN_ATTACK -> "Click on a red tile to attack.";
+                case CAN_MOVE -> "CLICK on a BLUE tile to move there, or a RED tile to attack.";
+                case CAN_ATTACK -> "CLICK on a RED tile to attack.";
                 default -> "This unit cannot take any further action.";
             };
         } else {
-            hintToDisplay = "Select a unit to move.";
+            hintToDisplay = "SELECT a unit to move.";
         }
 
         changeSelectionHintTo(hintToDisplay);
@@ -183,20 +172,6 @@ public class UIManager {
             targetText.setText(String.format("%s (%s) %d/%d HP", name, weapon, currentHealth, maxHealth));
         } else {
             targetText.setText("");
-        }
-    }
-
-    /**
-     * Updates the dialogue.
-     *
-     * @param message next line of the script, a String
-     */
-    public void changeDialogueDisplay(final String message) {
-        if (message != null) {
-            this.dialogue.setText(message);
-        } else {
-            stack.setVisible(false);
-            dialogueDisplay.setVisible(false);
         }
     }
 

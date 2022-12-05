@@ -38,6 +38,7 @@ public class GameManager {
     private Group tilesGroup;
     private Group userInterfaceGroup;
     private Group tileHighlightGroup;
+    private Group cutsceneGroup;
     private Vector2D viewOffset;
 
     /**
@@ -158,8 +159,9 @@ public class GameManager {
         tilesGroup = SpriteRenderer.groupDrawables(map.getTilesForRendering());
         userInterfaceGroup = userInterface.getGroup();
         tileHighlightGroup = new Group();
+        cutsceneGroup = cutscene.getGroup();
 
-        return new Group(tilesGroup, tileHighlightGroup, unitsGroup, userInterfaceGroup);
+        return new Group(tilesGroup, tileHighlightGroup, unitsGroup, userInterfaceGroup, cutsceneGroup);
     }
 
     /**
@@ -176,7 +178,7 @@ public class GameManager {
             case A -> moveAllDrawables(new Vector2D(speedInPixelsPerFrame, 0));
             case S -> moveAllDrawables(new Vector2D(0, -speedInPixelsPerFrame));
             case D -> moveAllDrawables(new Vector2D(-speedInPixelsPerFrame, 0));
-            case SPACE -> userInterface.changeDialogueDisplay(cutscene.loadScript());
+            case SPACE -> cutscene.changeDialogueDisplay(cutscene.loadScript());
 
             default -> { }
         }
