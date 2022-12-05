@@ -26,6 +26,7 @@ public class TileHighlight implements Drawable {
     private final Image sprite;
 
     private final Vector2D location;
+    private int height;
     private final Vector2D viewOffset;
 
     /**
@@ -89,7 +90,7 @@ public class TileHighlight implements Drawable {
     private void updateImageViewPosition() {
         Vector2D screenSpaceCoordinates = getScreenSpaceCoordinates(viewOffset);
         imageView.setX(screenSpaceCoordinates.getXCoordinate());
-        imageView.setY(screenSpaceCoordinates.getYCoordinate() * TILE_HEIGHT_IN_PIXELS);
+        imageView.setY(screenSpaceCoordinates.getYCoordinate() - height * TILE_HEIGHT_IN_PIXELS);
     }
 
     /* Gets the coordinates of this Tile in screen space (pixels). */
