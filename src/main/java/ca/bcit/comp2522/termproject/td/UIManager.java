@@ -29,7 +29,7 @@ public class UIManager {
     private final Text combatForecastDisplay;
     private final Text turnDisplay;
     private final Text levelDisplay;
-    private final Text gameOverText;
+    private final ImageView gameOverText;
 
 
     /**
@@ -60,9 +60,10 @@ public class UIManager {
         levelDisplay = new Text(10, 15, "First Encounter");
         levelDisplay.setFill(Color.WHITE);
 
-        gameOverText = new Text(200, 50, "GAME OVER");
-        gameOverText.setFill(Color.RED);
-        gameOverText.setFont(Font.font(42));
+        Image gameOverImage = new Image("game_over.png");
+        gameOverText = new ImageView(gameOverImage);
+        gameOverText.setX(25);
+        gameOverText.setY(150);
         gameOverText.setVisible(false);
 
         hudElements = new Group(hintBackground, selectionHint, selectedUnitHint, hoverHint, combatForecastDisplay,
