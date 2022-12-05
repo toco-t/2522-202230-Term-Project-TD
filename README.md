@@ -16,13 +16,14 @@ A narrative-driven tactical RPG taking place in modern Tokyo. The gameplay will 
 ## Technologies
 Technologies used for this project:
 * Java
+* JavaFX
 
 ## Content
 Content of the project folder:
 
 ```
  Top level of project folder:
-├── .idea			#
+├── .idea
 ├── .mvm
 ├── src
 ├── .gitignore
@@ -88,5 +89,6 @@ It has the following subfolders and files:
 *
 
 ## Creators
-*Nathan * (https://github.com/nng32)
+*Nathan Ng* (https://github.com/nng32)
+
 *Toco Tachibana* (https://github.com/toco-t)  
