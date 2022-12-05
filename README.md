@@ -1,4 +1,4 @@
-<h1 align="center"> BlossomStorm </h1>
+<h1 align="center"> Blossom Storm </h1>
 
 ## Table of Contents
 
@@ -6,10 +6,11 @@
 * [Technologies](#technologies)
 * [Contents](#content)
 * [Features](#features)
-* [Creators](#creators)
+* [Read More](#read-more)
+* [Developers](#developers)
 
 ## General Info
-A narrative-driven tactical RPG taking place in modern Tokyo. The gameplay will consist of simple cutscenes, similar to visual novels and battles. Battles occur on square grids with various terrain features, such as buildings and different terrain surfaces. The player and enemy team (controlled by the computer) take turns moving units on the battlefield to attack each other while attempting to accomplish a broader objective.
+A narrative-driven tactical RPG taking place in modern Tokyo. The gameplay consists of simple cutscenes (similar to visual novels) and battles. Battles occur on square grids with various terrain features, such as buildings and different terrain surfaces. The player and enemy team (controlled by the computer) take turns moving units on the battlefield to attack each other while attempting to accomplish a broader objective.
 
 
 ## Technologies
@@ -43,11 +44,8 @@ It has the following subfolders and files:
 └── src
    └── java
 	   └── ca.bcit.comp2522.termproject.td
-		   └── camera
-			/Camera
-		   ├── driver
+		   └── driver
 			/BlossomStorm
-			/SpriteRenderer
 		   ├── enums
 			/Affiliation
 			/ArmourType
@@ -84,9 +82,12 @@ It has the following subfolders and files:
 
 
 ## Features
-Unlike many games of this genre, characters in BlossomStorm have access to a wide assortment of modern weapons and vehicles. Firearms will be the primary method of attacking; due to this, most combat in this game will be at range. Accuracy will be a significant factor in the player’s strategy: attacking distance, gun class, environmental conditions, fire type, and more will determine a character’s accuracy. Additionally, multi-hit attacks will play a large part in combat as fully automatic weapons are commonplace.
+Unlike many games of this genre, characters in Blossom Storm have access to a wide assortment of modern weapons and vehicles. Firearms will be the primary method of attacking; due to this, most combat in this game will be at range. Accuracy will be a significant factor in the player’s strategy: attacking distance, gun class, environmental conditions, fire type, and more will determine a character’s accuracy. Additionally, multi-hit attacks will play a large part in combat as fully automatic weapons are commonplace.
 
-## Creators
+## Read More
+Read the project plans and documentation here:
+[Blossom Storm Documentation](https://docs.google.com/document/d/1ajxo79C1yCrWTRonEz8J--nV4USNBrs82EkxQ73g82c/edit?usp=sharing)
+## Developers
 *Nathan Ng* (https://github.com/nng32)
 
 *Toco Tachibana* (https://github.com/toco-t)  
