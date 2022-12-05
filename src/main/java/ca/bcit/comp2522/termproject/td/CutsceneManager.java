@@ -11,6 +11,7 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
 import java.io.*;
+import java.util.Objects;
 
 /**
  * Cutscene Manager.
@@ -37,7 +38,7 @@ public class CutsceneManager {
 
         dialogueBackground = new ImageView(new Image("cutscene_background.png"));
 
-        dialogue = new Text("First Mission - Battle in CoCo");
+        dialogue = new Text("First Encounter");
         dialogue.setFont(Font.font("IMPACT", 28));
         dialogue.setFill(Color.WHITE);
         dialogue.setWrappingWidth(720);
@@ -113,8 +114,15 @@ public class CutsceneManager {
      * @param name name of Unit that got killed, a String
      */
     public void displayDeathQuotes(final String name) {
-        dialogue.setText(name + ": Ah, it was a miserable life...\n"
-                + "What could I expect but a miserable death...");
+        if (Objects.equals(name, "RU Infantry")) {
+            return;
+        }
+        String deathQuote = switch (name) {
+            case "Ayumi" -> "Ayumi: Ah, it was a miserable life...\nWhat could I expect but a miserable death...";
+            case "Miyako" -> "Miyako: Why did I ever... fall for those anime recruitment posters?";
+            default -> String.format("Killed in Action: %s", name);
+        };
+        dialogue.setText(deathQuote);
         dialogueBackground.setVisible(true);
         dialogueDisplay.setVisible(true);
     }
