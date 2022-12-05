@@ -328,10 +328,27 @@ public class GameMap {
     @Override
     public int hashCode() {
         final int primeMultiplier = 31;
-        int result = gameManager != null ? gameManager.hashCode() : 0;
-        result = primeMultiplier * result + (tiles != null ? tiles.hashCode() : 0);
-        result = primeMultiplier * result + (weather != null ? weather.hashCode() : 0);
-        result = primeMultiplier * result + (isNighttime ? 1 : 0);
+        int result;
+        if (gameManager != null) {
+            result = gameManager.hashCode();
+        } else {
+            result = 0;
+        }
+        if (tiles != null) {
+            result = primeMultiplier * result + tiles.hashCode();
+        } else {
+            result = primeMultiplier * result;
+        }
+        if (weather != null) {
+            result = primeMultiplier * result + weather.hashCode();
+        } else {
+            result = primeMultiplier * result;
+        }
+        if (isNighttime) {
+            result = primeMultiplier * result + 1;
+        } else {
+            result = primeMultiplier * result;
+        }
         return result;
     }
 
