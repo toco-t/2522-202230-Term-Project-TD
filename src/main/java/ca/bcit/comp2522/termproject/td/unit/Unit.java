@@ -83,6 +83,7 @@ public class Unit implements Combatant, Drawable {
         affiliation = Affiliation.PLAYER;
         turnState = TurnState.CAN_MOVE;
         armourType = ArmourType.DEFAULT;
+        aerial = false;
 
         weapons = new ArrayList<>();
         weapons.add(new Firearm("Remington M24"));
@@ -105,6 +106,7 @@ public class Unit implements Combatant, Drawable {
         affiliation = Affiliation.PLAYER;
         turnState = TurnState.CAN_MOVE;
         armourType = ArmourType.DEFAULT;
+        aerial = false;
 
         weapons = new ArrayList<>();
         weapons.add(new Firearm("H&K MP7"));
@@ -127,6 +129,7 @@ public class Unit implements Combatant, Drawable {
         affiliation = Affiliation.ENEMY;
         turnState = TurnState.DONE;
         armourType = ArmourType.DEFAULT;
+        aerial = false;
 
         weapons = new ArrayList<>();
         weapons.add(new Firearm("AK-12"));
@@ -199,39 +202,12 @@ public class Unit implements Combatant, Drawable {
     }
 
     /**
-     * Returns the sprite of this Unit.
-     *
-     * @return the sprite as an Image
-     */
-    public Image getSprite() {
-        return sprite;
-    }
-
-    /**
-     * Sets the sprite of this Unit.
-     *
-     * @param sprite the sprite as an Image
-     */
-    public void setSprite(final Image sprite) {
-        this.sprite = sprite;
-    }
-
-    /**
      * Returns the affiliation of this Unit.
      *
      * @return the affiliation as an Affiliation
      */
     public Affiliation getAffiliation() {
         return affiliation;
-    }
-
-    /**
-     * Sets the affiliation of this Unit.
-     *
-     * @param affiliation the affiliation as an Affiliation
-     */
-    public void setAffiliation(final Affiliation affiliation) {
-        this.affiliation = affiliation;
     }
 
     /**
@@ -280,120 +256,12 @@ public class Unit implements Combatant, Drawable {
     }
 
     /**
-     * Sets the location of this Unit.
-     *
-     * @param location the location as a Vector2D
-     */
-    public void setLocation(final Vector2D location) {
-        this.location = location;
-    }
-
-    /**
-     * Returns this unit's list of weapons.
-     *
-     * @return the weapons as an ArrayList of Attacker
-     */
-    public ArrayList<Attacker> getWeapons() {
-        return weapons;
-    }
-
-    /**
-     * Sets this unit's list of weapons.
-     *
-     * @param weapons the weapons as an ArrayList of Attacker
-     */
-    public void setWeapons(final ArrayList<Attacker> weapons) {
-        this.weapons = weapons;
-    }
-
-    /**
-     * Returns the inventory of this Unit.
-     *
-     * @return the inventory as an ArrayList of Item
-     */
-    public ArrayList<Item> getInventory() {
-        return inventory;
-    }
-
-    /**
-     * Sets the inventory of this Unit.
-     *
-     * @param inventory the inventory as an ArrayList of Item
-     */
-    public void setInventory(final ArrayList<Item> inventory) {
-        this.inventory = inventory;
-    }
-
-    /**
-     * Returns the level of this Unit.
-     *
-     * @return the level as an int
-     */
-    public int getLevel() {
-        return level;
-    }
-
-    /**
-     * Sets the level of this Unit.
-     *
-     * @param level the level as an int
-     */
-    public void setLevel(final int level) {
-        this.level = level;
-    }
-
-    /**
-     * Returns the amount of experience required to level up this Unit.
-     *
-     * @return the experience to next level as an int
-     */
-    public int getExpToNext() {
-        return expToNext;
-    }
-
-    /**
-     * Sets the experience required to level up this Unit.
-     *
-     * @param expToNext the experience to next level as an int
-     */
-    public void setExpToNext(final int expToNext) {
-        this.expToNext = expToNext;
-    }
-
-    /**
-     * Returns the movement range of this Unit.
-     *
-     * @return the movement range as an int
-     */
-    public int getMovementRange() {
-        return movementRange;
-    }
-
-    /**
-     * Sets the movement range of this Unit.
-     *
-     * @param movementRange the movement range as an int
-     */
-    public void setMovementRange(final int movementRange) {
-        this.movementRange = movementRange;
-    }
-
-    /**
      * Returns whether this Unit is aerial.
      *
      * @return whether this Unit is aerial as a boolean
      */
     public boolean isAerial() {
         return aerial;
-    }
-
-    /**
-     * Sets whether this Unit is aerial.
-     *
-     * @param aerial whether this Unit will be aerial as a boolean
-     */
-    public void setAerial(final boolean aerial) {
-        this.aerial = aerial;
     }
 
     /**
@@ -415,30 +283,12 @@ public class Unit implements Combatant, Drawable {
     }
 
     /**
-     * Sets the armour type of this Unit.
-     *
-     * @param armourType the armour type as an ArmourType
-     */
-    public void setArmourType(final ArmourType armourType) {
-        this.armourType = armourType;
-    }
-
-    /**
      * Returns the health of this Unit.
      *
      * @return the health as an int
      */
     public int getHealth() {
         return health;
-    }
-
-    /**
-     * Sets the health of this Unit.
-     *
-     * @param health the health as an int
-     */
-    public void setHealth(final int health) {
-        this.health = health;
     }
 
     /**
@@ -451,15 +301,6 @@ public class Unit implements Combatant, Drawable {
     }
 
     /**
-     * Sets the max health of this Unit.
-     *
-     * @param maxHealth the max health as an int
-     */
-    public void setMaxHealth(final int maxHealth) {
-        this.maxHealth = maxHealth;
-    }
-
-    /**
      * Returns the defense of this Unit.
      *
      * @return the defense as an int
@@ -469,30 +310,12 @@ public class Unit implements Combatant, Drawable {
     }
 
     /**
-     * Sets the defense of this Unit.
-     *
-     * @param defense the defense as an int
-     */
-    public void setDefense(final int defense) {
-        this.defense = defense;
-    }
-
-    /**
      * Returns the evasion of this Unit.
      *
      * @return the evasion as an int
      */
     public int getEvasion() {
         return evasion;
-    }
-
-    /**
-     * Sets the evasion of this Unit.
-     *
-     * @param evasion the evasion as an int
-     */
-    public void setEvasion(final int evasion) {
-        this.evasion = evasion;
     }
 
     /**

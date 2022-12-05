@@ -29,7 +29,7 @@ public class Tile implements Drawable {
     private static final double SPRITE_SCALE = 1;
     private ImageView imageView;
     private final GameManager gameManager;
-    private Image sprite;
+    private final Image sprite;
 
     private final Vector2D location;
     private int height;
@@ -67,39 +67,12 @@ public class Tile implements Drawable {
     }
 
     /**
-     * Returns the sprite of this Tile.
-     *
-     * @return the sprite as an Image
-     */
-    public Image getSprite() {
-        return sprite;
-    }
-
-    /**
-     * Sets the sprite of this Tile.
-     *
-     * @param sprite the sprite as an Image
-     */
-    public void setSprite(final Image sprite) {
-        this.sprite = sprite;
-    }
-
-    /**
      * Returns the coordinates of this Tile.
      *
      * @return the coordinates as a Vector2D
      */
     public Vector2D getLocation() {
         return location;
-    }
-
-    /**
-     * Returns the height of this Tile.
-     *
-     * @return the height as an int
-     */
-    public int getHeight() {
-        return height;
     }
 
     /**

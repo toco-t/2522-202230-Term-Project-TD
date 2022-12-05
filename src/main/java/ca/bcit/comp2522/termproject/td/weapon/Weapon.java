@@ -19,7 +19,6 @@ public abstract class Weapon implements Attacker {
     private static final String DEFAULT_DESCRIPTION = "I like to keep this for close encounters.";
     private static final int DEFAULT_DAMAGE = 250;
     private static final int DEFAULT_RANGE = 5;
-    private static final int DEFAULT_ACCURACY = 250;
     private static final DamageType DEFAULT_DAMAGE_TYPE = DamageType.STANDARD;
     private static final ProjectileSize DEFAULT_PROJECTILE_SIZE = ProjectileSize.BULLET;
     private static final Random RANDOM_NUMBER_GENERATOR = new Random();
@@ -76,15 +75,6 @@ public abstract class Weapon implements Attacker {
     }
 
     /**
-     * Returns the attack strength of this Weapon.
-     *
-     * @return the attack strength as an int
-     */
-    public int getDamage() {
-        return damage;
-    }
-
-    /**
      * Sets the attack strength of this Weapon.
      *
      * @param damage the attack strength as an int
@@ -112,15 +102,6 @@ public abstract class Weapon implements Attacker {
     }
 
     /**
-     * Returns the accuracy of this Weapon.
-     *
-     * @return the accuracy as an int
-     */
-    public int getAccuracy() {
-        return accuracy;
-    }
-
-    /**
      * Sets the accuracy of this Weapon.
      *
      * @param accuracy the accuracy as an int
@@ -145,15 +126,6 @@ public abstract class Weapon implements Attacker {
      */
     public void setRange(final int range) {
         this.range = range;
-    }
-
-    /**
-     * Returns the damage type of this Weapon.
-     *
-     * @return the damage type as a DamageType enum
-     */
-    public DamageType getDamageType() {
-        return damageType;
     }
 
     /**
@@ -185,7 +157,7 @@ public abstract class Weapon implements Attacker {
 
         double accuracyPerHit = getAccuracyPerHit(target, distance);
 
-        if (canBreakTargetERA(target)) {
+        if (canBreakTargetERA()) {
             target.breakERA();
         }
 
@@ -258,7 +230,7 @@ public abstract class Weapon implements Attacker {
     }
 
     /* Determines whether this attack can break ERA armour. */
-    private boolean canBreakTargetERA(final Combatant target) {
+    private boolean canBreakTargetERA() {
         return projectileSize == ProjectileSize.SHELL || damageType == DamageType.EXPLOSIVE;
     }
 

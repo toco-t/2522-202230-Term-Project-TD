@@ -45,15 +45,6 @@ public class GameMap {
     }
 
     /**
-     * Returns the tiles of this Map.
-     *
-     * @return the tiles as an ArrayList of Tile
-     */
-    public ArrayList<Tile> getTiles() {
-        return tiles;
-    }
-
-    /**
      * Returns the tiles of this Map so that they can be rendered.
      *
      * @return the tiles as an ArrayList of Drawable

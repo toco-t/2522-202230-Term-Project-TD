@@ -1,15 +1,10 @@
 package ca.bcit.comp2522.termproject.td.map;
 
 import ca.bcit.comp2522.termproject.td.interfaces.Drawable;
-import ca.bcit.comp2522.termproject.td.GameManager;
-import ca.bcit.comp2522.termproject.td.enums.Terrain;
 import ca.bcit.comp2522.termproject.td.Vector2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
-
-import java.util.Objects;
 
 import static ca.bcit.comp2522.termproject.td.Vector2D.tileCoordinateToScreenSpace;
 
@@ -28,10 +23,9 @@ public class TileHighlight implements Drawable {
 
     private static final double SPRITE_SCALE = 1;
     private ImageView imageView;
-    private Image sprite;
+    private final Image sprite;
 
     private final Vector2D location;
-    private int height;
     private final Vector2D viewOffset;
 
     /**
@@ -60,49 +54,12 @@ public class TileHighlight implements Drawable {
     }
 
     /**
-     * Returns the sprite of this Tile.
-     *
-     * @return the sprite as an Image
-     */
-    public Image getSprite() {
-        return sprite;
-    }
-
-    /**
-     * Sets the sprite of this Tile.
-     *
-     * @param sprite the sprite as an Image
-     */
-    public void setSprite(final Image sprite) {
-        this.sprite = sprite;
-    }
-
-    /**
      * Returns the coordinates of this Tile.
      *
      * @return the coordinates as a Vector2D
      */
     public Vector2D getLocation() {
         return location;
-    }
-
-    /**
-     * Returns the height of this Tile.
-     *
-     * @return the height as an int
-     */
-    public int getHeight() {
-        return height;
-    }
-
-    /**
-     * Sets the height of this Tile.
-     *
-     * @param height the height as an int
-     */
-    public void setHeight(final int height) {
-        this.height = height;
-        updateImageViewPosition();
     }
 
     /**
@@ -132,7 +89,7 @@ public class TileHighlight implements Drawable {
     private void updateImageViewPosition() {
         Vector2D screenSpaceCoordinates = getScreenSpaceCoordinates(viewOffset);
         imageView.setX(screenSpaceCoordinates.getXCoordinate());
-        imageView.setY(screenSpaceCoordinates.getYCoordinate() - height * TILE_HEIGHT_IN_PIXELS);
+        imageView.setY(screenSpaceCoordinates.getYCoordinate() * TILE_HEIGHT_IN_PIXELS);
     }
 
     /* Gets the coordinates of this Tile in screen space (pixels). */
