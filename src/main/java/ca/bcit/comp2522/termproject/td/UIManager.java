@@ -10,6 +10,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
+import java.util.Objects;
+
 /**
  * Manages the game's User Interface.
  *
@@ -226,5 +228,73 @@ public class UIManager {
                 + ", combatForecastDisplay=" + combatForecastDisplay + ", turnDisplay=" + turnDisplay
                 + ", levelDisplay=" + levelDisplay + ", defeatImage=" + defeatImage
                 + ", victoryImage=" + victoryImage + '}';
+    }
+
+    /**
+     * Returns true if the specified object is equal to this UIManager, else False.
+     *
+     * @param   o object to be compared for equality with this UIManager
+     * @return  true if the specified object is equal to this UIManager, else False
+     */
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        UIManager uiManager = (UIManager) o;
+
+        if (!Objects.equals(hudElements, uiManager.hudElements)) {
+            return false;
+        }
+        if (!Objects.equals(combatForecastDisplay, uiManager.combatForecastDisplay)) {
+            return false;
+        }
+        if (!Objects.equals(turnDisplay, uiManager.turnDisplay)) {
+            return false;
+        }
+        if (!Objects.equals(levelDisplay, uiManager.levelDisplay)) {
+            return false;
+        }
+
+        return Objects.equals(victoryImage, uiManager.victoryImage);
+    }
+
+    /**
+     * Returns the unique hashCode of this UIManager.
+     *
+     * @return hashCode as an int
+     */
+    @Override
+    public int hashCode() {
+        final int multiplier = 31;
+        int result;
+        if (hudElements != null) {
+            result = hudElements.hashCode();
+        } else {
+            result = 0;
+        }
+
+        if (combatForecastDisplay != null) {
+            result = multiplier * result + combatForecastDisplay.hashCode();
+        } else {
+            result = multiplier * result;
+        }
+
+        if (turnDisplay != null) {
+            result = multiplier * result + turnDisplay.hashCode();
+        } else {
+            result = multiplier * result;
+        }
+
+        if (levelDisplay != null) {
+            result = multiplier * result + levelDisplay.hashCode();
+        } else {
+            result = multiplier * result;
+        }
+        return result;
     }
 }
