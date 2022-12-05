@@ -184,7 +184,7 @@ public class Tile implements Drawable {
      * Returns true if the specified object is equal to this Tile, else false.
      *
      * @param object the specified item to compare, an Object
-     * @return true if this Tile and the specified object are euqal, else false
+     * @return true if this Tile and the specified object are equal, else false
      */
     @Override
     public boolean equals(final Object object) {

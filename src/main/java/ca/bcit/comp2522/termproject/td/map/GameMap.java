@@ -1,6 +1,7 @@
 package ca.bcit.comp2522.termproject.td.map;
 
-import ca.bcit.comp2522.termproject.td.*;
+import ca.bcit.comp2522.termproject.td.GameManager;
+import ca.bcit.comp2522.termproject.td.Vector2D;
 import ca.bcit.comp2522.termproject.td.enums.Terrain;
 import ca.bcit.comp2522.termproject.td.enums.Weather;
 import ca.bcit.comp2522.termproject.td.interfaces.Combatant;
@@ -268,6 +269,19 @@ public class GameMap {
             }
         }
 
+        generateWallsForTestMission(leftmostColumn, rightmostColumn, topmostRow, bottommostRow, cocoTextures);
+
+        for (int y = topmostRow; y >= bottommostRow; y--) {
+            Tile tile = new Tile(gameManager, Terrain.OBSTACLE, cocoTextures, new Vector2D(1, 1),
+                    new Vector2D(leftmostColumn, y));
+            tile.setHeight(0);
+            tiles.add(tile);
+        }
+    }
+
+    /* Generates outer walls for the test mission. */
+    private void generateWallsForTestMission(final int leftmostColumn, final int rightmostColumn, final int topmostRow,
+                                             final int bottommostRow, final Image cocoTextures) {
         for (int wallHeight = 1; wallHeight <= 3; wallHeight++) {
             for (int y = topmostRow + 1; y >= bottommostRow; y--) {
                 Tile tile = new Tile(gameManager, Terrain.OBSTACLE, cocoTextures, new Vector2D(0, 0),
@@ -282,13 +296,6 @@ public class GameMap {
                 tile.setHeight(wallHeight);
                 tiles.add(tile);
             }
-        }
-
-        for (int y = topmostRow; y >= bottommostRow; y--) {
-            Tile tile = new Tile(gameManager, Terrain.OBSTACLE, cocoTextures, new Vector2D(1, 1),
-                    new Vector2D(leftmostColumn, y));
-            tile.setHeight(0);
-            tiles.add(tile);
         }
     }
 }

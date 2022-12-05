@@ -1,6 +1,9 @@
 package ca.bcit.comp2522.termproject.td;
 
-import ca.bcit.comp2522.termproject.td.enums.*;
+import ca.bcit.comp2522.termproject.td.enums.Affiliation;
+import ca.bcit.comp2522.termproject.td.enums.CurrentTurn;
+import ca.bcit.comp2522.termproject.td.enums.TurnState;
+import ca.bcit.comp2522.termproject.td.enums.Weather;
 import ca.bcit.comp2522.termproject.td.interfaces.Attacker;
 import ca.bcit.comp2522.termproject.td.interfaces.Combatant;
 import ca.bcit.comp2522.termproject.td.interfaces.Drawable;
@@ -14,7 +17,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 
 /**

@@ -23,6 +23,11 @@ import javafx.stage.Stage;
 public class BlossomStorm extends Application {
     private Stage applicationStage;
 
+    /**
+     * Starts the game.
+     *
+     * @param stage the stage to place nodes in
+     */
     @Override
     public void start(final Stage stage) {
         Image titleBackground = new Image("title.png", 1024, 756, true, false);
@@ -70,7 +75,12 @@ public class BlossomStorm extends Application {
         applicationStage.show();
     }
 
-    public static void main(String[] args) {
+    /**
+     * Drives the program.
+     *
+     * @param args command-line arguments
+     */
+    public static void main(final String[] args) {
         launch();
     }
 }

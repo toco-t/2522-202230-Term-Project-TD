@@ -17,4 +17,6 @@ module ca.bcit.comp2522.termproject.td {
     opens ca.bcit.comp2522.termproject.td.interfaces to javafx.fxml;
     exports ca.bcit.comp2522.termproject.td.map;
     opens ca.bcit.comp2522.termproject.td.map to javafx.fxml;
+    exports ca.bcit.comp2522.termproject.td.items;
+    opens ca.bcit.comp2522.termproject.td.items to javafx.fxml;
 }

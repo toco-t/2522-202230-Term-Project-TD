@@ -1,7 +1,5 @@
 package ca.bcit.comp2522.termproject.td.weapon;
 
-import ca.bcit.comp2522.termproject.td.interfaces.Combatant;
-
 /**
  * A firearm that deals ranged damage. Includes infantry guns, tank cannons, and rocket tubes.
  *
