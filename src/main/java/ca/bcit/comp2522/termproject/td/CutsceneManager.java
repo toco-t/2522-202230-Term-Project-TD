@@ -93,6 +93,11 @@ public class CutsceneManager {
         return buffer;
     }
 
+    /**
+     * Return Group of components for cutscenes.
+     *
+     * @return components used to render cutscenes, as a Group
+     */
     public Group getGroup() {
         return cutscene;
     }
