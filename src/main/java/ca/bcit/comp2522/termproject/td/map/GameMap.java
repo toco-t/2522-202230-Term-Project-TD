@@ -9,6 +9,7 @@ import ca.bcit.comp2522.termproject.td.interfaces.Drawable;
 import javafx.scene.image.Image;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * GameMap that consists of number of Tiles.
@@ -288,5 +289,64 @@ public class GameMap {
                 tiles.add(tile);
             }
         }
+    }
+
+    /**
+     * Compares this GameMap with another object.
+     *
+     * @param o the other Object to compare
+     * @return true if they are the equal, otherwise false
+     */
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        final GameMap gameMap = (GameMap) o;
+
+        if (isNighttime != gameMap.isNighttime) {
+            return false;
+        }
+        if (!Objects.equals(gameManager, gameMap.gameManager)) {
+            return false;
+        }
+        if (!Objects.equals(tiles, gameMap.tiles)) {
+            return false;
+        }
+        return weather == gameMap.weather;
+    }
+
+    /**
+     * Returns this instance of GameMap's hashcode.
+     *
+     * @return the hashcode as an int
+     */
+    @Override
+    public int hashCode() {
+        final int primeMultiplier = 31;
+        int result = gameManager != null ? gameManager.hashCode() : 0;
+        result = primeMultiplier * result + (tiles != null ? tiles.hashCode() : 0);
+        result = primeMultiplier * result + (weather != null ? weather.hashCode() : 0);
+        result = primeMultiplier * result + (isNighttime ? 1 : 0);
+        return result;
+    }
+
+    /**
+     * Returns a String representation of this GameMap's state.
+     *
+     * @return String representation of object
+     */
+    @Override
+    public String toString() {
+        return "GameMap{"
+                + "gameManager=" + gameManager
+                + ", tiles=" + tiles
+                + ", weather=" + weather
+                + ", isNighttime=" + isNighttime
+                + '}';
     }
 }

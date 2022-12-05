@@ -16,6 +16,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import static ca.bcit.comp2522.termproject.td.Vector2D.tileCoordinateToScreenSpace;
 
@@ -405,5 +406,134 @@ public class Unit implements Combatant, Drawable {
 
         final int distanceToTarget = location.manhattanDistance(target.getLocation());
         weapons.get(0).attack(target, distanceToTarget);
+    }
+
+    /**
+     * Compares this Unit with another object.
+     *
+     * @param o the other Object to compare
+     * @return true if they are the equal, otherwise false
+     */
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        final Unit unit = (Unit) o;
+
+        if (level != unit.level) {
+            return false;
+        }
+        if (expToNext != unit.expToNext) {
+            return false;
+        }
+        if (movementRange != unit.movementRange) {
+            return false;
+        }
+        if (aerial != unit.aerial) {
+            return false;
+        }
+        if (health != unit.health) {
+            return false;
+        }
+        if (maxHealth != unit.maxHealth) {
+            return false;
+        }
+        if (defense != unit.defense) {
+            return false;
+        }
+        if (evasion != unit.evasion) {
+            return false;
+        }
+        if (!Objects.equals(imageView, unit.imageView)) {
+            return false;
+        }
+        if (!Objects.equals(name, unit.name)) {
+            return false;
+        }
+        if (!Objects.equals(sprite, unit.sprite)) {
+            return false;
+        }
+        if (affiliation != unit.affiliation) {
+            return false;
+        }
+        if (turnState != unit.turnState) {
+            return false;
+        }
+        if (!Objects.equals(location, unit.location)) {
+            return false;
+        }
+        if (!Objects.equals(viewOffset, unit.viewOffset)) {
+            return false;
+        }
+        if (!Objects.equals(weapons, unit.weapons)) {
+            return false;
+        }
+        if (!Objects.equals(inventory, unit.inventory)) {
+            return false;
+        }
+        return armourType == unit.armourType;
+    }
+
+    /**
+     * Returns this instance of Unit's hashcode.
+     *
+     * @return the hashcode as an int
+     */
+    @Override
+    public int hashCode() {
+        final int primeMultiplier = 31;
+        int result = imageView != null ? imageView.hashCode() : 0;
+        result = primeMultiplier * result + (name != null ? name.hashCode() : 0);
+        result = primeMultiplier * result + (sprite != null ? sprite.hashCode() : 0);
+        result = primeMultiplier * result + (affiliation != null ? affiliation.hashCode() : 0);
+        result = primeMultiplier * result + (turnState != null ? turnState.hashCode() : 0);
+        result = primeMultiplier * result + (location != null ? location.hashCode() : 0);
+        result = primeMultiplier * result + (viewOffset != null ? viewOffset.hashCode() : 0);
+        result = primeMultiplier * result + (weapons != null ? weapons.hashCode() : 0);
+        result = primeMultiplier * result + (inventory != null ? inventory.hashCode() : 0);
+        result = primeMultiplier * result + level;
+        result = primeMultiplier * result + expToNext;
+        result = primeMultiplier * result + movementRange;
+        result = primeMultiplier * result + (aerial ? 1 : 0);
+        result = primeMultiplier * result + (armourType != null ? armourType.hashCode() : 0);
+        result = primeMultiplier * result + health;
+        result = primeMultiplier * result + maxHealth;
+        result = primeMultiplier * result + defense;
+        result = primeMultiplier * result + evasion;
+        return result;
+    }
+
+    /**
+     * Returns a String representation of this Unit's state.
+     *
+     * @return String representation of object
+     */
+    @Override
+    public String toString() {
+        return "Unit{"
+                + "imageView=" + imageView
+                + ", name='" + name + '\''
+                + ", sprite=" + sprite
+                + ", affiliation=" + affiliation
+                + ", turnState=" + turnState
+                + ", location=" + location
+                + ", viewOffset=" + viewOffset
+                + ", weapons=" + weapons
+                + ", inventory=" + inventory
+                + ", level=" + level
+                + ", expToNext=" + expToNext
+                + ", movementRange=" + movementRange
+                + ", aerial=" + aerial
+                + ", armourType=" + armourType
+                + ", health=" + health
+                + ", maxHealth=" + maxHealth
+                + ", defense=" + defense
+                + ", evasion=" + evasion
+                + '}';
     }
 }
