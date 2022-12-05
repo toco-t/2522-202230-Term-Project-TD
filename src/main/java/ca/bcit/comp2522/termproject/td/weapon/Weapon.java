@@ -19,7 +19,6 @@ public abstract class Weapon implements Attacker {
     private static final String DEFAULT_DESCRIPTION = "I like to keep this for close encounters.";
     private static final int DEFAULT_DAMAGE = 250;
     private static final int DEFAULT_RANGE = 5;
-    private static final int DEFAULT_ACCURACY = 250;
     private static final DamageType DEFAULT_DAMAGE_TYPE = DamageType.STANDARD;
     private static final ProjectileSize DEFAULT_PROJECTILE_SIZE = ProjectileSize.BULLET;
     private static final Random RANDOM_NUMBER_GENERATOR = new Random();
@@ -76,15 +75,6 @@ public abstract class Weapon implements Attacker {
     }
 
     /**
-     * Returns the attack strength of this Weapon.
-     *
-     * @return the attack strength as an int
-     */
-    public int getDamage() {
-        return damage;
-    }
-
-    /**
      * Sets the attack strength of this Weapon.
      *
      * @param damage the attack strength as an int
@@ -109,15 +99,6 @@ public abstract class Weapon implements Attacker {
      */
     public void setHits(final int hits) {
         this.hits = hits;
-    }
-
-    /**
-     * Returns the accuracy of this Weapon.
-     *
-     * @return the accuracy as an int
-     */
-    public int getAccuracy() {
-        return accuracy;
     }
 
     /**
@@ -148,15 +129,6 @@ public abstract class Weapon implements Attacker {
     }
 
     /**
-     * Returns the damage type of this Weapon.
-     *
-     * @return the damage type as a DamageType enum
-     */
-    public DamageType getDamageType() {
-        return damageType;
-    }
-
-    /**
      * Attacks another Combatant, potentially dealing damage to them.
      *
      * @param target the Combatant to attack
@@ -183,10 +155,9 @@ public abstract class Weapon implements Attacker {
     public int calculateDamage(final Combatant target, final int distance) {
         int damagePerHit = getDamagePerHit(target);
 
-        // TODO: ask chris if using wrapping or casting is better
         double accuracyPerHit = getAccuracyPerHit(target, distance);
 
-        if (canBreakTargetERA(target)) {
+        if (canBreakTargetERA()) {
             target.breakERA();
         }
 
@@ -215,8 +186,8 @@ public abstract class Weapon implements Attacker {
     public int getDamagePerHit(final Combatant target) {
         int baseDamageDealt = damage - target.getDefense();
         double damageModifier = getDamageModifier(target);
-        Double unroundedDamagePerHit = baseDamageDealt * damageModifier;
-        return unroundedDamagePerHit.intValue();
+        double unroundedDamagePerHit = baseDamageDealt * damageModifier;
+        return (int) unroundedDamagePerHit;
     }
 
     /* Simulates a number of attacks and returns the result. */
@@ -259,7 +230,7 @@ public abstract class Weapon implements Attacker {
     }
 
     /* Determines whether this attack can break ERA armour. */
-    private boolean canBreakTargetERA(final Combatant target) {
+    private boolean canBreakTargetERA() {
         return projectileSize == ProjectileSize.SHELL || damageType == DamageType.EXPLOSIVE;
     }
 
@@ -279,58 +250,77 @@ public abstract class Weapon implements Attacker {
 
     /* Returns a multiplier for attack damage. */
     private double getDamageModifier(final Combatant target) {
-        // TODO: make this method clean
         // Refer to Blossom Storm documentation for the armour damage table.
         switch (target.getArmourType()) {
             case DEFAULT -> {
-                final double bulletDamageModifier = 1;
-                final double explosiveDamageModifier = 1.25;
-                final double dartDamageModifier = 2;
-                final double heatDamageModifier = 2;
-                return applyBulletArmourModifiers(bulletDamageModifier, explosiveDamageModifier, dartDamageModifier,
-                        heatDamageModifier);
+                return getArmourModifierForDefault();
             }
             case LIGHT -> {
-                final double bulletDamageModifier = 0.75;
-                final double explosiveDamageModifier = 1;
-                final double dartDamageModifier = 0.75;
-                final double heatDamageModifier = 2;
-                return applyBulletArmourModifiers(bulletDamageModifier, explosiveDamageModifier, dartDamageModifier,
-                        heatDamageModifier);
+                return getArmourModifierForLight();
             }
             case MEDIUM -> {
-                final double bulletDamageModifier = 0;
-                final double explosiveDamageModifier = 0;
-                final double dartDamageModifier = 1.75;
-                final double heatDamageModifier = 2;
-                return applyBulletArmourModifiers(bulletDamageModifier, explosiveDamageModifier, dartDamageModifier,
-                        heatDamageModifier);
+                return getArmourModifierForMedium();
             }
             case ERA -> {
-                final double bulletDamageModifier = 0;
-                final double explosiveDamageModifier = 0;
-                final double dartDamageModifier = 0.9;
-                final double heatDamageModifier = 0;
-                return applyBulletArmourModifiers(bulletDamageModifier, explosiveDamageModifier, dartDamageModifier,
-                        heatDamageModifier);
+                return getArmourModifierForERA();
             }
             case COMPOSITE -> {
-                final double bulletDamageModifier = 0;
-                final double explosiveDamageModifier = 0;
-                final double dartDamageModifier = 0.75;
-                final double heatDamageModifier = 0.5;
-                return applyBulletArmourModifiers(bulletDamageModifier, explosiveDamageModifier, dartDamageModifier,
-                        heatDamageModifier);
+                return getArmourModifierForComposite();
             }
             default -> {
-                final double bulletDamageModifier = 1;
-                final double explosiveDamageModifier = 1;
-                final double dartDamageModifier = 1;
-                final double heatDamageModifier = 1;
-                return applyBulletArmourModifiers(bulletDamageModifier, explosiveDamageModifier, dartDamageModifier,
-                        heatDamageModifier);
+                return 1;
             }
         }
+    }
+
+    /* Gets the armour modifier value against Composite armour. */
+    private double getArmourModifierForComposite() {
+        final double bulletDamageModifier = 0;
+        final double explosiveDamageModifier = 0;
+        final double dartDamageModifier = 0.75;
+        final double heatDamageModifier = 0.5;
+        return applyBulletArmourModifiers(bulletDamageModifier, explosiveDamageModifier, dartDamageModifier,
+                heatDamageModifier);
+    }
+
+    /* Gets the armour modifier value against ERA armour. */
+    private double getArmourModifierForERA() {
+        final double bulletDamageModifier = 0;
+        final double explosiveDamageModifier = 0;
+        final double dartDamageModifier = 0.9;
+        final double heatDamageModifier = 0;
+        return applyBulletArmourModifiers(bulletDamageModifier, explosiveDamageModifier, dartDamageModifier,
+                heatDamageModifier);
+    }
+
+    /* Gets the armour modifier value against Medium armour. */
+    private double getArmourModifierForMedium() {
+        final double bulletDamageModifier = 0;
+        final double explosiveDamageModifier = 0;
+        final double dartDamageModifier = 1.75;
+        final double heatDamageModifier = 2;
+        return applyBulletArmourModifiers(bulletDamageModifier, explosiveDamageModifier, dartDamageModifier,
+                heatDamageModifier);
+    }
+
+    /* Gets the armour modifier value against Light armour. */
+    private double getArmourModifierForLight() {
+        final double bulletDamageModifier = 0.75;
+        final double explosiveDamageModifier = 1;
+        final double dartDamageModifier = 0.75;
+        final double heatDamageModifier = 2;
+        return applyBulletArmourModifiers(bulletDamageModifier, explosiveDamageModifier, dartDamageModifier,
+                heatDamageModifier);
+    }
+
+    /* Gets the armour modifier value against Default armour. */
+    private double getArmourModifierForDefault() {
+        final double bulletDamageModifier = 1;
+        final double explosiveDamageModifier = 1.25;
+        final double dartDamageModifier = 2;
+        final double heatDamageModifier = 2;
+        return applyBulletArmourModifiers(bulletDamageModifier, explosiveDamageModifier, dartDamageModifier,
+                heatDamageModifier);
     }
 
     /* Applies one of the four modifiers depending on the projectile size and damage type. */

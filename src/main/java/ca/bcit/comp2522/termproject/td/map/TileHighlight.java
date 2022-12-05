@@ -1,25 +1,22 @@
 package ca.bcit.comp2522.termproject.td.map;
 
 import ca.bcit.comp2522.termproject.td.interfaces.Drawable;
-import ca.bcit.comp2522.termproject.td.GameManager;
-import ca.bcit.comp2522.termproject.td.enums.Terrain;
 import ca.bcit.comp2522.termproject.td.Vector2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 
 import java.util.Objects;
 
 import static ca.bcit.comp2522.termproject.td.Vector2D.tileCoordinateToScreenSpace;
 
 /**
- * Tile in a Map.
+ * Tile Highlight that shows potential movement options.
  *
- * @author Toco Tachibana & Nathan Ng
+ * @author Nathan
  * @version 0.3
  */
-public class Tile implements Drawable {
+public class TileHighlight implements Drawable {
     private static final double VIEW_SIZE_X = 128;
     private static final double VIEW_SIZE_Y = 128;
 
@@ -28,32 +25,25 @@ public class Tile implements Drawable {
 
     private static final double SPRITE_SCALE = 1;
     private ImageView imageView;
-    private final GameManager gameManager;
     private final Image sprite;
 
     private final Vector2D location;
     private int height;
     private final Vector2D viewOffset;
-    private final Terrain terrain;
 
     /**
      * Constructs an object of type Tile.
      *
-     * @param gameManager the GameManager, used for handling clicking events
-     * @param terrain the terrain type of this Tile
-     * @param spriteSheet the sprite this Tile uses
+     * @param sprite the sprite this Tile uses
      * @param location the tile-coordinates of this Tile
-     * @param spriteLocation the location of the sprite within the sprite sheet
+     * @param viewOffset the offset to apply to the ImageView to simulate a camera
      */
-    public Tile(final GameManager gameManager, final Terrain terrain, final Image spriteSheet,
-                final Vector2D spriteLocation, final Vector2D location) {
-        this.gameManager = gameManager;
-        this.terrain = terrain;
-        this.sprite = spriteSheet;
+    public TileHighlight(final Image sprite, final Vector2D location, final Vector2D viewOffset) {
+        this.sprite = sprite;
         this.location = location;
-        this.viewOffset = new Vector2D(0, 0);
+        this.viewOffset = viewOffset;
 
-        generateImageView(spriteLocation);
+        generateImageView();
     }
 
     /**
@@ -76,55 +66,26 @@ public class Tile implements Drawable {
     }
 
     /**
-     * Sets the height of this Tile.
-     *
-     * @param height the height as an int
-     */
-    public void setHeight(final int height) {
-        this.height = height;
-        updateImageViewPosition();
-    }
-
-    /**
-     * Returns the terrain type of this Tile.
-     *
-     * @return the terrain type as a Terrain
-     */
-    public Terrain getTerrain() {
-        return terrain;
-    }
-
-    /**
      * Moves the ImageView of this Tile without changing its actual coordinates.
      *
      * @param offsetDelta the amount to move the Tile by, as a Vector2D
      */
     @Override
     public void moveImageView(final Vector2D offsetDelta) {
-        viewOffset.add(offsetDelta);
         updateImageViewPosition();
     }
 
     /* Generates an ImageView of this Tile, using its coordinates. */
-    private void generateImageView(final Vector2D spritePosition) {
+    private void generateImageView() {
         double scaledViewSizeX = VIEW_SIZE_X * SPRITE_SCALE;
         double scaledViewSizeY = VIEW_SIZE_Y * SPRITE_SCALE;
 
-        double xOffsetPixels = VIEW_SIZE_X * spritePosition.getXCoordinate();
-        double yOffsetPixels = VIEW_SIZE_Y * spritePosition.getYCoordinate();
-
         imageView = new ImageView(sprite);
-        imageView.setViewport(new Rectangle2D(xOffsetPixels, yOffsetPixels, scaledViewSizeX,
+        imageView.setViewport(new Rectangle2D(0, 0, scaledViewSizeX,
                 scaledViewSizeY));
+        imageView.setMouseTransparent(true);
 
         updateImageViewPosition();
-
-        imageView.setOnMouseClicked((MouseEvent event) -> gameManager.select(this));
-        imageView.setOnMouseEntered((MouseEvent event) -> gameManager.hoverHint(this));
-
-        if (terrain == Terrain.OBSTACLE) {
-            imageView.setMouseTransparent(true);
-        }
     }
 
     /* Updates the ImageView's position based on the offset. */
@@ -144,40 +105,50 @@ public class Tile implements Drawable {
     }
 
     /**
-     * Returns the String representation of this Tile.
+     * Compares this TileHighlight with another object.
      *
-     * @return toString as a String
+     * @param o the other Object to compare
+     * @return true if they are the equal, otherwise false
      */
     @Override
-    public String toString() {
-        return String.format("Tile{ coordinates = %s, terrain = %s}", location.toString(), terrain.toString());
-    }
-
-    /**
-     * Returns true if the specified object is equal to this Tile, else false.
-     *
-     * @param object the specified item to compare, an Object
-     * @return true if this Tile and the specified object are equal, else false
-     */
-    @Override
-    public boolean equals(final Object object) {
-        if (this == object) {
+    public boolean equals(final Object o) {
+        if (this == o) {
             return true;
         }
-        if (object == null || getClass() != object.getClass()) {
+        if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Tile tile = (Tile) object;
-        return Objects.equals(location, tile.location) && terrain == tile.terrain;
+
+        final TileHighlight highlight = (TileHighlight) o;
+
+        if (height != highlight.height) {
+            return false;
+        }
+        if (!Objects.equals(imageView, highlight.imageView)) {
+            return false;
+        }
+        if (!Objects.equals(sprite, highlight.sprite)) {
+            return false;
+        }
+        if (!Objects.equals(location, highlight.location)) {
+            return false;
+        }
+        return Objects.equals(viewOffset, highlight.viewOffset);
     }
 
     /**
-     * Returns the hash code of this Tile.
+     * Returns this instance of TileHighlight's hashcode.
      *
-     * @return hashCode as an int
+     * @return the hashcode as an int
      */
     @Override
     public int hashCode() {
-        return Objects.hash(location, terrain);
+        final int primeMultiplier = 31;
+        int result = imageView != null ? imageView.hashCode() : 0;
+        result = primeMultiplier * result + (sprite != null ? sprite.hashCode() : 0);
+        result = primeMultiplier * result + (location != null ? location.hashCode() : 0);
+        result = primeMultiplier * result + height;
+        result = primeMultiplier * result + (viewOffset != null ? viewOffset.hashCode() : 0);
+        return result;
     }
 }

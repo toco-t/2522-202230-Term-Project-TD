@@ -4,18 +4,23 @@ import ca.bcit.comp2522.termproject.td.enums.CurrentTurn;
 import ca.bcit.comp2522.termproject.td.interfaces.Attacker;
 import ca.bcit.comp2522.termproject.td.interfaces.Combatant;
 import javafx.scene.Group;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
+
+import java.util.Objects;
 
 /**
  * Manages the game's User Interface.
  *
- * @author Nathan
- * @version 0.2
+ * @author Nathan Ng & Toco Tachibana
+ * @version 0.3
  */
 public class UIManager {
+    private final Group hudElements;
+    private final Rectangle hintBackground;
     private final Text selectionHint;
     private final Text keyPrompts;
     private final Text selectedUnitHint;
@@ -23,12 +28,18 @@ public class UIManager {
     private final Text combatForecastDisplay;
     private final Text turnDisplay;
     private final Text levelDisplay;
+    private final ImageView defeatImage;
+    private final ImageView victoryImage;
+
 
     /**
      * Constructs an object of type UIManager.
      */
     public UIManager() {
-        selectionHint = new Text(10, 566, "Select a unit to move.");
+        hintBackground = new Rectangle(0, 526, 1024, 50);
+        hintBackground.setFill(new Color(0, 0, 0,  0.5));
+
+        selectionHint = new Text(10, 566, "SELECT a unit to move.");
         selectionHint.setFill(Color.WHITE);
 
         keyPrompts = new Text(700, 566, "[W][A][S][D] Adjust Camera     [ENTER] End Turn");
@@ -46,8 +57,25 @@ public class UIManager {
         turnDisplay = new Text(455, 15, "PLAYER PHASE 01");
         turnDisplay.setFill(Color.WHITE);
 
-        levelDisplay = new Text(10, 15, "Test Mission");
+        levelDisplay = new Text(10, 15, "First Encounter");
         levelDisplay.setFill(Color.WHITE);
+
+        Image gameOverImage = new Image("game_over.png");
+        defeatImage = new ImageView(gameOverImage);
+        defeatImage.setX(25);
+        defeatImage.setY(150);
+        defeatImage.setVisible(false);
+        defeatImage.setMouseTransparent(true);
+
+        Image winImage = new Image("victory.png");
+        victoryImage = new ImageView(winImage);
+        victoryImage.setX(25);
+        victoryImage.setY(150);
+        victoryImage.setVisible(false);
+        defeatImage.setMouseTransparent(true);
+
+        hudElements = new Group(hintBackground, selectionHint, selectedUnitHint, hoverHint, combatForecastDisplay,
+                keyPrompts, turnDisplay, levelDisplay, defeatImage, victoryImage);
     }
 
     /**
@@ -59,15 +87,25 @@ public class UIManager {
         String hintToDisplay;
         if (selectedUnit != null) {
             hintToDisplay = switch (selectedUnit.getTurnState()) {
-                case CAN_MOVE -> "Click on a blue tile to move there, or a red tile to attack.";
-                case CAN_ATTACK -> "Click on a red tile to attack.";
-                default -> "This unit cannot take any further action.";
+                case CAN_MOVE -> "CLICK on a BLUE tile to move there, or a RED tile to attack.";
+                case CAN_ATTACK -> "CLICK on a RED tile to attack.";
+                default -> "This unit cannot take any further action. After all units have moved,"
+                        + " press ENTER to end your turn.";
             };
         } else {
-            hintToDisplay = "Select a unit to move.";
+            hintToDisplay = "SELECT a unit to move.";
         }
 
-        selectionHint.setText(hintToDisplay);
+        changeSelectionHintTo(hintToDisplay);
+    }
+
+    /**
+     * Changes the selection hint to a specific string.
+     *
+     * @param string the string to display
+     */
+    public void changeSelectionHintTo(final String string) {
+        selectionHint.setText(string);
     }
 
     /**
@@ -118,7 +156,13 @@ public class UIManager {
         final int hits = attacker.getHits();
 
         final int distanceToTarget = initiator.getLocation().manhattanDistance(target.getLocation());
-        final double accuracyPerHit = attacker.getAccuracyPerHit(target, distanceToTarget);
+        double accuracyPerHit = attacker.getAccuracyPerHit(target, distanceToTarget);
+
+        if (accuracyPerHit < 0) {
+            accuracyPerHit = 0;
+        } else if (accuracyPerHit > 1) {
+            accuracyPerHit = 1;
+        }
 
         final String combatForecast = String.format("DMG: %d ✕ %d\nACC: %.00f%%", damagePerHit, hits,
                 accuracyPerHit * 100);
@@ -148,12 +192,109 @@ public class UIManager {
     }
 
     /**
+     * Displays the Game Over text.
+     */
+    public void showGameOver() {
+        defeatImage.setVisible(true);
+    }
+
+    /**
+     * Displays the Victory text.
+     */
+    public void showVictory() {
+        victoryImage.setVisible(true);
+    }
+
+    /**
      * Returns the Group of UI elements, used for rendering.
      *
      * @return the Group of UI elements
      */
     public Group getGroup() {
-        return new Group(selectionHint, selectedUnitHint, hoverHint, combatForecastDisplay, keyPrompts, turnDisplay,
-                levelDisplay);
+        return hudElements;
+    }
+
+    /**
+     * Returns the string representation of this UIManager.
+     *
+     * @return toString of this UIManager as a String
+     */
+    @Override
+    public String toString() {
+        return "UIManager{"
+                + "hudElements=" + hudElements + ", hintBackground=" + hintBackground
+                + ", selectionHint=" + selectionHint + ", keyPrompts=" + keyPrompts
+                + ", selectedUnitHint=" + selectedUnitHint + ", hoverHint=" + hoverHint
+                + ", combatForecastDisplay=" + combatForecastDisplay + ", turnDisplay=" + turnDisplay
+                + ", levelDisplay=" + levelDisplay + ", defeatImage=" + defeatImage
+                + ", victoryImage=" + victoryImage + '}';
+    }
+
+    /**
+     * Returns true if the specified object is equal to this UIManager, else False.
+     *
+     * @param   o object to be compared for equality with this UIManager
+     * @return  true if the specified object is equal to this UIManager, else False
+     */
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        UIManager uiManager = (UIManager) o;
+
+        if (!Objects.equals(hudElements, uiManager.hudElements)) {
+            return false;
+        }
+        if (!Objects.equals(combatForecastDisplay, uiManager.combatForecastDisplay)) {
+            return false;
+        }
+        if (!Objects.equals(turnDisplay, uiManager.turnDisplay)) {
+            return false;
+        }
+        if (!Objects.equals(levelDisplay, uiManager.levelDisplay)) {
+            return false;
+        }
+
+        return Objects.equals(victoryImage, uiManager.victoryImage);
+    }
+
+    /**
+     * Returns the unique hashCode of this UIManager.
+     *
+     * @return unique hashCode as an int
+     */
+    @Override
+    public int hashCode() {
+        final int multiplier = 31;
+        int result;
+        if (hudElements != null) {
+            result = hudElements.hashCode();
+        } else {
+            result = 0;
+        }
+
+        if (combatForecastDisplay != null) {
+            result = multiplier * result + combatForecastDisplay.hashCode();
+        } else {
+            result = multiplier * result;
+        }
+
+        if (turnDisplay != null) {
+            result = multiplier * result + turnDisplay.hashCode();
+        } else {
+            result = multiplier * result;
+        }
+
+        if (levelDisplay != null) {
+            result = multiplier * result + levelDisplay.hashCode();
+        } else {
+            result = multiplier * result;
+        }
+        return result;
     }
 }

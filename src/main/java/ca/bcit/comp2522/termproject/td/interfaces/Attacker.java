@@ -3,8 +3,8 @@ package ca.bcit.comp2522.termproject.td.interfaces;
 /**
  * Represents objects that can inflict damage on Combatants.
  *
- * @author Nathan
- * @version 0.1
+ * @author Nathan Ng
+ * @version 0.3
  */
 public interface Attacker {
 
@@ -16,14 +16,21 @@ public interface Attacker {
     String getName();
 
     /**
-     * Returns the number of hits for this Weapon.
+     * Returns the number of hits for this Attacker.
      *
      * @return the hits as an int
      */
     int getHits();
 
     /**
-     * Initiates an attack against another Combatant.
+     * Returns the range of this Attacker. One range unit is equivalent to one grid square.
+     *
+     * @return the range as an int
+     */
+    int getRange();
+
+    /**
+     * Initiates an attack against a Combatant.
      *
      * @param target the Combatant to attack
      * @param distance the distance from the target in grid squares

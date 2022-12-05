@@ -1,27 +1,30 @@
 package ca.bcit.comp2522.termproject.td;
 
-import ca.bcit.comp2522.termproject.td.driver.SpriteRenderer;
 import ca.bcit.comp2522.termproject.td.enums.Affiliation;
 import ca.bcit.comp2522.termproject.td.enums.CurrentTurn;
 import ca.bcit.comp2522.termproject.td.enums.TurnState;
 import ca.bcit.comp2522.termproject.td.enums.Weather;
+import ca.bcit.comp2522.termproject.td.interfaces.Attacker;
 import ca.bcit.comp2522.termproject.td.interfaces.Combatant;
 import ca.bcit.comp2522.termproject.td.interfaces.Drawable;
 import ca.bcit.comp2522.termproject.td.map.GameMap;
 import ca.bcit.comp2522.termproject.td.map.Tile;
+import ca.bcit.comp2522.termproject.td.map.TileHighlight;
 import ca.bcit.comp2522.termproject.td.unit.Unit;
 import javafx.scene.Group;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Objects;
 
 
 /**
  * Game manager.
  *
- * @author Toco Tachibana
- * @version 0.2
+ * @author Toco Tachibana & Nathan Ng
+ * @version 0.3
  */
 public class GameManager {
     private int turnNumber;
@@ -32,6 +35,10 @@ public class GameManager {
     private final UIManager userInterface;
     private GameMap map;
     private Combatant selectedUnit;
+    private final CutsceneManager cutscene;
+    private final ArrayList<Drawable> tileHighlights;
+    private Group tileHighlightGroup;
+    private final Vector2D viewOffset;
 
     /**
      * Constructs an object of type GameManager.
@@ -41,12 +48,15 @@ public class GameManager {
         this.enemyUnits = new ArrayList<>();
         this.entities = new ArrayList<>();
         this.userInterface = new UIManager();
+        this.cutscene = new CutsceneManager();
+        this.tileHighlights = new ArrayList<>();
+        this.viewOffset = new Vector2D(0, 0);
 
         currentTurn = CurrentTurn.PLAYER_TURN;
         turnNumber = 1;
 
-        generateUnits(-1);
-        createGameMap(-1);
+        generateUnits(0);
+        createGameMap(0);
     }
 
     /**
@@ -68,6 +78,11 @@ public class GameManager {
 
         if (currentTurn == CurrentTurn.ENEMY_TURN) {
             takeEnemyTurn();
+
+            selectedUnit = null;
+            userInterface.changeUnitDisplay(null);
+            userInterface.changeSelectionHint(null);
+            clearHighlights();
         }
     }
 
@@ -96,10 +111,45 @@ public class GameManager {
     /* Takes all enemies' turns. */
     private void takeEnemyTurn() {
         for (Combatant enemy : enemyUnits) {
-            System.out.printf("%s taking action.\n", enemy.getName());
+            System.out.printf("\n%s taking action.\n", enemy.getName());
+
+            Combatant playerToTarget = playerInRange(enemy);
+
+            if (playerToTarget != null) {
+                enemy.attack(playerToTarget);
+                System.out.printf("%s initiating attack against %s.\n", enemy.getName(), playerToTarget.getName());
+                if (playerToTarget.getTurnState() == TurnState.DEAD) {
+                    cutscene.displayDeathQuotes(playerToTarget.getName());
+                    playerUnits.remove(playerToTarget);
+                    if (playerUnits.isEmpty()) {
+                        userInterface.showGameOver();
+                    }
+                }
+            }
         }
 
         nextPhase();
+    }
+
+    /* Returns the player in range, or null if none are in range. */
+    private Combatant playerInRange(final Combatant enemy) {
+        Combatant playerToTarget = null;
+        Attacker enemyWeapon = enemy.getEquippedWeapon();
+        double highestAccuracy = 0;
+
+        for (Combatant player : playerUnits) {
+            int distance = enemy.getLocation().manhattanDistance(player.getLocation());
+
+            if (distance <= enemyWeapon.getRange() || enemy.getHealth() < enemy.getMaxHealth()) {
+                double accuracyPerHit = enemyWeapon.getAccuracyPerHit(player, distance);
+                if (accuracyPerHit > highestAccuracy) {
+                    highestAccuracy = accuracyPerHit;
+                    playerToTarget = player;
+                }
+            }
+        }
+
+        return playerToTarget;
     }
 
     /**
@@ -108,11 +158,30 @@ public class GameManager {
      * @return the Group of units and tiles
      */
     public Group groupAllObjectsForRendering() {
-        Group units = SpriteRenderer.groupDrawables(entities);
-        Group tiles = SpriteRenderer.groupDrawables(map.getTilesForRendering());
-        Group userInterfaceElements = userInterface.getGroup();
+        Group unitsGroup = groupDrawables(entities);
+        Group tilesGroup = groupDrawables(map.getTilesForRendering());
+        Group userInterfaceGroup = userInterface.getGroup();
+        tileHighlightGroup = new Group();
+        Group cutsceneGroup = cutscene.getGroup();
 
-        return new Group(tiles, units, userInterfaceElements);
+        return new Group(tilesGroup, tileHighlightGroup, unitsGroup, userInterfaceGroup, cutsceneGroup);
+    }
+
+    /**
+     * Converts an ArrayList of Tiles to a Group, converting coordinates as necessary.
+     *
+     * @param drawables an ArrayList of Tiles to convert
+     * @return the Group of converted ImageView nodes
+     */
+    public Group groupDrawables(final ArrayList<Drawable> drawables) {
+        ArrayList<ImageView> drawableViews = new ArrayList<>();
+
+        for (Drawable drawable : drawables) {
+            drawableViews.add(drawable.getImageView());
+        }
+
+        ImageView[] imageViews = new ImageView[drawables.size()];
+        return new Group(drawableViews.toArray(imageViews));
     }
 
     /**
@@ -129,13 +198,17 @@ public class GameManager {
             case A -> moveAllDrawables(new Vector2D(speedInPixelsPerFrame, 0));
             case S -> moveAllDrawables(new Vector2D(0, -speedInPixelsPerFrame));
             case D -> moveAllDrawables(new Vector2D(-speedInPixelsPerFrame, 0));
+            case SPACE -> cutscene.changeDialogueDisplay(cutscene.loadScript());
+
             default -> { }
         }
     }
 
     /* Moves all drawable objects' offsets by a certain amount. */
     private void moveAllDrawables(final Vector2D delta) {
+        viewOffset.add(delta);
         moveAllUnits(delta);
+        moveAllHighlights(delta);
         map.moveTiles(delta);
     }
 
@@ -146,19 +219,11 @@ public class GameManager {
         }
     }
 
-    /**
-     * Loads all the units to the specified list.
-     *
-     * @param listToLoad the specified list, an ArrayList of Combatant
-     * @param units variable length of units, an array
-     * @throws IllegalArgumentException when units is empty
-     */
-    public void loadUnits(final ArrayList<Combatant> listToLoad, final Combatant... units) {
-        if (units == null) {
-            throw new IllegalArgumentException("Units cannot be null...");
+    /* Moves all tile highlights' offsets by a certain amount. */
+    private void moveAllHighlights(final Vector2D delta) {
+        for (Drawable drawable : tileHighlights) {
+            drawable.moveImageView(delta);
         }
-
-        Collections.addAll(listToLoad, units);
     }
 
     /**
@@ -168,27 +233,53 @@ public class GameManager {
      * @throws IllegalArgumentException if the mission does not exist
      */
     public void generateUnits(final int mission) {
-        if (mission == -1) {
-            generateUnitsForTestMission();
-        } else {
-            throw new IllegalArgumentException("The requested mission does not exist.");
+        switch (mission) {
+            case -1 -> generateUnitsForTestMission();
+            case 0 -> generateUnitsForCurryHouseMission();
+            default -> throw new IllegalArgumentException("The requested mission does not exist.");
         }
     }
 
-    private void generateUnitsForTestMission() {
-        Unit ayumi = new Unit("Ayumi", new Vector2D(6, 0));
+    private void generateUnitsForCurryHouseMission() {
+        Unit ayumi = new Unit("Ayumi", new Vector2D(7, -1), viewOffset);
         playerUnits.add(ayumi);
         entities.add(ayumi);
 
-        Unit miyako = new Unit("Miyako", new Vector2D(6, 1));
+        Unit miyako = new Unit("Miyako", new Vector2D(7, 0), viewOffset);
         playerUnits.add(miyako);
         entities.add(miyako);
 
-        Unit dmitri1 = new Unit("Dmitri", new Vector2D(10, 0));
+        Unit ruInfantry = new Unit("RU Infantry", new Vector2D(16, -1), viewOffset);
+        enemyUnits.add(ruInfantry);
+        entities.add(ruInfantry);
+
+        Unit ruInfantry2 = new Unit("RU Infantry", new Vector2D(16, 2), viewOffset);
+        enemyUnits.add(ruInfantry2);
+        entities.add(ruInfantry2);
+
+        Unit ruInfantry3 = new Unit("RU Infantry", new Vector2D(20, 1), viewOffset);
+        enemyUnits.add(ruInfantry3);
+        entities.add(ruInfantry3);
+
+        Unit ruInfantry4 = new Unit("RU Infantry", new Vector2D(20, -2), viewOffset);
+        enemyUnits.add(ruInfantry4);
+        entities.add(ruInfantry4);
+    }
+
+    private void generateUnitsForTestMission() {
+        Unit ayumi = new Unit("Ayumi", new Vector2D(6, 0), viewOffset);
+        playerUnits.add(ayumi);
+        entities.add(ayumi);
+
+        Unit miyako = new Unit("Miyako", new Vector2D(6, 1), viewOffset);
+        playerUnits.add(miyako);
+        entities.add(miyako);
+
+        Unit dmitri1 = new Unit("Dmitri", new Vector2D(10, 0), viewOffset);
         enemyUnits.add(dmitri1);
         entities.add(dmitri1);
 
-        Unit dmitri2 = new Unit("Dmitri", new Vector2D(10, 1));
+        Unit dmitri2 = new Unit("Dmitri", new Vector2D(10, 1), viewOffset);
         enemyUnits.add(dmitri2);
         entities.add(dmitri2);
     }
@@ -225,6 +316,63 @@ public class GameManager {
     }
 
     /**
+     * Clears all map highlighting.
+     */
+    public void clearHighlights() {
+        tileHighlightGroup.getChildren().clear();
+        tileHighlights.clear();
+    }
+
+    /**
+     * Highlights possible movement options on the game map.
+     *
+     * @param combatant the Combatant to move
+     */
+    public void highlightOptions(final Combatant combatant) {
+        ArrayList<Vector2D> movementOptions = map.getMovementOptions(combatant);
+        ArrayList<Vector2D> enemyPositions = getEnemyPositions();
+        Image movableTile = new Image("tile_movable.png");
+        Image targetTile = new Image("tile_target.png");
+
+        if (combatant.getTurnState() == TurnState.CAN_MOVE) {
+            highlightMovementOptions(movementOptions, enemyPositions, movableTile);
+        }
+
+        if (combatant.getTurnState() != TurnState.DONE) {
+            highlightAttackOptions(enemyPositions, targetTile);
+        }
+    }
+
+    private void highlightMovementOptions(final ArrayList<Vector2D> movementOptions,
+                                          final ArrayList<Vector2D> enemyPositions, final Image movableTile) {
+        for (Vector2D movementOption : movementOptions) {
+            if (!enemyPositions.contains(movementOption)) {
+                TileHighlight highlight = new TileHighlight(movableTile, movementOption, viewOffset);
+                tileHighlightGroup.getChildren().add(highlight.getImageView());
+                tileHighlights.add(highlight);
+            }
+        }
+    }
+
+    private void highlightAttackOptions(final ArrayList<Vector2D> enemyPositions, final Image targetTile) {
+        for (Vector2D enemyPosition : enemyPositions) {
+            TileHighlight highlight = new TileHighlight(targetTile, enemyPosition, viewOffset);
+            tileHighlightGroup.getChildren().add(highlight.getImageView());
+            tileHighlights.add(highlight);
+        }
+    }
+
+    private ArrayList<Vector2D> getEnemyPositions() {
+        ArrayList<Vector2D> enemyPositions = new ArrayList<>();
+
+        for (Combatant enemy : enemyUnits) {
+            enemyPositions.add(enemy.getLocation());
+        }
+
+        return enemyPositions;
+    }
+
+    /**
      * Responds to a Tile being clicked, and takes action according to the context (whether a unit is selected).
      *
      * @param tile the Tile that was clicked
@@ -234,52 +382,61 @@ public class GameManager {
             return;
         }
 
-        Vector2D selectionLocation = tile.getLocation();
-        Combatant clickedUnit = getCombatantAtLocation(selectionLocation);
+        System.out.printf("Clicked (%f, %f)\n", tile.getLocation().getXCoordinate(),
+                tile.getLocation().getYCoordinate());
 
         // a friendly unit is already selected, take action with them...
         if (selectedUnit != null) {
-            takeActionWithSelectedUnit(selectionLocation, clickedUnit);
+            takeActionWithSelectedUnit(tile);
         } else {
-            takeActionWithoutSelectedUnit(clickedUnit);
+            takeActionWithoutSelectedUnit(tile);
         }
 
         userInterface.changeSelectionHint(selectedUnit);
     }
 
     /* Take action without a selected unit depending on the context. */
-    private void takeActionWithoutSelectedUnit(final Combatant clickedUnit) {
+    private void takeActionWithoutSelectedUnit(final Tile tile) {
+        Combatant clickedUnit = getCombatantAtLocation(tile.getLocation());
+
         // select unit if a unit is clicked but no unit is already selected
         if (clickedUnit != null && clickedUnit.getAffiliation() == Affiliation.PLAYER) {
             selectedUnit = clickedUnit;
             userInterface.changeUnitDisplay(selectedUnit);
+            highlightOptions(selectedUnit);
         }
     }
 
     /* Take action with a selected unit depending on the context. */
-    private void takeActionWithSelectedUnit(final Vector2D selectionLocation, final Combatant clickedUnit) {
-        // move unit if an empty tile is clicked and a unit is selected
-        if (clickedUnit == null) {
-            moveUnit(selectionLocation);
-        }
+    private void takeActionWithSelectedUnit(final Tile tile) {
+        Combatant clickedUnit = getCombatantAtLocation(tile.getLocation());
 
-        // attack enemy if occupied tile is clicked and a friendly unit is selected
-        if (clickedUnit != null && clickedUnit.getAffiliation() == Affiliation.ENEMY) {
+        if (clickedUnit == null && validateUnitMove(tile)) {
+            // move unit if an empty tile is clicked and a unit is selected
+            moveUnit(tile);
+            clearHighlights();
+            highlightOptions(selectedUnit);
+        } else if (clickedUnit == null && !validateUnitMove(tile)) {
+            // deselect if tile outside movement range is clicked
+            selectedUnit = null;
+            clearHighlights();
+        } else if (clickedUnit != null && clickedUnit.getAffiliation() == Affiliation.ENEMY) {
+            // attack enemy if occupied tile is clicked and a friendly unit is selected
             attackEnemy(clickedUnit);
             userInterface.changeUnitDisplay(selectedUnit);
             userInterface.changeHoverHint(clickedUnit);
-        }
-
-        // deselect unit if clicked again
-        if (clickedUnit == selectedUnit) {
+            clearHighlights();
+        } else if (clickedUnit == selectedUnit) {
+            // deselect unit if clicked again
             selectedUnit = null;
             userInterface.changeUnitDisplay(null);
-        }
-
-        // select the other unit if it is a friendly
-        if (clickedUnit != null && clickedUnit.getAffiliation() == Affiliation.PLAYER) {
+            clearHighlights();
+        } else if (clickedUnit != null && clickedUnit.getAffiliation() == Affiliation.PLAYER) {
+            // select the other unit if it is a friendly
             selectUnit(clickedUnit);
             userInterface.changeUnitDisplay(selectedUnit);
+            clearHighlights();
+            highlightOptions(selectedUnit);
         }
     }
 
@@ -313,18 +470,27 @@ public class GameManager {
     /**
      * Moves the selected Unit to the location at the specified coordinates.
      *
-     * @param coordinates destination for this move, a Vector2D
+     * @param tile destination for this move, a Tile
      * @throws IllegalArgumentException when the specified coordinates is null
      */
-    public void moveUnit(final Vector2D coordinates) throws IllegalArgumentException {
+    public void moveUnit(final Tile tile) throws IllegalArgumentException {
+        Vector2D coordinates = tile.getLocation();
         if (coordinates == null) {
             throw new IllegalArgumentException("Coordinates cannot be null...");
-        } else if (selectedUnit.getTurnState() == TurnState.CAN_MOVE) {
+        }
+
+        if (validateUnitMove(tile)) {
             selectedUnit.moveTo(coordinates);
             selectedUnit.setTurnState(TurnState.CAN_ATTACK);
-        } else {
-            selectedUnit = null;
         }
+    }
+
+    private boolean validateUnitMove(final Tile tile) throws IllegalArgumentException {
+        if (tile == null) {
+            throw new IllegalArgumentException("Tile cannot be null for unit movement validation.");
+        }
+
+        return selectedUnit.canMoveTo(tile) && selectedUnit.getTurnState() == TurnState.CAN_MOVE;
     }
 
     /**
@@ -336,10 +502,20 @@ public class GameManager {
     public void attackEnemy(final Combatant target) throws IllegalArgumentException {
         if (target == null) {
             throw new IllegalArgumentException("The target to attack cannot be null.");
-        } else if (selectedUnit.getTurnState() != TurnState.DONE) {
+        }
+
+        if (selectedUnit.getTurnState() != TurnState.DONE) {
             selectedUnit.attack(target);
             selectedUnit.setTurnState(TurnState.DONE);
             selectedUnit = null;
+
+            if (target.getTurnState() == TurnState.DEAD) {
+                cutscene.displayDeathQuotes(target.getName());
+                enemyUnits.remove(target);
+                if (enemyUnits.isEmpty()) {
+                    userInterface.showVictory();
+                }
+            }
         }
     }
 
@@ -355,5 +531,93 @@ public class GameManager {
         } else {
             userInterface.changeUnitDisplay(target);
         }
+    }
+
+    /**
+     * Returns the string representation of this GameManager.
+     *
+     * @return toString of this GameManager as a String
+     */
+    @Override
+    public String toString() {
+        return "GameManager{" + "turnNumber=" + turnNumber + ", currentTurn=" + currentTurn
+                + ", playerUnits=" + playerUnits + ", enemyUnits=" + enemyUnits + ", entities=" + entities
+                + ", userInterface=" + userInterface + ", map=" + map + ", selectedUnit=" + selectedUnit
+                + ", cutscene=" + cutscene + ", tileHighlights=" + tileHighlights
+                + ", tileHighlightGroup=" + tileHighlightGroup + ", viewOffset=" + viewOffset + '}';
+    }
+
+    /**
+     * Returns true if the specified object is equal to this GameManager, else False.
+     *
+     * @param   o object to be compared for equality with this GameManager
+     * @return  true if the specified object is equal to this GameManager, else False
+     */
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        GameManager that = (GameManager) o;
+
+        if (turnNumber != that.turnNumber) {
+            return false;
+        }
+        if (currentTurn != that.currentTurn) {
+            return false;
+        }
+        if (!Objects.equals(playerUnits, that.playerUnits)) {
+            return false;
+        }
+        if (!Objects.equals(enemyUnits, that.enemyUnits)) {
+            return false;
+        }
+        if (!Objects.equals(entities, that.entities)) {
+            return false;
+        }
+
+        return Objects.equals(map, that.map);
+    }
+
+    /**
+     * Returns the unique hashCode of this GameManager.
+     *
+     * @return unique hashCode as an int
+     */
+    @Override
+    public int hashCode() {
+        final int multiplier = 31;
+        int result = turnNumber;
+        if (currentTurn != null) {
+            result = multiplier * result + currentTurn.hashCode();
+        } else {
+            result = multiplier * result;
+        }
+        if (playerUnits != null) {
+            result = multiplier * result + playerUnits.hashCode();
+        } else {
+            result = multiplier * result;
+        }
+        if (enemyUnits != null) {
+            result = multiplier * result + enemyUnits.hashCode();
+        } else {
+            result = multiplier * result;
+        }
+        if (entities != null) {
+            result = multiplier * result + entities.hashCode();
+        } else {
+            result = multiplier * result;
+        }
+        if (map != null) {
+            result = multiplier * result + map.hashCode();
+        } else {
+            result = multiplier * result;
+        }
+
+        return result;
     }
 }

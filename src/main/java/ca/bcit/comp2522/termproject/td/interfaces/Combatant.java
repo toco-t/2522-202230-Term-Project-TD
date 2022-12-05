@@ -4,12 +4,13 @@ import ca.bcit.comp2522.termproject.td.Vector2D;
 import ca.bcit.comp2522.termproject.td.enums.Affiliation;
 import ca.bcit.comp2522.termproject.td.enums.ArmourType;
 import ca.bcit.comp2522.termproject.td.enums.TurnState;
+import ca.bcit.comp2522.termproject.td.map.Tile;
 
 /**
  * An object that is capable of attacking and receiving damage from Combatants.
  *
- * @author Nathan
- * @version 0.1
+ * @author Nathan Ng
+ * @version 0.3
  */
 public interface Combatant {
     /**
@@ -87,7 +88,6 @@ public interface Combatant {
      */
     void breakERA();
 
-
     /**
      * Returns the turn state of this Combatant.
      *
@@ -122,6 +122,14 @@ public interface Combatant {
      * @param delta the amount of add or subtract as an int
      */
     void changeHealth(int delta);
+
+    /**
+     * Returns whether this Combatant can move to the destination Tile.
+     *
+     * @param tile the destination Tile
+     * @return true if the Combatant can move to the destination, otherwise false
+     */
+    boolean canMoveTo(Tile tile);
 
     /**
      * Initiates an attack against a target.

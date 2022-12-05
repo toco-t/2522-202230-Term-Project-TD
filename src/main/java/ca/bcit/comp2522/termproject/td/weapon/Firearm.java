@@ -1,11 +1,9 @@
 package ca.bcit.comp2522.termproject.td.weapon;
 
-import ca.bcit.comp2522.termproject.td.interfaces.Combatant;
-
 /**
- * A firearm that deals ranged weapon. Includes infantry guns, tank cannons, and rocket tubes.
+ * A firearm that deals ranged damage. Includes infantry guns, tank cannons, and rocket tubes.
  *
- * @author Nathan
+ * @author Nathan Ng
  * @version 0.1
  */
 public class Firearm extends Weapon {
@@ -30,7 +28,7 @@ public class Firearm extends Weapon {
     /* Sets this Firearm's stats to that of the Remington M24. */
     private void getM24Stats() {
         final int m24Hits = 1;
-        final int m24Range = 7;
+        final int m24Range = 8;
         final int m24Damage = 290;
         final int m24Accuracy = 190;
 
@@ -58,7 +56,7 @@ public class Firearm extends Weapon {
     private void getAK12tats() {
         final int ak12Hits = 3;
         final int ak12Range = 5;
-        final int ak12Damage = 200;
+        final int ak12Damage = 150;
         final int ak12Accuracy = 142;
 
         setHits(ak12Hits);

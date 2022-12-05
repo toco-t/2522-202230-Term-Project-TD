@@ -1,5 +1,6 @@
 package ca.bcit.comp2522.termproject.td.unit;
 
+import ca.bcit.comp2522.termproject.td.enums.Terrain;
 import ca.bcit.comp2522.termproject.td.enums.TurnState;
 import ca.bcit.comp2522.termproject.td.interfaces.Drawable;
 import ca.bcit.comp2522.termproject.td.enums.Affiliation;
@@ -8,20 +9,22 @@ import ca.bcit.comp2522.termproject.td.interfaces.Attacker;
 import ca.bcit.comp2522.termproject.td.interfaces.Combatant;
 import ca.bcit.comp2522.termproject.td.Vector2D;
 import ca.bcit.comp2522.termproject.td.items.Item;
+import ca.bcit.comp2522.termproject.td.map.Tile;
 import ca.bcit.comp2522.termproject.td.weapon.Firearm;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import static ca.bcit.comp2522.termproject.td.Vector2D.tileCoordinateToScreenSpace;
 
 /**
  * Represents a character or vehicle on the battlefield.
  *
- * @author Nathan
- * @version 0.2
+ * @author Nathan Ng
+ * @version 0.3
  */
 public class Unit implements Combatant, Drawable {
     private static final double VIEW_SIZE_X = 20;
@@ -56,18 +59,19 @@ public class Unit implements Combatant, Drawable {
      *
      * @param name the name of the Unit as a String
      * @param location the starting location of the Unit as a Vector2D
+     * @param viewOffset the offset to apply to the ImageView to simulate a camera
      * @throws IllegalArgumentException if the Unit does not exist
      */
-    public Unit(final String name, final Vector2D location) {
+    public Unit(final String name, final Vector2D location, final Vector2D viewOffset) {
         // replace this code with I/O to a unit bank of some sort. This is just a placeholder.
         this.name = name;
         this.location = location;
-        this.viewOffset = new Vector2D(0, 0);
+        this.viewOffset = viewOffset;
 
         switch (name) {
             case "Ayumi" -> getAyumiStats();
             case "Miyako" -> getMiyakoStats();
-            case "Dmitri" -> getDmitriStats();
+            case "RU Infantry" -> getDmitriStats();
             default -> throw new IllegalArgumentException("The requested Unit does not exist.");
         }
 
@@ -80,6 +84,7 @@ public class Unit implements Combatant, Drawable {
         affiliation = Affiliation.PLAYER;
         turnState = TurnState.CAN_MOVE;
         armourType = ArmourType.DEFAULT;
+        aerial = false;
 
         weapons = new ArrayList<>();
         weapons.add(new Firearm("Remington M24"));
@@ -87,11 +92,13 @@ public class Unit implements Combatant, Drawable {
         final int ayumiHealth = 301;
         final int ayumiDefense = 90;
         final int ayumiEvasion = 80;
+        final int ayumiMovementRange = 4;
 
         health = ayumiHealth;
         maxHealth = ayumiHealth;
         defense = ayumiDefense;
         evasion = ayumiEvasion;
+        movementRange = ayumiMovementRange;
     }
 
     /* Sets this unit's stats to that of Ayumi's. */
@@ -100,6 +107,7 @@ public class Unit implements Combatant, Drawable {
         affiliation = Affiliation.PLAYER;
         turnState = TurnState.CAN_MOVE;
         armourType = ArmourType.DEFAULT;
+        aerial = false;
 
         weapons = new ArrayList<>();
         weapons.add(new Firearm("H&K MP7"));
@@ -107,11 +115,13 @@ public class Unit implements Combatant, Drawable {
         final int miyakoHealth = 355;
         final int miyakoDefense = 100;
         final int miyakoEvasion = 190;
+        final int miyakoMovementRange = 4;
 
         health = miyakoHealth;
         maxHealth = miyakoHealth;
         defense = miyakoDefense;
         evasion = miyakoEvasion;
+        movementRange = miyakoMovementRange;
     }
 
     /* Sets this unit's stats to that of Ayumi's. */
@@ -120,6 +130,7 @@ public class Unit implements Combatant, Drawable {
         affiliation = Affiliation.ENEMY;
         turnState = TurnState.DONE;
         armourType = ArmourType.DEFAULT;
+        aerial = false;
 
         weapons = new ArrayList<>();
         weapons.add(new Firearm("AK-12"));
@@ -127,11 +138,13 @@ public class Unit implements Combatant, Drawable {
         final int dmitriHealth = 416;
         final int dmitriDefense = 125;
         final int dmitriEvasion = 120;
+        final int dmitriMovementRange = 4;
 
         health = dmitriHealth;
         maxHealth = dmitriHealth;
         defense = dmitriDefense;
         evasion = dmitriEvasion;
+        movementRange = dmitriMovementRange;
     }
 
     /**
@@ -190,39 +203,12 @@ public class Unit implements Combatant, Drawable {
     }
 
     /**
-     * Returns the sprite of this Unit.
-     *
-     * @return the sprite as an Image
-     */
-    public Image getSprite() {
-        return sprite;
-    }
-
-    /**
-     * Sets the sprite of this Unit.
-     *
-     * @param sprite the sprite as an Image
-     */
-    public void setSprite(final Image sprite) {
-        this.sprite = sprite;
-    }
-
-    /**
      * Returns the affiliation of this Unit.
      *
      * @return the affiliation as an Affiliation
      */
     public Affiliation getAffiliation() {
         return affiliation;
-    }
-
-    /**
-     * Sets the affiliation of this Unit.
-     *
-     * @param affiliation the affiliation as an Affiliation
-     */
-    public void setAffiliation(final Affiliation affiliation) {
-        this.affiliation = affiliation;
     }
 
     /**
@@ -252,17 +238,6 @@ public class Unit implements Combatant, Drawable {
         return location;
     }
 
-    /**
-     * Moves the ImageView of this Unit without changing its actual coordinates.
-     *
-     * @param offsetDelta the amount to move the Unit by, as a Vector2D
-     */
-    @Override
-    public void moveImageView(final Vector2D offsetDelta) {
-        viewOffset.add(offsetDelta);
-        updateImageViewPosition();
-    }
-
     /* Gets the coordinates of this Unit in screen space (pixels). */
     private Vector2D getScreenSpaceCoordinates(final Vector2D offset) {
         double scaledViewSizeX = VIEW_SIZE_X * SPRITE_SCALE;
@@ -279,6 +254,79 @@ public class Unit implements Combatant, Drawable {
                 * (verticalPositionInTile) - scaledViewSizeY + offset.getYCoordinate();
 
         return new Vector2D(adjustedXCoordinate, adjustedYCoordinate);
+    }
+
+    /**
+     * Returns whether this Unit is aerial.
+     *
+     * @return whether this Unit is aerial as a boolean
+     */
+    public boolean isAerial() {
+        return aerial;
+    }
+
+    /**
+     * Returns the armour type of this Unit.
+     *
+     * @return the armour type as an ArmourType
+     */
+    public ArmourType getArmourType() {
+        return armourType;
+    }
+
+    /**
+     * Removes ERA armour and replaces it with MEDIUM armour.
+     */
+    public void breakERA() {
+        if (armourType == ArmourType.ERA) {
+            armourType = ArmourType.MEDIUM;
+        }
+    }
+
+    /**
+     * Returns the health of this Unit.
+     *
+     * @return the health as an int
+     */
+    public int getHealth() {
+        return health;
+    }
+
+    /**
+     * Returns the max health of this Unit.
+     *
+     * @return the max health as an int
+     */
+    public int getMaxHealth() {
+        return maxHealth;
+    }
+
+    /**
+     * Returns the defense of this Unit.
+     *
+     * @return the defense as an int
+     */
+    public int getDefense() {
+        return defense;
+    }
+
+    /**
+     * Returns the evasion of this Unit.
+     *
+     * @return the evasion as an int
+     */
+    public int getEvasion() {
+        return evasion;
+    }
+
+    /**
+     * Moves the ImageView of this Unit without changing its actual coordinates.
+     *
+     * @param offsetDelta the amount to move the Unit by, as a Vector2D
+     */
+    @Override
+    public void moveImageView(final Vector2D offsetDelta) {
+        updateImageViewPosition();
     }
 
     /* Generates an ImageView of this Unit, using its coordinates. */
@@ -305,222 +353,6 @@ public class Unit implements Combatant, Drawable {
     }
 
     /**
-     * Sets the location of this Unit.
-     *
-     * @param location the location as a Vector2D
-     */
-    public void setLocation(final Vector2D location) {
-        this.location = location;
-    }
-
-    /**
-     * Returns this unit's list of weapons.
-     *
-     * @return the weapons as an ArrayList of Attacker
-     */
-    public ArrayList<Attacker> getWeapons() {
-        return weapons;
-    }
-
-    /**
-     * Sets this unit's list of weapons.
-     *
-     * @param weapons the weapons as an ArrayList of Attacker
-     */
-    public void setWeapons(final ArrayList<Attacker> weapons) {
-        this.weapons = weapons;
-    }
-
-    /**
-     * Returns the inventory of this Unit.
-     *
-     * @return the inventory as an ArrayList of Item
-     */
-    public ArrayList<Item> getInventory() {
-        return inventory;
-    }
-
-    /**
-     * Sets the inventory of this Unit.
-     *
-     * @param inventory the inventory as an ArrayList of Item
-     */
-    public void setInventory(final ArrayList<Item> inventory) {
-        this.inventory = inventory;
-    }
-
-    /**
-     * Returns the level of this Unit.
-     *
-     * @return the level as an int
-     */
-    public int getLevel() {
-        return level;
-    }
-
-    /**
-     * Sets the level of this Unit.
-     *
-     * @param level the level as an int
-     */
-    public void setLevel(final int level) {
-        this.level = level;
-    }
-
-    /**
-     * Returns the amount of experience required to level up this Unit.
-     *
-     * @return the experience to next level as an int
-     */
-    public int getExpToNext() {
-        return expToNext;
-    }
-
-    /**
-     * Sets the experience required to level up this Unit.
-     *
-     * @param expToNext the experience to next level as an int
-     */
-    public void setExpToNext(final int expToNext) {
-        this.expToNext = expToNext;
-    }
-
-    /**
-     * Returns the movement range of this Unit.
-     *
-     * @return the movement range as an int
-     */
-    public int getMovementRange() {
-        return movementRange;
-    }
-
-    /**
-     * Sets the movement range of this Unit.
-     *
-     * @param movementRange the movement range as an int
-     */
-    public void setMovementRange(final int movementRange) {
-        this.movementRange = movementRange;
-    }
-
-    /**
-     * Returns whether this Unit is aerial.
-     *
-     * @return whether this Unit is aerial as a boolean
-     */
-    public boolean isAerial() {
-        return aerial;
-    }
-
-    /**
-     * Sets whether this Unit is aerial.
-     *
-     * @param aerial whether this Unit will be aerial as a boolean
-     */
-    public void setAerial(final boolean aerial) {
-        this.aerial = aerial;
-    }
-
-    /**
-     * Returns the armour type of this Unit.
-     *
-     * @return the armour type as an ArmourType
-     */
-    public ArmourType getArmourType() {
-        return armourType;
-    }
-
-    /**
-     * Removes ERA armour and replaces it with MEDIUM armour.
-     */
-    public void breakERA() {
-        if (armourType == ArmourType.ERA) {
-            armourType = ArmourType.MEDIUM;
-        }
-    }
-
-    /**
-     * Sets the armour type of this Unit.
-     *
-     * @param armourType the armour type as an ArmourType
-     */
-    public void setArmourType(final ArmourType armourType) {
-        this.armourType = armourType;
-    }
-
-    /**
-     * Returns the health of this Unit.
-     *
-     * @return the health as an int
-     */
-    public int getHealth() {
-        return health;
-    }
-
-    /**
-     * Sets the health of this Unit.
-     *
-     * @param health the health as an int
-     */
-    public void setHealth(final int health) {
-        this.health = health;
-    }
-
-    /**
-     * Returns the max health of this Unit.
-     *
-     * @return the max health as an int
-     */
-    public int getMaxHealth() {
-        return maxHealth;
-    }
-
-    /**
-     * Sets the max health of this Unit.
-     *
-     * @param maxHealth the max health as an int
-     */
-    public void setMaxHealth(final int maxHealth) {
-        this.maxHealth = maxHealth;
-    }
-
-    /**
-     * Returns the defense of this Unit.
-     *
-     * @return the defense as an int
-     */
-    public int getDefense() {
-        return defense;
-    }
-
-    /**
-     * Sets the defense of this Unit.
-     *
-     * @param defense the defense as an int
-     */
-    public void setDefense(final int defense) {
-        this.defense = defense;
-    }
-
-    /**
-     * Returns the evasion of this Unit.
-     *
-     * @return the evasion as an int
-     */
-    public int getEvasion() {
-        return evasion;
-    }
-
-    /**
-     * Sets the evasion of this Unit.
-     *
-     * @param evasion the evasion as an int
-     */
-    public void setEvasion(final int evasion) {
-        this.evasion = evasion;
-    }
-
-    /**
      * Adds or subtracts health from the Unit.
      *
      * @param delta the amount of add or subtract as an int
@@ -528,8 +360,10 @@ public class Unit implements Combatant, Drawable {
     public void changeHealth(final int delta) {
         health += delta;
 
-        if (health < 0) {
+        if (health <= 0) {
             health = 0;
+            turnState = TurnState.DEAD;
+            imageView.setVisible(false);
         }
         if (health > maxHealth) {
             health = maxHealth;
@@ -542,9 +376,21 @@ public class Unit implements Combatant, Drawable {
      * @param destination the location to move to
      */
     public void moveTo(final Vector2D destination) {
-        // TODO: check if destination is valid
         location = destination;
         updateImageViewPosition();
+    }
+
+    /**
+     * Returns whether this Unit can move to the destination Tile.
+     *
+     * @param tile the destination Tile
+     * @return true if the Unit can move to the destination, otherwise false
+     */
+    public boolean canMoveTo(final Tile tile) {
+        boolean inMovementRange = location.manhattanDistance(tile.getLocation()) <= movementRange;
+        boolean notMovingToObstacle = tile.getTerrain() != Terrain.OBSTACLE;
+        boolean notMovingToAirspaceIfUnitNotAerial = tile.getTerrain() == Terrain.AIRSPACE && aerial;
+        return (inMovementRange && (notMovingToObstacle || notMovingToAirspaceIfUnitNotAerial));
     }
 
     /**
@@ -560,5 +406,134 @@ public class Unit implements Combatant, Drawable {
 
         final int distanceToTarget = location.manhattanDistance(target.getLocation());
         weapons.get(0).attack(target, distanceToTarget);
+    }
+
+    /**
+     * Compares this Unit with another object.
+     *
+     * @param o the other Object to compare
+     * @return true if they are the equal, otherwise false
+     */
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        final Unit unit = (Unit) o;
+
+        if (level != unit.level) {
+            return false;
+        }
+        if (expToNext != unit.expToNext) {
+            return false;
+        }
+        if (movementRange != unit.movementRange) {
+            return false;
+        }
+        if (aerial != unit.aerial) {
+            return false;
+        }
+        if (health != unit.health) {
+            return false;
+        }
+        if (maxHealth != unit.maxHealth) {
+            return false;
+        }
+        if (defense != unit.defense) {
+            return false;
+        }
+        if (evasion != unit.evasion) {
+            return false;
+        }
+        if (!Objects.equals(imageView, unit.imageView)) {
+            return false;
+        }
+        if (!Objects.equals(name, unit.name)) {
+            return false;
+        }
+        if (!Objects.equals(sprite, unit.sprite)) {
+            return false;
+        }
+        if (affiliation != unit.affiliation) {
+            return false;
+        }
+        if (turnState != unit.turnState) {
+            return false;
+        }
+        if (!Objects.equals(location, unit.location)) {
+            return false;
+        }
+        if (!Objects.equals(viewOffset, unit.viewOffset)) {
+            return false;
+        }
+        if (!Objects.equals(weapons, unit.weapons)) {
+            return false;
+        }
+        if (!Objects.equals(inventory, unit.inventory)) {
+            return false;
+        }
+        return armourType == unit.armourType;
+    }
+
+    /**
+     * Returns this instance of Unit's hashcode.
+     *
+     * @return the hashcode as an int
+     */
+    @Override
+    public int hashCode() {
+        final int primeMultiplier = 31;
+        int result = imageView != null ? imageView.hashCode() : 0;
+        result = primeMultiplier * result + (name != null ? name.hashCode() : 0);
+        result = primeMultiplier * result + (sprite != null ? sprite.hashCode() : 0);
+        result = primeMultiplier * result + (affiliation != null ? affiliation.hashCode() : 0);
+        result = primeMultiplier * result + (turnState != null ? turnState.hashCode() : 0);
+        result = primeMultiplier * result + (location != null ? location.hashCode() : 0);
+        result = primeMultiplier * result + (viewOffset != null ? viewOffset.hashCode() : 0);
+        result = primeMultiplier * result + (weapons != null ? weapons.hashCode() : 0);
+        result = primeMultiplier * result + (inventory != null ? inventory.hashCode() : 0);
+        result = primeMultiplier * result + level;
+        result = primeMultiplier * result + expToNext;
+        result = primeMultiplier * result + movementRange;
+        result = primeMultiplier * result + (aerial ? 1 : 0);
+        result = primeMultiplier * result + (armourType != null ? armourType.hashCode() : 0);
+        result = primeMultiplier * result + health;
+        result = primeMultiplier * result + maxHealth;
+        result = primeMultiplier * result + defense;
+        result = primeMultiplier * result + evasion;
+        return result;
+    }
+
+    /**
+     * Returns a String representation of this Unit's state.
+     *
+     * @return String representation of object
+     */
+    @Override
+    public String toString() {
+        return "Unit{"
+                + "imageView=" + imageView
+                + ", name='" + name + '\''
+                + ", sprite=" + sprite
+                + ", affiliation=" + affiliation
+                + ", turnState=" + turnState
+                + ", location=" + location
+                + ", viewOffset=" + viewOffset
+                + ", weapons=" + weapons
+                + ", inventory=" + inventory
+                + ", level=" + level
+                + ", expToNext=" + expToNext
+                + ", movementRange=" + movementRange
+                + ", aerial=" + aerial
+                + ", armourType=" + armourType
+                + ", health=" + health
+                + ", maxHealth=" + maxHealth
+                + ", defense=" + defense
+                + ", evasion=" + evasion
+                + '}';
     }
 }
