@@ -36,7 +36,7 @@ public class UIManager {
      */
     public UIManager() {
         hintBackground = new Rectangle(0, 526, 1024, 50);
-        hintBackground.setFill(new Color(0.3, 0.3, 0.3,  0.5));
+        hintBackground.setFill(new Color(0, 0, 0,  0.5));
 
         selectionHint = new Text(10, 566, "SELECT a unit to move.");
         selectionHint.setFill(Color.WHITE);
@@ -56,7 +56,7 @@ public class UIManager {
         turnDisplay = new Text(455, 15, "PLAYER PHASE 01");
         turnDisplay.setFill(Color.WHITE);
 
-        levelDisplay = new Text(10, 15, "Test Mission");
+        levelDisplay = new Text(10, 15, "First Encounter");
         levelDisplay.setFill(Color.WHITE);
 
         hudElements = new Group(hintBackground, selectionHint, selectedUnitHint, hoverHint, combatForecastDisplay,
