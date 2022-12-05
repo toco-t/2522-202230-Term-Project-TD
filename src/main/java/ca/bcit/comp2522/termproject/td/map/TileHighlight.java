@@ -6,6 +6,8 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
+import java.util.Objects;
+
 import static ca.bcit.comp2522.termproject.td.Vector2D.tileCoordinateToScreenSpace;
 
 /**
@@ -100,5 +102,53 @@ public class TileHighlight implements Drawable {
 
         return new Vector2D(screenSpaceCoordinates.getXCoordinate() + offset.getXCoordinate(),
                 screenSpaceCoordinates.getYCoordinate() + offset.getYCoordinate());
+    }
+
+    /**
+     * Compares this TileHighlight with another object.
+     *
+     * @param o the other Object to compare
+     * @return true if they are the equal, otherwise false
+     */
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        final TileHighlight highlight = (TileHighlight) o;
+
+        if (height != highlight.height) {
+            return false;
+        }
+        if (!Objects.equals(imageView, highlight.imageView)) {
+            return false;
+        }
+        if (!Objects.equals(sprite, highlight.sprite)) {
+            return false;
+        }
+        if (!Objects.equals(location, highlight.location)) {
+            return false;
+        }
+        return Objects.equals(viewOffset, highlight.viewOffset);
+    }
+
+    /**
+     * Returns this instance of TileHighlight's hashcode.
+     *
+     * @return the hashcode as an int
+     */
+    @Override
+    public int hashCode() {
+        final int primeMultiplier = 31;
+        int result = imageView != null ? imageView.hashCode() : 0;
+        result = primeMultiplier * result + (sprite != null ? sprite.hashCode() : 0);
+        result = primeMultiplier * result + (location != null ? location.hashCode() : 0);
+        result = primeMultiplier * result + height;
+        result = primeMultiplier * result + (viewOffset != null ? viewOffset.hashCode() : 0);
+        return result;
     }
 }
