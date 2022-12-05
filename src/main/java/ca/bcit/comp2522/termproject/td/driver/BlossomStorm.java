@@ -9,6 +9,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
@@ -32,8 +33,9 @@ public class BlossomStorm extends Application {
         logoView.setX(300);
         logoView.setY(25);
 
-        Text pressStartText = new Text(480, 566, "Press SPACE");
+        Text pressStartText = new Text(465, 516, "Press SPACE");
         pressStartText.setFill(Color.WHITE);
+        pressStartText.setFont(Font.font(18));
 
         Group root = new Group(titleBGView, logoView, pressStartText);
         Scene scene = new Scene(root, 1024, 576, Color.BLACK);
