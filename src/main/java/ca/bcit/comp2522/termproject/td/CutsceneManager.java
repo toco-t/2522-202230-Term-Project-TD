@@ -53,7 +53,7 @@ public class CutsceneManager {
         instruction.setX(820);
         instruction.setY(500);
 
-        endOfTurnsBackground = new ImageView(new Image("turns_background.png"));
+        endOfTurnsBackground = new ImageView(new Image("endOfTurns_background.png"));
 
         endOfTurns = new Text("Player's Turn");
         endOfTurns.setFont(Font.font("IMPACT", 36));
